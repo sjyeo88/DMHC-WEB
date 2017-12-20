@@ -1,0 +1,33 @@
+<form class="term-wrap" (ngSubmit)="onSubmit()">
+  <p-growl [value]="msgs"></p-growl>
+  <div class="access-term">
+    <h3 class="term-title">이용 약관</h3>
+    <textarea name="terms" readonly class="term-source">이용약관 작성</textarea>
+    <br><br>
+    <p-checkbox name="a_term_box" label="매일마음관리 이용약관 동의(필수)"
+    [(ngModel)]="TA.a_term_agree" binary="true" id="term-agree">
+    </p-checkbox>
+  </div>
+  <div class="personal-term">
+    <h3 class="term-title">개인 정보 수집 및 이용에 대한 안내</h3>
+    <textarea name="terms" readonly class="term-source">개인정보 수집 및 이용에 대한 안내 작성</textarea>
+    <br><br>
+    <p-checkbox name="p_term_box" label="매일마음관리 이용약관 동의(필수)"
+    [(ngModel)]="TA.p_term_agree" binary="true" id="term-agree">
+    </p-checkbox>
+  </div>
+
+  <div class="terms-agree-submit">
+    <button type="submit" name="terms-agree" id="terms-agree-button">동의</button>
+  </div>
+</form>
+
+<ng-template #placeholder >
+  <div id="terms-agree-label">&nbsp;</div>
+</ng-template>
+<!-- <p class="term-title" id="personal-te">
+</p>
+<textarea name="terms" readonly class="term-source" id="term-source01">
+</textarea>
+<textarea name="terms" readonly class="term-source" id="term-source02">
+</textarea> -->

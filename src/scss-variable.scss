@@ -1,0 +1,35 @@
+// Colors
+$white: #FFFFFF;
+$black: #000000;
+$gray_darken: #4A4A4A;
+$gray_mid: #979797;
+$gray_light: #c4c4c4;
+$crimson: #94282C;
+$light_blue: #008cff;
+$bluish_green: #009E73;
+$vermilion: #D55E00;
+
+$main_color01: $crimson;
+
+$correct_color: $bluish_green;
+$error_color: $vermilion;
+$form_border_color: $gray_mid;
+$img_border_color: $gray_mid;
+$link_hover_color: $light_blue;
+$button_hover_color: lighten($main_color01, 5);
+
+
+// Index-page variables
+
+$address_mg: 30px;
+$address_h: 48px;
+$address_w: 503px;
+$footer_h: $address_h + 2*$address_mg;
+
+
+$input_margin: 5px;
+$input_left_padding: 5px;
+
+$regist_input_top_margin: 1.5em;
+
+$login-panel-source-default-height: 340px;

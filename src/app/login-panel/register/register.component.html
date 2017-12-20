@@ -1,0 +1,207 @@
+<h2 id="register-title">매일마음관리 치료자 등록요청</h2>
+<form [formGroup]="rf.registForm" (ngSubmit)="onSubmit()" novalidate
+class="regist-form">
+  <!-- User Name Field -->
+  <input type="text" formControlName="username"
+  name="username" placeholder="성명"
+  >
+
+  <!-- UserName Validation -->
+  <div class="label">
+    <label *ngIf="username.errors?.required && username.untouched">
+      {{ vmsg.usernameLabel.value }}
+    </label>
+    <label *ngIf="username.errors?.required && username.touched"
+    class="invalid">
+      {{ vmsg.usernameLabel.require }}
+    </label>
+    <label *ngIf="username.errors?.maxlength" class="invalid">
+      {{ vmsg.usernameLabel.invalidMax}}
+    </label>
+
+    <label *ngIf="username.errors?.minlength" class="invalid">
+      {{ vmsg.usernameLabel.invalidMin}}
+    </label>
+    <label *ngIf="username.valid" class="valid">
+      {{ vmsg.usernameLabel.value }}
+    </label>
+  </div>
+
+  <!-- E-Mail Field -->
+  <input type="text" formControlName="email" placeholder="이메일" >
+  <div class="label">
+    <label *ngIf="email.errors?.required && email.untouched">
+      {{ vmsg.emailLabel.value }}
+    </label>
+    <label *ngIf="email.errors?.required && email.touched"
+    class="invalid">
+      {{ vmsg.emailLabel.require }}
+    </label>
+    <label *ngIf="email.errors?.pattern" class="invalid">
+      {{ vmsg.emailLabel.invalid }}
+    </label>
+    <label *ngIf="email.valid" class="valid">
+      {{ vmsg.emailLabel.value }}
+    </label>
+  </div>
+
+  <br>
+
+  <!-- Password Field -->
+  <div formGroupName="passwordGroup">
+    <input type="password" formControlName="password"
+    class=".ui-inputtext" placeholder="비밀번호">
+
+    <div class="label">
+      <label *ngIf="password.errors?.required && password.untouched">
+        {{ vmsg.passwordLabel.value }}
+      </label>
+      <label *ngIf="password.errors?.required && password.touched" class="invalid">
+        {{ vmsg.passwordLabel.require }}
+      </label>
+      <label *ngIf="password.errors?.minlength" class="invalid">
+        {{ vmsg.passwordLabel.invalidMin }}
+      </label>
+      <label *ngIf="password.errors?.maxlength" class="invalid">
+        {{ vmsg.passwordLabel.invalidMax }}
+      </label>
+      <label *ngIf="password.errors?.pattern && !(password.errors?.minlength) && !(password.errors?.maxlength)" class="invalid">
+        {{ vmsg.passwordLabel.invalidPattern }}
+      </label>
+      <label *ngIf="password.valid" class="valid">
+        {{ vmsg.passwordLabel.value }}
+      </label>
+    </div>
+
+    <input type="password"
+    formControlName="password_check" placeholder="비밀번호 확인">
+    <div class="label">
+      <label *ngIf="password_check.errors?.required && password_check.untouched">
+        {{ vmsg.passwordCheckLabel.value}}
+      </label>
+      <label *ngIf="password_check.errors?.required && password_check.touched" class="invalid">
+        {{ vmsg.passwordCheckLabel.require}}
+      </label>
+      <label *ngIf="passwordGroup.errors?.match && password_check.dirty" class="invalid">
+        {{ vmsg.passwordCheckLabel.invalid}}
+      </label>
+      <label *ngIf="passwordGroup.valid" class="valid">
+        {{ vmsg.passwordCheckLabel.valid}}
+      </label>
+      <!-- <label *ngIf="!(passwordGroup.errors?.match) && (password_check.errors?.minlenth || password_check.errors?.maxlenth)" class="valid">
+        &nbsp;
+      </label> -->
+
+    </div>
+    <!-- <input type="date" [(ngModel)]="company.birthdate"> -->
+  </div>
+
+  <br>
+
+
+  <input type="text" formControlName="phone_num"
+  placeholder="휴대폰 번호">
+      <div class="label" >
+        <!-- <label *ngIf="phone_num.errors?.required && phone_num.untouched"> -->
+        <label *ngIf="phone_num.errors?.required && phone_num.untouched">
+          {{ vmsg.phoneNumLabel.value }}
+        </label>
+        <label *ngIf="phone_num.errors?.required && phone_num.touched" class="invalid">
+          {{ vmsg.phoneNumLabel.require }}
+        </label>
+        <label *ngIf="phone_num.errors?.minlength" class="invalid">
+          {{ vmsg.phoneNumLabel.invalidMin }}
+        </label>
+        <label *ngIf="phone_num.errors?.maxlength" class="invalid">
+          {{ vmsg.phoneNumLabel.invalidMax }}
+        </label>
+        <label *ngIf="phone_num.errors?.pattern && !(phone_num.errors?.minlength) && !(phone_num.errors?.maxlength)" class="invalid">
+          {{ vmsg.phoneNumLabel.invalidPattern }}
+        </label>
+        <label *ngIf="phone_num.valid" class="valid">
+          {{ vmsg.phoneNumLabel.value }}
+        </label>
+      </div>
+
+      <p-calendar formControlName="birthday"  [locale]="ko"
+        monthNavigator="true" yearNavigator="true" yearRange="1900:2100"
+        inputStyleClass="date-picker" placeholder="생일을 입력해주세요"
+        readonlyInput="true" dateFormat="yy.mm.dd"
+      >
+      </p-calendar>
+      <div class="label" >
+        <label *ngIf="birthday.errors?.required && birthday.untouched">
+          {{ vmsg.birthLabel.value }}
+        </label>
+        <label *ngIf="birthday.errors?.required && birthday.touched" class="invalid">
+          {{ vmsg.birthLabel.require }}
+        </label>
+        <label *ngIf="birthday.valid" class="valid">
+          {{ vmsg.birthLabel.value }}
+        </label>
+      </div>
+
+      <p-dropdown [options]="jobs" formControlName="job" optionLabel="name"
+        placeholder="직종을 선택해주세요." filter="true"
+        styleClass="dropdown" ></p-dropdown>
+      <div class="label" >
+        <label *ngIf="job.errors?.required && job.untouched">
+          {{ vmsg.jobLabel.value }}
+        </label>
+        <label *ngIf="job.errors?.required && job.touched" class="invalid">
+          {{ vmsg.jobLabel.require }}
+        </label>
+        <label *ngIf="job.valid" class="valid">
+          {{ vmsg.jobLabel.value }}
+        </label>
+      </div>
+
+      <p-dropdown [options]="depts" formControlName="dept" optionLabel="name"
+        placeholder="소속기관을 선택해주세요." filter="true"
+        styleClass="dropdown" ></p-dropdown>
+      <div class="label" >
+        <label *ngIf="dept.errors?.required && dept.untouched">
+          {{ vmsg.deptLabel.value }}
+        </label>
+        <label *ngIf="dept.errors?.required && dept.touched" class="invalid">
+          {{ vmsg.deptLabel.require }}
+        </label>
+        <label *ngIf="dept.valid" class="valid">
+          {{ vmsg.deptLabel.value }}
+        </label>
+      </div>
+
+      <br>
+      <p-growl [value]="msgs"></p-growl>
+      <!-- (onUpload)="onUpload($event)" -->
+      <p-fileUpload
+      name="license_file"
+      url="http://localhost:3001/api/auth/license"
+      showCancelButton="false"  auto="true"
+      customUpload="true"
+      (onRemove)= "onRemoved($event)"
+      (uploadHandler)="onUpload($event)"
+      styleClass="file-uploader" accept="image/*"
+      maxFileSize="10000000"
+      invalidFileSizeMessageSummary= "{0}: 파일 사이즈가 맞지않습니다."
+      invalidFileSizeMessageDetail= "({0} 이하)"
+      invalidFileTypeMessageSummary= "{0}: 파일 타입이 맞지않습니다."
+      invalidFileTypeMessageDetail= "(jpg, jpeg, png, gif)">
+            <!-- <ul *ngIf="license_imgs.length"> -->
+                <!-- <li *ngFor="let file of license_imgs">{{file.name}} - {{file.size}} bytes</li> -->
+            <!-- </ul> -->
+      </p-fileUpload>
+      <div class="label" >
+        <label *ngIf="fileSelected == false">
+          {{ vmsg.fileLabel.valid}}
+        </label>
+        <label *ngIf="license_imgs.length !== 0 && fileSelected" class="valid">
+          {{ vmsg.fileLabel.valid}}
+        </label>
+        <label *ngIf="license_imgs.length === 0 && fileSelected" class="invalid">
+          {{ vmsg.fileLabel.invalid}}
+        </label>
+      </div>
+
+      <button type="submit" id="submit-register">치료자 등록 요청</button>
+</form>

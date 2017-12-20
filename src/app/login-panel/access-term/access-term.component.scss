@@ -1,0 +1,65 @@
+@import "../../../scss-variable.scss";
+
+
+.term-wrap {
+  margin-top: 26px;
+  height: $login-panel-source-default-height;
+}
+
+.term-title {
+  font-family: NanumBarunGothicOTF;
+  font-size: 18px;
+  text-align: center;
+  font-weight: normal;
+  color: #4a4a4a;
+}
+
+.access-term {
+  width: 50%;
+  float: left;
+}
+
+.personal-term {
+  width: 50%;
+  float: right;
+}
+
+.term-source {
+  position: relative;
+  width: 80%;
+  height: 146px;
+  padding: 5px;
+  margin-top: 19px;
+  margin-left: (100% - 80%)/2;
+}
+
+#term-agree {
+  position: relative;
+  width: 65%;
+  margin-left: (100% - 65%)/2;
+  font-size: 14px;
+  // left: 101px;
+  // top: 312px;
+}
+
+.terms-agree-submit {
+  margin-top: 30px;
+  width: 45%;
+  float: right;
+}
+
+#terms-agree-label{
+  position: relative;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  color: $error_color;
+  font-weight: bold;
+  // margin-bottom: 10px;
+}
+
+#terms-agree-button {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  margin-top: 20px;
+}

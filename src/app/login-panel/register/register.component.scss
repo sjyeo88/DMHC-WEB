@@ -1,0 +1,50 @@
+@import "../../../scss-variable.scss";
+
+
+.label {
+  position: relative;
+	font-family: NanumBarunGothicOTF;
+	font-size: 15px;
+	text-align: left;
+	color: #4a4a4a;
+  top: 5px;
+  .invalid {
+    color: $vermilion;
+  }
+  .valid {
+    color: $bluish_green;
+  }
+}
+
+
+#register-title {
+  position: relative;
+  font-family: NanumBarunGothicOTF;
+  font-size: 24px;
+  text-align: left;
+  color: #4a4a4a;
+  margin: 30px;
+}
+
+.regist-form {
+  position: relative;
+  margin-left: 35px;
+}
+
+.regist-form input {
+  margin-top: $regist_input_top_margin;
+}
+
+
+#submit-register {
+  position: relative;
+  width: 331px;
+  margin-top: 47px;
+  margin-left: 401px;
+}
+
+#validStyle {
+  position: relative;
+  left: 600px;
+  top: 100px;
+}

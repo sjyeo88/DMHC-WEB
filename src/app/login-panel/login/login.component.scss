@@ -1,0 +1,72 @@
+@import '../../../scss-variable.scss';
+
+$login_img_w: 380px;
+$login_img_h: 300px;
+
+$login_p_tb: 35px;
+$login_p_side: 8px;
+$login_input_w: 331px;
+
+$login_form_margin: 5px;
+
+.login {
+  padding-top: $login_p_tb;
+  padding-bottom:  $login_p_tb;
+  height: $login-panel-source-default-height;
+  padding-left: $login_p_side;
+  padding-right: $login_p_side;
+}
+
+#login-img {
+  width: 50%;
+  width: $login_img_w;
+  height: $login_img_h;
+  border: solid 1px $img_border_color;
+  float: left;
+}
+
+
+.login-input {
+  width: $login_input_w;
+  float: right;
+}
+
+.login .login-input input {
+  margin-top: $login_form_margin;
+  margin-bottom: $login_form_margin;
+  width: 100%;
+}
+
+.login .login-input button {
+  margin-top: $login_form_margin;
+  margin-bottom: $login_form_margin;
+  width: 100%;
+}
+
+.login .login-input .input-text {
+  margin-top: 48px;
+}
+
+.login .login-input .input-button {
+  margin-top: 20px;
+}
+
+
+.login-title {
+	font-family: NanumBarunGothicOTF;
+	font-size: 36px;
+	text-align: left;
+  font-weight: normal;
+}
+
+#sub-menu {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+
+  font-family: NanumBarunGothicOTF;
+  font-size: 11px;
+  text-align: right;
+  background-color: transparent;
+  color: $gray_darken;
+}
