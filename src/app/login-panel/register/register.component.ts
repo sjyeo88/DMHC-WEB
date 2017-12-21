@@ -7,10 +7,11 @@ import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Router, ActivatedRoute } from '@angular/router'
 
-import { GetPublicDataService } from '../../get-data/get-public-data.service';
+import { GetPublicDataService, Req2 } from '../../get-data/get-public-data.service';
 import { Job, Dept } from  '../../get-data/get-data';
 import { TermAgree } from  '../../get-data/get-data';
 import { RegistData } from  '../../get-data/auth-data';
+
 
 
 
@@ -19,11 +20,9 @@ import { RegistData } from  '../../get-data/auth-data';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   providers: [
-    MessageService,
     KoDate,
     RegexValidators,
     ValidMsgs,
-    GetPublicDataService,
   ],
 })
 
@@ -39,6 +38,8 @@ export class RegisterComponent implements OnInit {
   chkFile: any[] = [];
   fileSelected: boolean = false;
   public msgs: Message[] = [];
+  public isJobLoaded:boolean
+  public isDeptLoaded:boolean
 
   constructor(
     public http: HttpClient,
@@ -52,6 +53,7 @@ export class RegisterComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     public rf: RegistData,
+    // public rq: Req,
   ) {
     this.ko = this.koClass.ko;
     if (!(this.TA.a_term_agree && this.TA.p_term_agree)) {
@@ -97,22 +99,29 @@ export class RegisterComponent implements OnInit {
   }
 
   getJobs():void {
-    this.dataService.getJobs()
-    .subscribe(
-      jobs => {
-        this.jobs = jobs
-      }
-    )
+    let http = new Req2('get', '/jobs')
+    http.send();
+    http.Complete = ()=> {
+      // console.log(typeof http.response)
+      this.jobs = JSON.parse(http.response);
+      this.isJobLoaded = true
+    }
+    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
   }
 
   getDepts():void {
-    this.dataService.getDepts()
-    .subscribe(
-      depts => {
-        this.depts = depts
-      }
-    )
+    let http = new Req2('get', '/jobs')
+    http.send();
+    http.Complete = ()=> {
+      // console.log(typeof http.response)
+      this.depts= JSON.parse(http.response);
+      this.isDeptLoaded = true
+    }
+    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
   }
+  
 
   onUpload(event) {
       this.fileSelected = true;
@@ -131,21 +140,27 @@ export class RegisterComponent implements OnInit {
   }
 
   public onSubmit() {
-    // console.log(this.rf.registForm.value)
-    if (this.rf.registForm.valid && (this.license_imgs.length !==0)) {
-      let xhr_1 = new XMLHttpRequest(), formData = new FormData();
-      const url:string = 'http://localhost:3001/api/auth/local/register';
-      formData.append('username', this.rf.registForm.value.username)
-      formData.append('email', this.rf.registForm.value.email)
-      formData.append('password', this.rf.registForm.value.passwordGroup.password)
-      formData.append('birthday', this.rf.registForm.value.birthday)
-      formData.append('job', this.rf.registForm.value.job.idJOBS)
-      formData.append('dept', this.rf.registForm.value.dept.idDEPT)
-      formData.append('phone', this.rf.registForm.value.phone_num)
-      formData.append('license_file', this.license_imgs[0], this.license_imgs[0].name);
 
-      xhr_1.open('POST', url, true);
-      xhr_1.send(formData);
+    if (this.rf.registForm.valid && (this.license_imgs.length !==0)) {
+      const url:string = 'http://localhost:3001/api/auth/local/register';
+      const formData = new FormData();
+      this.msgs = [];
+
+      // formData.append('username', this.rf.registForm.value.username)
+      // formData.append('email', this.rf.registForm.value.email)
+      // formData.append('password', this.rf.registForm.value.passwordGroup.password)
+      // formData.append('birthday', this.rf.registForm.value.birthday)
+      // formData.append('job', this.rf.registForm.value.job.idJOBS)
+      // formData.append('dept', this.rf.registForm.value.dept.idDEPT)
+      // formData.append('phone', this.rf.registForm.value.phone_num)
+      // formData.append('license_file', this.license_imgs[0], this.license_imgs[0].name);
+      //
+      //
+      // let http = new YHttp('post', url, formData)
+      //
+      //
+      // http.send(formData)
+
     } else {
       this.msgs = [];
       this.msgs.push({severity: 'error', summary: '입력이 모두 완료되지 않았습니다!', detail: ''});

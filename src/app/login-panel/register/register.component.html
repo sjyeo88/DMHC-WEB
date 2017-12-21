@@ -1,3 +1,15 @@
+<p-growl [value]="msgs"></p-growl>
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      Loading...
+    </div>
+  </div>
+</ng-template>
+
 <h2 id="register-title">매일마음관리 치료자 등록요청</h2>
 <form [formGroup]="rf.registForm" (ngSubmit)="onSubmit()" novalidate
 class="regist-form">
@@ -141,24 +153,29 @@ class="regist-form">
         </label>
       </div>
 
-      <p-dropdown [options]="jobs" formControlName="job" optionLabel="name"
-        placeholder="직종을 선택해주세요." filter="true"
-        styleClass="dropdown" ></p-dropdown>
+      <div *ngIf="isJobLoaded;else loading">
+        <p-dropdown [options]="jobs" formControlName="job" optionLabel="name"
+          placeholder="직종을 선택해주세요." filter="true"
+          styleClass="dropdown" ></p-dropdown>
+      </div>
       <div class="label" >
         <label *ngIf="job.errors?.required && job.untouched">
-          {{ vmsg.jobLabel.value }}
+            {{ vmsg.jobLabel.value }}
         </label>
         <label *ngIf="job.errors?.required && job.touched" class="invalid">
-          {{ vmsg.jobLabel.require }}
+            {{ vmsg.jobLabel.require }}
         </label>
         <label *ngIf="job.valid" class="valid">
-          {{ vmsg.jobLabel.value }}
+            {{ vmsg.jobLabel.value }}
         </label>
       </div>
 
-      <p-dropdown [options]="depts" formControlName="dept" optionLabel="name"
-        placeholder="소속기관을 선택해주세요." filter="true"
-        styleClass="dropdown" ></p-dropdown>
+      <div *ngIf="isDeptLoaded;else loading">
+        <p-dropdown [options]="depts" formControlName="dept" optionLabel="name"
+          placeholder="소속기관을 선택해주세요." filter="true"
+          styleClass="dropdown" ></p-dropdown>
+      </div>
+
       <div class="label" >
         <label *ngIf="dept.errors?.required && dept.untouched">
           {{ vmsg.deptLabel.value }}
@@ -171,9 +188,8 @@ class="regist-form">
         </label>
       </div>
 
+
       <br>
-      <p-growl [value]="msgs"></p-growl>
-      <!-- (onUpload)="onUpload($event)" -->
       <p-fileUpload
       name="license_file"
       url="http://localhost:3001/api/auth/license"

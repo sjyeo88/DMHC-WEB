@@ -6,6 +6,8 @@ import { LoginPanelComponent } from './login-panel/login-panel.component';
 import { LoginComponent } from './login-panel/login/login.component';
 import { AccessTermComponent } from './login-panel/access-term/access-term.component';
 import { RegisterComponent } from './login-panel/register/register.component';
+import { WelcomeComponent } from './login-panel/welcome/welcome.component'
+import { ErrorComponent } from './error/error.component'
 
 const routes: Routes = [
   // {path: '', redirectTo: '/login-panel', pathMatch: 'full'},
@@ -16,8 +18,10 @@ const routes: Routes = [
       {path: 'login', component: LoginComponent},
       {path: 'access-term', component: AccessTermComponent},
       {path: 'register', component: RegisterComponent},
+      {path: 'welcome', component: WelcomeComponent},
     ]
   },
+  {path: '**', component: ErrorComponent},
 ]
 
 @NgModule({

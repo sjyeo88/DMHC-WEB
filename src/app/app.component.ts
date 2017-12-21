@@ -1,10 +1,15 @@
 import { Component } from '@angular/core';
 import { Title } from '@angular/platform-browser'
+import { Message } from 'primeng/components/common/api';
+import { MessageService } from 'primeng/components/common/messageservice';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [
+    MessageService,
+  ]
 })
 export class AppComponent {
 

@@ -1,0 +1,15 @@
+<div class="welcome" *ngIf="isDataLoaded">
+  <div class="welcom-message">
+    <h2>가입신청이 완료 되었습니다!</h2><br>
+    <p>
+      관리자 검토 후 1영업일 이내에 가입완료 메일이 전송됩니다.
+      <br>
+      추가 문의사항은 다음 연락처로 문의 바랍니다.
+      <br> <br>
+      <strong>관리자 E-Mail : </strong>{{ this.admin.email }}
+      <br>
+      <strong>관리자 휴대번호 : </strong>{{ this.admin.phone | phone }}
+    </p>
+  </div>
+  <button id="home" type="submit" name="button" routerLink= "/login-panel">Login 페이지로</button>
+</div>

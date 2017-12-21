@@ -1,0 +1,22 @@
+@import "../../scss-variable.scss";
+
+
+.address {
+  position: absolute;
+	width: $address_w;
+	height: $address_h;
+  margin-top: $address_mg;
+  left: calc((100% - #{$address_w})/2);
+	font-family: NanumBarunGothicOTF;
+  font-style: normal;
+	font-size: 11px;
+	text-align: left;
+  line-height: 1.3em;
+	color: #4a4a4a;
+}
+
+.footer {
+  position: absolute;
+  width: 100%;
+  height: $address_h + 2*$address_mg;
+}

@@ -1,1 +1,20 @@
+<p-growl [value]="msgs"></p-growl>
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      Loading...
+    </div>
+  </div>
+</ng-template>
 
+<div class="footer" *ngIf="isAdminLoaded;else loading">
+  <address class="address">
+  기관명 : KU 마음건강연구소 | 주소 : 서울시 성북구 안암로 145 고려대학교 홍보관 212호 | TEL: 02-3290-1676
+  소장 : 최기홍 | E-mail : kumh@korea.ac.kr <br>
+  관리자 : {{admin.name}} | E-mail : {{admin.email}}<br>
+  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.
+  </address>
+</div>

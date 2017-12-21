@@ -12,6 +12,12 @@ export class Dept {
     add_time:string;
 }
 
+export class Admin {
+    name:string;
+    email:string;
+    phone:string;
+}
+
 @Injectable()
 export class TermAgree {
   public a_term_agree: boolean;
