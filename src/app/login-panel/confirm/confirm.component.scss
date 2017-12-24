@@ -4,7 +4,18 @@
 // #  Client : KU Mind health care institute.                       # //
 // #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
 // #  Used Frameworks : Angular 4, Express, MySQL.                  # //
-// #  Name of Component : login-panel                               # //
+// #  Name of Component : confirm                                   # //
 // #  Kick off : 2017-12-04                                         # //
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
+
+.confirm {
+  font-family: "NanumBarunGothicOTF";
+  margin-top: 21px;
+  margin-bottom: 200px;
+  .confirm-message{
+    margin-left: 25px;
+    // margin-bottom: 180px;
+  }
+
+}

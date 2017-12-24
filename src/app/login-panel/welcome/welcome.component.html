@@ -1,3 +1,32 @@
+<!-- ##################################################################  -->
+<!-- #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             #  -->
+<!-- #  Name of app: DMHC (Web applcation of Daily Mind Health Care). #  -->
+<!-- #  Client : KU Mind health care institute.                       #  -->
+<!-- #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  Used Frameworks : Angular 4, Express, MySQL.                  #  -->
+<!-- #  Name of Component : welcome                                   #  -->
+<!-- #  Kick off : 2017-12-04                                         #  -->
+<!-- #  End day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- Need for Message Service of PrimeNG -->
+<p-growl [value]="msgs"></p-growl>
+
+ <!-- Predefiend Loading Template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      Loading...
+    </div>
+  </div>
+</ng-template>
+
+
+<!-- Code start  ---------------------------------------------------------->
+
 <div class="welcome" *ngIf="isDataLoaded">
   <div class="welcom-message">
     <h2>가입신청이 완료 되었습니다!</h2><br>

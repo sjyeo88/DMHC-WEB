@@ -1,4 +1,18 @@
+<!-- ##################################################################  -->
+<!-- #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             #  -->
+<!-- #  Name of app: DMHC (Web applcation of Daily Mind Health Care). #  -->
+<!-- #  Client : KU Mind health care institute.                       #  -->
+<!-- #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  Used Frameworks : Angular 4, Express, MySQL.                  #  -->
+<!-- #  Name of Component : register                                  #  -->
+<!-- #  Kick off : 2017-12-04                                         #  -->
+<!-- #  End day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- Need for Message Service of PrimeNG -->
 <p-growl [value]="msgs"></p-growl>
+
+ <!-- Predefiend Loading Template -->
 <ng-template #loading>
   <div class="loading">
     <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
@@ -9,6 +23,8 @@
     </div>
   </div>
 </ng-template>
+
+<!-- Code start  ---------------------------------------------------------->
 
 <h2 id="register-title">매일마음관리 치료자 등록요청</h2>
 <form [formGroup]="rf.registForm" (ngSubmit)="onSubmit()" novalidate
@@ -40,7 +56,7 @@ class="regist-form">
   </div>
 
   <!-- E-Mail Field -->
-  <input type="text" formControlName="email" placeholder="이메일" >
+  <input type="text" formControlName="email" placeholder="이메일" (blur)="onEmailBlur($event.target.value)">
   <div class="label">
     <label *ngIf="email.errors?.required && email.untouched">
       {{ vmsg.emailLabel.value }}
@@ -52,7 +68,10 @@ class="regist-form">
     <label *ngIf="email.errors?.pattern" class="invalid">
       {{ vmsg.emailLabel.invalid }}
     </label>
-    <label *ngIf="email.valid" class="valid">
+    <label *ngIf="email.valid && isMail" class="invalid">
+      {{ vmsg.emailLabel.invalidPattern }}
+    </label>
+    <label *ngIf="email.valid && !isMail" class="valid">
       {{ vmsg.emailLabel.value }}
     </label>
   </div>

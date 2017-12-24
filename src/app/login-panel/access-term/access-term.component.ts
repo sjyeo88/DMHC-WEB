@@ -1,10 +1,20 @@
+// ################################################################## //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : access-term:         ;                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
 import { Component, OnInit } from '@angular/core';
 import { AbstractControl, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
-import { TermAgree } from  '../../get-data/get-data';
-import { RegistData } from  '../../get-data/auth-data';
+import { TermAgree } from  '../../service/get-data';
+import { RegistData } from  '../../service/auth-data';
 
 @Component({
   selector: 'app-access-term',

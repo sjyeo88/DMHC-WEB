@@ -1,20 +1,31 @@
+// ################################################################## //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : login-panel                               # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
 import { Component, OnInit } from '@angular/core';
-import { RegistData } from '../get-data/auth-data';
-import { TermAgree } from  '../get-data/get-data';
+import { RegistData, LoginData } from '../service/auth-data';
+import { TermAgree } from  '../service/get-data';
 import { RegexValidators } from "./register/register.validator";
-import { GetPublicDataService } from '../get-data/get-public-data.service';
 
 @Component({
   selector: 'app-login-panel',
   templateUrl: './login-panel.component.html',
   styleUrls: ['./login-panel.component.scss',],
-  providers: [TermAgree, RegistData, RegexValidators, GetPublicDataService,]
+  providers: [LoginData, TermAgree, RegistData, RegexValidators ]
 })
 export class LoginPanelComponent implements OnInit {
-
   constructor() { }
 
   ngOnInit() {
+    console.log(document.cookie)
   }
+
+
 
 }

@@ -1,16 +1,23 @@
+// ################################################################## //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : register                                  # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
 import { Component, OnInit, HostListener } from '@angular/core';
-import { HttpClient, } from '@angular/common/http';
-import { AbstractControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { ValidMsgs, RegexValidators } from "./register.validator";
 import { KoDate } from "../../date-ko";
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Router, ActivatedRoute } from '@angular/router'
-
-import { GetPublicDataService, Req2 } from '../../get-data/get-public-data.service';
-import { Job, Dept } from  '../../get-data/get-data';
-import { TermAgree } from  '../../get-data/get-data';
-import { RegistData } from  '../../get-data/auth-data';
+import { ValidMsgs } from './register.validator'
+import { Req2 } from '../../service/get-public-data.service';
+import { TermAgree } from  '../../service/get-data';
+import { RegistData } from  '../../service/auth-data';
+import { Job, Dept, User } from  '../../service/get-data';
 
 
 
@@ -21,7 +28,6 @@ import { RegistData } from  '../../get-data/auth-data';
   styleUrls: ['./register.component.scss'],
   providers: [
     KoDate,
-    RegexValidators,
     ValidMsgs,
   ],
 })
@@ -31,28 +37,26 @@ export class RegisterComponent implements OnInit {
 
   // registForm: FormGroup;
   ko: any;
-  jobs:Job[];
-  depts:Dept[];
   license_imgs: any[] = [];
   license_img: any[] = [];
-  chkFile: any[] = [];
+  public jobs: Job[];
+  public depts: Dept[];
+  public users: User[];
   fileSelected: boolean = false;
   public msgs: Message[] = [];
   public isJobLoaded:boolean
   public isDeptLoaded:boolean
+  public isUserLoaded:boolean
+  public isMail:boolean
 
   constructor(
-    public http: HttpClient,
-    private fb: FormBuilder,
     private msgSrv: MessageService,
-    public vmsg:ValidMsgs,
     public koClass:KoDate,
     public TA: TermAgree,
-    private valider: RegexValidators,
-    private dataService: GetPublicDataService,
     private router: Router,
     public route: ActivatedRoute,
     public rf: RegistData,
+    public vmsg:ValidMsgs,
     // public rq: Req,
   ) {
     this.ko = this.koClass.ko;
@@ -65,8 +69,21 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
     this.getJobs();
     this.getDepts();
+    this.getUsers();
 
 
+  }
+
+
+  public onEmailBlur(value){
+    this.users.map((arg)=>{
+      // console.log(arg.email);
+      if(arg.email === value) {
+        this.isMail = true;
+      } else {
+        this.isMail = false;
+      }
+    })
   }
 
   get username() {
@@ -99,7 +116,7 @@ export class RegisterComponent implements OnInit {
   }
 
   getJobs():void {
-    let http = new Req2('get', '/jobs')
+    let http = new Req2('get', '/data/jobs')
     http.send();
     http.Complete = ()=> {
       // console.log(typeof http.response)
@@ -111,7 +128,7 @@ export class RegisterComponent implements OnInit {
   }
 
   getDepts():void {
-    let http = new Req2('get', '/jobs')
+    let http = new Req2('get', '/data/depts')
     http.send();
     http.Complete = ()=> {
       // console.log(typeof http.response)
@@ -121,7 +138,18 @@ export class RegisterComponent implements OnInit {
     http.ServErr = () =>{ this.msgs.push(http.smsgs) }
     http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
   }
-  
+
+  getUsers():void {
+    let http = new Req2('get', '/data/users')
+    http.send();
+    http.Complete = ()=> {
+      // console.log(typeof http.response)
+      this.users= JSON.parse(http.response);
+      this.isUserLoaded = true
+    }
+    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
+  }
 
   onUpload(event) {
       this.fileSelected = true;
@@ -141,25 +169,31 @@ export class RegisterComponent implements OnInit {
 
   public onSubmit() {
 
-    if (this.rf.registForm.valid && (this.license_imgs.length !==0)) {
-      const url:string = 'http://localhost:3001/api/auth/local/register';
+    if (!this.isMail && this.rf.registForm.valid && (this.license_imgs.length !==0)) {
+      const url:string = '/auth/local/register';
       const formData = new FormData();
       this.msgs = [];
 
-      // formData.append('username', this.rf.registForm.value.username)
-      // formData.append('email', this.rf.registForm.value.email)
-      // formData.append('password', this.rf.registForm.value.passwordGroup.password)
-      // formData.append('birthday', this.rf.registForm.value.birthday)
-      // formData.append('job', this.rf.registForm.value.job.idJOBS)
-      // formData.append('dept', this.rf.registForm.value.dept.idDEPT)
-      // formData.append('phone', this.rf.registForm.value.phone_num)
-      // formData.append('license_file', this.license_imgs[0], this.license_imgs[0].name);
-      //
-      //
-      // let http = new YHttp('post', url, formData)
-      //
-      //
-      // http.send(formData)
+      formData.append('username', this.rf.registForm.value.username)
+      formData.append('email', this.rf.registForm.value.email)
+      formData.append('password', this.rf.registForm.value.passwordGroup.password)
+      formData.append('password', this.rf.registForm.value.passwordGroup.password)
+      formData.append('birthday', this.rf.registForm.value.birthday)
+      formData.append('job', this.rf.registForm.value.job.idJOBS)
+      formData.append('dept', this.rf.registForm.value.dept.idDEPT)
+      formData.append('phone', this.rf.registForm.value.phone_num)
+      formData.append('license_file', this.license_imgs[0], this.license_imgs[0].name);
+
+
+      let http = new Req2('post', url, formData)
+      http.send(formData)
+      http.Complete = () =>{
+
+        this.rf.registForm.reset();
+        this.router.navigate(['../welcome'], {relativeTo: this.route})
+      }
+      http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+      http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
 
     } else {
       this.msgs = [];
@@ -172,9 +206,20 @@ export class RegisterComponent implements OnInit {
           this.rf.registForm.value.dept = null;
   }
 
+  resetPassword(){
+     this.rf.registForm.controls.passwordGroup.reset();
+     this.rf.registForm.controls.passwordGroup.reset();
+  }
+
+
   // Page Refresh Check
   // @HostListener('window:beforeunload', ['$event'])
-  //  doSomething($event) {
+  //  chkReload($event) {
   //    $event.returnValue='Your data will be lost!';
   // }
+  @HostListener('window:popstate', ['$event'])
+  chkBack($event) {
+     this.resetPassword();
+  }
+
 }

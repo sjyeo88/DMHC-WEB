@@ -13,6 +13,7 @@ import { LoginComponent } from './login-panel/login/login.component';
 import { AccessTermComponent } from './login-panel/access-term/access-term.component';
 import { RegisterComponent } from './login-panel/register/register.component';
 import { WelcomeComponent } from './login-panel/welcome/welcome.component'
+import { ConfirmComponent } from './login-panel/confirm/confirm.component'
 
 import { AccordionModule } from 'primeng/components/accordion/accordion';
 import { MenuItem } from 'primeng/components/common/api';
@@ -25,7 +26,9 @@ import { GrowlModule } from 'primeng/primeng';
 import { AppRoutingModule } from './app-routing.module';
 
 import { PhonePipe } from './pipes/phone';
-import { ErrorComponent } from './error/error.component'
+import { ErrorComponent } from './error/error.component';
+import { TopComponent } from './top/top.component';
+import { JwtHelper } from 'angular2-jwt';
 
 @NgModule({
   declarations: [
@@ -38,6 +41,8 @@ import { ErrorComponent } from './error/error.component'
     WelcomeComponent,
     PhonePipe,
     ErrorComponent,
+    TopComponent,
+    ConfirmComponent,
   ],
   imports: [
     BrowserModule,
@@ -54,8 +59,11 @@ import { ErrorComponent } from './error/error.component'
     GrowlModule,
   ],
   providers: [
-    Title
+    Title,
+    JwtHelper,
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent,
+  ]
 })
 export class AppModule { }

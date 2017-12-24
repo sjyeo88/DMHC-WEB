@@ -4,11 +4,10 @@
 <!-- #  Client : KU Mind health care institute.                       #  -->
 <!-- #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 #  -->
 <!-- #  Used Frameworks : Angular 4, Express, MySQL.                  #  -->
-<!-- #  Name of Component : error                                     #  -->
+<!-- #  Name of Component : top                                       #  -->
 <!-- #  Kick off : 2017-12-04                                         #  -->
 <!-- #  End day  : 2017-01-31                                         #  -->
 <!-- ##################################################################  -->
-
 
  <!-- Need for Message Service of PrimeNG -->
 <p-growl [value]="msgs"></p-growl>
@@ -25,11 +24,8 @@
   </div>
 </ng-template>
 
-
 <!-- Code start  ---------------------------------------------------------->
 
-<div class="error">
-  <h1>Error 404</h1>
-  <br>
-  <h2>이 페이지는 존재하지 않습니다.</h2>
+<div class="" *ngIf="isUserLoaded">
+  Welcome {{ user.name }}
 </div>

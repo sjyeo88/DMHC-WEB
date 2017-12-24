@@ -6,6 +6,12 @@ export class Job {
     add_time:string;
 }
 
+export class User {
+    idEXPERT_USER:number;
+    name:string;
+    email:string;
+}
+
 export class Dept {
     idDEPT:number;
     name:string;

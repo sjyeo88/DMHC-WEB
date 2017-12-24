@@ -1,26 +1,55 @@
+<!-- ##################################################################  -->
+<!-- #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             #  -->
+<!-- #  Name of app: DMHC (Web applcation of Daily Mind Health Care). #  -->
+<!-- #  Client : KU Mind health care institute.                       #  -->
+<!-- #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  Used Frameworks : Angular 4, Express, MySQL.                  #  -->
+<!-- #  Name of Component : <%= dasherize(name) %>                    #  -->
+<!-- #  Kick off : 2017-12-04                                         #  -->
+<!-- #  End day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- Need for Message Service of PrimeNG -->
+<p-growl [value]="msgs"></p-growl>
+
+ <!-- Predefiend Loading Template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      Loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- Code start  ---------------------------------------------------------->
+
 <div class="login">
   <img src="assets/img/1-2_pic.jpg" id="login-img">
   <div class="login-input">
-  <h2 class="login-title">치료자 로그인</h2>
-  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-    <div class="input-text">
-    <input type="text" name="emil" placeholder="이메일">
-    <input type="password" name="emil" placeholder="비밀번호">
-    </div>
-    <div class="input-button">
-    <button type="submit" name="log-in" id="login-button">로그인 하기</button>
-    <button type="button" name="register" id="register-button"
-            routerLink="../access-term">치료자 등록하기</button>
-    </div>
-    <p  id="sub-menu">
-      <a href="#">이메일 찾기</a>
-      <span>&nbsp;|&nbsp;</span>
-      <a href="#">비밀번호 찾기</a>
-      <span>&nbsp;|&nbsp;</span>
-      <a href="#">매일마음관리 소개</a>
-      <span>&nbsp;|&nbsp;</span>
-      <a href="#">이용절차</a>
-    </p>
-  </form>
+    <h2 class="login-title">치료자 로그인</h2>
+    <form [formGroup]="lf.loginForm" (ngSubmit)="onSubmit()" novalidate class="regist-form">
+      <div class="input-text">
+        <input type="text" name="emil" formControlName="email" placeholder="이메일">
+        <input type="password" name="emil" formControlName="password" placeholder="비밀번호">
+      </div>
+
+      <div class="input-button">
+        <button type="submit" name="log-in" id="login-button">로그인 하기</button>
+        <button type="button" name="register" id="register-button"
+                routerLink="../access-term">치료자 등록하기</button>
+      </div>
+      <p  id="sub-menu">
+        <a href="#">이메일 찾기</a>
+        <span>&nbsp;|&nbsp;</span>
+        <a href="#">비밀번호 찾기</a>
+        <span>&nbsp;|&nbsp;</span>
+        <a href="#">매일마음관리 소개</a>
+        <span>&nbsp;|&nbsp;</span>
+        <a href="#">이용절차</a>
+      </p>
+    </form>
   </div>
 </div>

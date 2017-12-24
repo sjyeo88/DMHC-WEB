@@ -71,6 +71,7 @@ export class ValidMsgs {
 
     this.emailLabel.value = '치료자님의 이메일을 입력해주세요, ID가 되오니 정확하게 입력바랍니다.';
     this.emailLabel.invalid = '적절한 E메일 주소가 아닙니다!';
+    this.emailLabel.invalidPattern = '이미 가입된 메일입니다!';
 
     this.passwordLabel.value = '비밀번호를 입력해주세요.';
     this.passwordLabel.invalidPattern = '적절한 비밀번호가 아닙니다! (숫자, 특수문자, 문자 조합)';

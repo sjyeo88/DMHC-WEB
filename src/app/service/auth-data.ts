@@ -52,6 +52,25 @@ export class RegistData {
           dept: ['', [
             Validators.required,
           ]],
+      }, {updateOn: 'blur'});
+    }
+}
+
+
+@Injectable()
+export class LoginData {
+    loginForm: FormGroup
+    constructor(
+      private fb: FormBuilder,
+      private valider: RegexValidators,
+    ) {
+          this.loginForm = this.fb.group({
+          email: ['', [
+            Validators.required,
+          ]],
+          password: ['', [
+            Validators.required,
+          ]],
       });
     }
 }
