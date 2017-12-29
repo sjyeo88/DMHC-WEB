@@ -1,7 +1,3 @@
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/from'
-import { HttpEvent } from '@angular/common/http/src/response';
-
 export class YHttp{
 
   public method:string;
@@ -28,7 +24,6 @@ export class YHttp{
       if(header) {
         xhttp.setRequestHeader(header.key, header.value);
       }
-      console.log(xhttp.getResponseHeader('Access-Control-Allow-Origin'));
       xhttp.withCredentials = true;
       xhttp.onreadystatechange = () => {
         this.status = xhttp.status;

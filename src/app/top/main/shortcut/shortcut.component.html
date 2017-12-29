@@ -1,0 +1,152 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : shortcut                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+ <!-- predefiend loading template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewbox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<div class="grid-all">
+
+<div class="shortcut" id="user-info">
+  <span class="icon">
+    <img src="./../../../../assets/img/icons/ic-person-48px.png" alt="">
+  </span>
+  <div class="info">
+    <div class="title">
+      치료자 정보
+    </div>
+    <ul>
+      <!-- <li>E-Mail: {{ this.userService.user.email }}</li> -->
+      <li>이름 :  {{ this.userService.user.name }}</li>
+      <li>소속 :  {{ this.userService.user.dept }}</li>
+      <li>직책 :  {{ this.userService.user.job }}</li>
+      <li>접속일: {{ this.userService.user.loginTime | date: 'yyyy/MM/dd' }}</li>
+      <li>접속시간 : {{ this.userService.user.loginTime | date: 'HH:mm:ss' }}</li>
+    </ul>
+  </div>
+</div>
+
+<div class="shortcut" id="patient-regist">
+  <div class="title">
+    내담자 등록신청
+  </div>
+  <span class="icon">
+    <img src="./../../../../assets/img/icons/ic-notifications-active-48px.png" alt="">
+  </span>
+  <div class="info">
+    <span class="infoNum">0</span>
+    <span>건</span>
+  </div>
+</div>
+
+<div class="shortcut" id="current-regist">
+  <div class="title">
+    현재 담당 내담자
+  </div>
+  <span class="icon">
+    <img src="./../../../../assets/img/icons/ic-people-48px.png" alt="">
+  </span>
+  <div class="info">
+    <span class="infoNum">{{ patient.patient.length }}</span>
+    <span>명</span>
+  </div>
+</div>
+
+
+  <div class="shortcut" id="process">
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-help-outline-24px.png" alt="">
+    </span>
+    <div class="title">
+      이용절차
+    </div>
+  </div>
+
+  <div class="shortcut" id="notice">
+    <div class="notice-title">
+      <span class="icon">
+        <img src="./../../../../assets/img/icons/ic-textsms-48px.png" alt="">
+      </span>
+      <div class="title">
+        공지사항
+      </div>
+    </div>
+    <br>
+      <ul>
+        <li  *ngFor="let notice of notices.notice; let i=index">
+          <a href="#">{{ notice.title }}</a>
+          <span
+          [style.margin-left.em]="12"
+          >
+            [{{ notice.ADD_TIME | date: 'yyyy/MM/dd'}}]
+          </span>
+        </li>
+      </ul>
+
+  </div>
+
+  <div class="shortcut" id="lectureMan">
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-border-color-48px.png" alt="">
+    </span>
+    <div class="title">
+      심리교육 설정<br>메뉴얼
+    </div>
+  </div>
+
+  <div class="shortcut" id="assignMan">
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-content-paste-48px.png" alt="">
+    </span>
+    <div class="title">
+      내담자 과제설정<br>메뉴얼
+    </div>
+  </div>
+
+  <div class="shortcut" id="manageMan">
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-face-48px.png" alt="">
+    </span>
+    <div class="title">
+      내담자 관리<br>메뉴얼
+    </div>
+  </div>
+
+  <div class="shortcut" id="service">
+    <div class="title">
+      서비스 이용문의
+    </div>
+    <div class="phone">
+      02. 3290. 1676
+    </div>
+    <div class="sub">
+      전화문의: 평일 오전 10:00 ~ 18:00
+      <br>
+      메일 : kumh@korea.ac.kr
+    <img src="./../../../../assets/img/icons/ic-call-48px.png" alt="">
+  </div>
+
+
+</div>

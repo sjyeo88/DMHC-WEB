@@ -1,0 +1,85 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : header                                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+@import "./../../../scss-variable.scss";
+
+.header{
+  margin: 10px;
+  border-bottom: 3px solid $main_color01;
+  height: 130px;
+  overflow: hidden;
+  img {
+    float:left;
+    width: 278px;
+    // height: 115;
+  }
+  .menu {
+    float: right;
+    width: 1000px;
+    .sub {
+      float: right;
+      padding-top: 40px;
+      padding-bottom: 24px;
+      ul{
+        list-style-type: none;
+        margin-left: 500px;
+        li{
+          img {
+            width: 30px;
+            height: 20px;
+            padding-right: 10px;
+          }
+          cursor:pointer;
+          text-align: center;
+          font-family: NanumGothicOTF;
+          // margin-top: 96px;
+          padding-left: 17px;
+          padding-right: 17px;
+          font-size: 16px;
+          float: left;
+        }
+      }
+    }
+    .main{
+      ul {
+        list-style-type: none;
+        li {
+          cursor:pointer;
+          text-align: center;
+          border-top-left-radius: 10px;
+          border-top-right-radius:  10px;
+          // margin-top: 96px;
+          padding-top: 13px;
+          padding-left: 25px;
+          padding-right: 25px;
+          padding-bottom: 15px;
+          font-size: 18px;
+          float: left;
+          font-weight: bold;
+
+          transition: background-color .5s;
+        }
+
+        li:hover {
+          background-color: $main_color01;
+          color: white;
+        }
+
+        li:click {
+          background-color: $main_color01;
+          color: white;
+        }
+      }
+    }
+
+  }
+
+  // border-bottom: 2px, bold, $main_color01;
+}

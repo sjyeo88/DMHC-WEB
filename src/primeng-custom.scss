@@ -26,3 +26,13 @@
 .regist-form .date-picker, .regist-form .dropdown, .regist-form .fileUploader{
   margin-top: $regist_input_top_margin;
 }
+.ui-togglebutton.ui-button.ui-state-active,
+.ui-selectbutton .ui-button.ui-state-active, {
+  background-color: $main_color01;
+  box-shadow: 0 0 5px $form_border_color;
+}
+.ui-togglebutton .ui-button.ui-state-focus.ui-state-active,
+.ui-selectbutton .ui-button.ui-state-focus.ui-state-active {
+  border: none;
+  box-shadow: 0 0 5px $form_border_color;
+}

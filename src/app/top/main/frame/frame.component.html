@@ -1,0 +1,38 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : frame                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+ <!-- predefiend loading template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewbox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="frame">
+  <div class="map">
+    <a routerLink ="../">Home</a> >   {{ title }}  >  {{ page }}
+  </div>
+
+  <div class="frame-title">
+    {{ page }}
+  </div>
+  <router-outlet></router-outlet>
+</div>

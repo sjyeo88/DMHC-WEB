@@ -1,6 +1,6 @@
 import { AppPage } from './app.po';
 
-describe('dmhc-web App', () => {
+describe('dmhc-web2 App', () => {
   let page: AppPage;
 
   beforeEach(() => {

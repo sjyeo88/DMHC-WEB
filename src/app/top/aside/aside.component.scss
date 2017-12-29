@@ -1,0 +1,77 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : aside                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import "../../../scss-variable.scss";
+
+.aside {
+  float: left;
+  height: 642px;
+  // margin-left: 10px;
+  // transform: translate(-200px);
+  width: 287px;
+  margin: 14px;
+  // background-color: rgb(34, 119, 72);
+  // border: 1px solid;
+  overflow: hidden;
+
+  .sub-title {
+    background-color: $main_color01;
+    height: 75px;
+    color: white;
+
+    font-size: 36px;
+    font-weight: bold;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    text-align: center;
+  }
+
+  .sub-menu {
+    cursor:pointer;
+    li {
+      border-bottom: 1px solid $gray_light;
+      font-size: 18px;
+      padding-top: 16px;
+      padding-bottom: 16px;
+      padding-left: 19px;
+      padding-right: 19px;
+      height: 52px;
+      .arrow {
+        float:right;
+        font-family: NanumGothicEXB;
+        font-weight:bolder;
+        font-size: 16px;
+        color: gray_light;
+      }
+      .arrow-red {
+        float:right;
+        font-family: NanumGothicEXB;
+        font-weight:bolder;
+        font-size: 16px;
+        color: red;
+        // color: $correct_color;
+        // color: blue;
+      }
+    }
+
+    li:hover {
+      font-weight: bold;
+      .arrow {
+        float:right;
+        font-size: 16px;
+        font-family: NanumGothicEXB;
+        font-weight: bold;
+        color: $button_hover_color;
+      }
+    }
+
+  }
+}

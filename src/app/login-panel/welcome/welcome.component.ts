@@ -10,8 +10,8 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
-import { Admin } from '../../get-data/get-data';
-import { Req2 } from '../../get-data/get-public-data.service';
+import { Admin } from '../../service/get-data';
+import { Req2 } from '../../service/get-public-data.service';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 

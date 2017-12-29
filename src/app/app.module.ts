@@ -22,13 +22,27 @@ import { DropdownModule } from 'primeng/primeng';
 import { CheckboxModule } from 'primeng/primeng';
 import { FileUploadModule } from 'primeng/primeng';
 import { GrowlModule } from 'primeng/primeng';
+import { SelectButtonModule } from 'primeng/primeng';
+import { ConfirmDialogModule } from 'primeng/primeng';
+import { ConfirmationService } from 'primeng/primeng';
+import { DialogModule } from 'primeng/primeng';
+
+import { QuillModule } from 'ngx-quill'
 
 import { AppRoutingModule } from './app-routing.module';
+import { UserService } from './top/user.service'
+import { Layout } from './top/layout.service'
 
 import { PhonePipe } from './pipes/phone';
 import { ErrorComponent } from './error/error.component';
 import { TopComponent } from './top/top.component';
-import { JwtHelper } from 'angular2-jwt';
+import { HeaderComponent } from './top/header/header.component';
+import { AsideComponent } from './top/aside/aside.component';
+import { MainComponent } from './top/main/main.component';
+import { ShortcutComponent } from './top/main/shortcut/shortcut.component';
+import { ExpireComponent } from './expire/expire.component';
+import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component';
+import { FrameComponent } from './top/main/frame/frame.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +57,13 @@ import { JwtHelper } from 'angular2-jwt';
     ErrorComponent,
     TopComponent,
     ConfirmComponent,
+    HeaderComponent,
+    AsideComponent,
+    MainComponent,
+    ShortcutComponent,
+    ExpireComponent,
+    NewLectureComponent,
+    FrameComponent,
   ],
   imports: [
     BrowserModule,
@@ -57,10 +78,16 @@ import { JwtHelper } from 'angular2-jwt';
     CheckboxModule,
     FileUploadModule,
     GrowlModule,
+    QuillModule,
+    SelectButtonModule,
+    ConfirmDialogModule,
+    DialogModule,
   ],
   providers: [
     Title,
-    JwtHelper,
+    UserService,
+    ConfirmationService,
+    Layout,
   ],
   bootstrap: [
     AppComponent,

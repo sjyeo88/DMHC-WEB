@@ -23,7 +23,6 @@ export class LoginPanelComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
-    console.log(document.cookie)
   }
 
 

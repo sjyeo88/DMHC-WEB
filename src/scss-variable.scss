@@ -4,6 +4,7 @@ $black: #000000;
 $gray_darken: #4A4A4A;
 $gray_mid: #979797;
 $gray_light: #c4c4c4;
+$gray_bright: #F1F1F1;
 $crimson: #94282C;
 $light_blue: #008cff;
 $bluish_green: #009E73;
@@ -16,7 +17,7 @@ $error_color: $vermilion;
 $form_border_color: $gray_mid;
 $img_border_color: $gray_mid;
 $link_hover_color: $light_blue;
-$button_hover_color: lighten($main_color01, 5);
+$button_hover_color: lighten($main_color01, 20);
 
 
 // Index-page variables

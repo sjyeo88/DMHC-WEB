@@ -25,7 +25,7 @@ import { MessageService } from 'primeng/components/common/messageservice';
 })
 export class LoginComponent implements OnInit {
 
-  msgs:any[];
+  public msgs: Message[] = [];
   constructor(
     private msgSrv: MessageService,
     public lf:LoginData,
@@ -33,9 +33,7 @@ export class LoginComponent implements OnInit {
     public route: ActivatedRoute,
   ) { }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
   get email() {
     return this.lf.loginForm.get('email');
   }
@@ -57,9 +55,6 @@ public onSubmit() {
       http.send(formData)
       http.Complete = () =>{
         this.lf.loginForm.reset();
-        console.log(http.response);
-        // seesionStorage()
-        sessionStorage.setItem('token', http.response);
         this.router.navigate(['../../top'], {relativeTo: this.route})
       }
       http.ServErr = () =>{

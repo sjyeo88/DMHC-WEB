@@ -1,0 +1,149 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : new-lecture                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+ <!-- <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script> -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+<p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="300" [responsive]="true">
+        <input type="text" name="" value="" [style.width.%]="100">
+        <p-footer>
+            <button type="button" pButton icon="fa-check" (click)="saveAsDialogView=false" label="Yes"></button>
+            <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="No"></button>
+        </p-footer>
+</p-dialog>
+
+
+ <!-- predefiend loading template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewbox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="new-lecture">
+  <div class="line0"  [style.height.px]="pageHeight">
+    <li class="label">
+      심리교육 이름
+    </li>
+    <li class="label">
+      생성방식 선택
+    </li>
+    <li class="label" *ngIf="!isPDF">
+      페이지 선택
+    </li>
+    <li class="label" *ngIf="!isPDF" [style.margin-top.px]="40">
+      Page편집
+    </li>
+    <li class="label" *ngIf="isPDF" [style.margin-top.px]="40" >
+      PDF 선택
+    </li>
+  </div>
+  <div class="line1">
+    <form class="" [formGroup]="ltr.lectureForm" action="index.html" method="post">
+      <li>
+        <input type="text" value="" formControlName="title" [style.width.px]="320">
+        <span class="valid-error">X  잘못되었습니다!</span>
+      </li>
+      <li>
+        <span>
+          <p-selectButton
+          [options]='optWay'
+          [styleClass]="selectButton"
+          (onChange)="onWayChange($event)"
+          [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="isPDF">
+          </p-selectButton>
+        </span>
+      </li>
+      <div *ngIf="isPDF===false">
+        <li>
+          <p-dropdown  [options]="lectureModel.pages"
+            placeholder="페이지를 선택해주세요" filter="true"
+            styleClass="dropdown"
+            formControlName="page"
+            (onChange)="changePage($event.value)"
+          ></p-dropdown>
+          <span class="page-control" [style.margin-left.px]="10">
+            <button type="button" (click)="addPage()">새 페이지 추가</button>
+            <button type="button"  (click)="confirmDel()">현재 페이지 삭제</button>
+            <button type="button" (click)="insertPage()">아래에 페이지 삽입</button>
+          </span>
+        </li>
+      </div>
+
+      <p-fileUpload
+        [style]="{width: '600px'}"
+        name="license_file"
+        *ngIf="isPDF"
+        url="http://localhost:3001/api/auth/license"
+        showCancelButton="false"  auto="true"
+        customUpload="true"
+        (onRemove)= "onRemoved($event)"
+        (uploadHandler)="onUpload($event)"
+        styleClass="file-uploader" accept="application/pdf"
+        maxFileSize="10000000"
+        invalidFileSizeMessageSummary= "{0}: 파일 사이즈가 맞지않습니다."
+        invalidFileSizeMessageDetail= "({0} 이하)"
+        invalidFileTypeMessageSummary= "{0}: 파일 타입이 맞지않습니다."
+        invalidFileTypeMessageDetail= "(pdf)">
+      </p-fileUpload>
+      <li class='editor' *ngIf="!isPDF">
+        <quill-editor [style]="{height: '900px'}"
+         formControlName="editor"
+         (onEditorCreated)="editorCreated($event)"
+         (onContentChanged)="quickSavePage($event)"
+         placeholder="교육내용을 작성해 주세요."
+        >
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-size">
+                  <option selected>Default</option>
+                  <option value="10px">10px</option>
+                  <option value="16px">16px</option>
+                  <option value="32px">32px</option>
+                  <option value="48px">48px</option>
+                  <option value="64px">64px</option>
+                  <option value="128px">128px</option>
+                </select>
+                <select class="ql-font"></select>
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+                <button class="ql-image"></button>
+              </span>
+            </div>
+          </quill-editor>
+        </li>
+        <li [style.margin-left.px]="210" [style.margin-top.px]="10">
+          <span>
+            <button type="button" name="button" [style.width.px]="250" (click)="confirmSaveAs()">다른 이름으로 저장하기</button>
+            <button type="button" (click)="confirmSave()">저장하기</button>
+          </span>
+        </li>
+        <li  [style.margin-left.px]="210">
+          <span>
+            <button type="button" name="button">전체 미리보기</button>
+            <button type="button" name="button">페이지 미리보기</button>
+            <button type="button" name="button">작성 완료</button>
+          </span>
+        </li>
+    </form>
+  </div>
+</div>
