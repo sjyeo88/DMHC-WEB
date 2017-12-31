@@ -76,13 +76,10 @@ export class RegisterComponent implements OnInit {
 
 
   public onEmailBlur(value){
+    this.isMail = false;
     this.users.map((arg)=>{
       // console.log(arg.email);
-      if(arg.email === value) {
-        this.isMail = true;
-      } else {
-        this.isMail = false;
-      }
+      if(arg.email === value) this.isMail = true;
     })
   }
 

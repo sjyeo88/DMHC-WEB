@@ -10,16 +10,31 @@
 <!-- ##################################################################  -->
 
  <!-- need for message service of primeng -->
- <!-- <script src="https://cdn.quilljs.com/1.3.4/quill.js"></script> -->
 <p-growl [value]="msgs"></p-growl>
 <p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
-<p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="300" [responsive]="true">
-        <input type="text" name="" value="" [style.width.%]="100">
-        <p-footer>
-            <button type="button" pButton icon="fa-check" (click)="saveAsDialogView=false" label="Yes"></button>
-            <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="No"></button>
-        </p-footer>
+
+<p-dialog header="교육 불러오기" [(visible)]="loadDialogView" modal="modal" width="500" [responsive]="true">
+    "{{ loadedTitle.value }}"  교육을 불러오시겠습니까? <br>저장하지 않은 내용을 잃을 수 있습니다.
+    <p-footer>
+        <button type="button" pButton icon="fa-check" (click)="onLoad()" label="불러오기"></button>
+        <button type="button" pButton icon="fa-close" (click)="onLoadReject();" label="취소"></button>
+    </p-footer>
 </p-dialog>
+
+
+<div class="viewer-wrapper" *ngIf=preViewer>
+  <div class="viewer-background">
+  </div>
+  <div class="viewer">
+    <div class="viewer-content">
+      <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(quill.container.firstChild.innerHTML)"></div>
+        <!-- Need to check For Security -->
+    </div>
+    <div class="viewer-off" (click)='viewPreViewer(false)'>X</div>
+    <div class="viewer-move" id="viewer-next" (click)="movePreview(true)">▷</div>
+    <div class="viewer-move" id="viewer-prev" (click)="movePreview(false)">◁</div>
+  </div>
+</div>
 
 
  <!-- predefiend loading template -->
@@ -56,9 +71,58 @@
   </div>
   <div class="line1">
     <form class="" [formGroup]="ltr.lectureForm" action="index.html" method="post">
+      <p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="500" [responsive]="true">
+        <div [style.margin-bottom.px]="10">새 이름을 입력해 주세요.</div>
+        <div [style.margin-bottom.px]="10" *ngIf="asTitle.value == cuTitle"> (현재 이름과 동일합니다.) </div>
+        <div [style.margin-bottom.px]="10" *ngIf="isAsTitle"> (기존 교육중 동일한 이름이 존재합니다.) </div>
+              <input type="text"
+              formControlName="asTitle"
+              [style.width.%]="100">
+              <p-footer>
+                  <button type="button" pButton icon="fa-check" (click)="saveAs()" label="저장하기"></button>
+                  <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="취소"></button>
+              </p-footer>
+      </p-dialog>
       <li>
-        <input type="text" value="" formControlName="title" [style.width.px]="320">
-        <span class="valid-error">X  잘못되었습니다!</span>
+        <span *ngIf="isNew">
+          <input type="text"
+          formControlName="title"
+          placeholder="심리교육 이름을 입력해주세요."
+          (blur)="onTitleChange()"
+          [style.width.px]="320">
+        </span>
+        <span *ngIf="!isNew"><p-dropdown  [options]="lectureModel.titles"
+            id="title"
+            placeholder="심리교육 이름을 선택해주세요" filter="true"
+            formControlName="loadedTitle"
+            [autofocus]="true"
+            (onFocus)="focusTitle()"
+            (onChange)="confirmLoad($event)"
+            [style]="{'width': '320px'}"
+        ></p-dropdown>
+        </span>
+
+        <span [style.margin-left.px]="10">
+        <p-selectButton
+          [options]='docWay'
+          [ngModelOptions]="{standalone: true}"
+          (onChange)="onDocWayChange($event)"
+          [(ngModel)]="isNew">
+          </p-selectButton>
+        </span>
+
+        <!-- <span class="valid-error" *ngIf="title.dirty && isTitle">
+          {{vmsg.titleLabel.invalid}}
+        </span> -->
+        <span class="valid-error" *ngIf="title.dirty && title.errors?.minlength">
+          {{vmsg.titleLabel.invalidMin}}
+        </span>
+        <span class="valid-error" *ngIf="title.dirty && title.errors?.maxlength">
+          {{vmsg.titleLabel.invalidMax}}
+        </span>
+        <span class="valid-error" *ngIf="title.dirty && title.errors?.required">
+          {{vmsg.titleLabel.require}}
+        </span>
       </li>
       <li>
         <span>
@@ -75,9 +139,7 @@
         <li>
           <p-dropdown  [options]="lectureModel.pages"
             placeholder="페이지를 선택해주세요" filter="true"
-            styleClass="dropdown"
-            formControlName="page"
-            (onChange)="changePage($event.value)"
+              formControlName="page"
           ></p-dropdown>
           <span class="page-control" [style.margin-left.px]="10">
             <button type="button" (click)="addPage()">새 페이지 추가</button>
@@ -139,8 +201,7 @@
         </li>
         <li  [style.margin-left.px]="210">
           <span>
-            <button type="button" name="button">전체 미리보기</button>
-            <button type="button" name="button">페이지 미리보기</button>
+            <button type="button" name="button" [style.width.px]="250" (click)="viewPreViewer(true)">미리보기</button>
             <button type="button" name="button">작성 완료</button>
           </span>
         </li>

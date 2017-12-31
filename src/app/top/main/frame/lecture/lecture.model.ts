@@ -1,9 +1,15 @@
 export class LectureModelHTML {
   name:string = '';
+  titles: Title[] = [];
   pages: Page[] = [
     // {value:1, get label ():string {return 'Page '+ this.value.toString()}, html:''},
     {value:1, label:'Page 1', html:''},
   ];
+  page_backup: Page[] = [
+    // {value:1, get label ():string {return 'Page '+ this.value.toString()}, html:''},
+    {value:1, label:'Page 1', html:''},
+  ];
+
 
   public addPage():number {
     let lastPage = this.pages.length;
@@ -46,4 +52,10 @@ interface Page {
   value:number;
   label:string;
   html:string;
+}
+
+interface Title {
+  value:string;
+  id:number;
+  label:string;
 }

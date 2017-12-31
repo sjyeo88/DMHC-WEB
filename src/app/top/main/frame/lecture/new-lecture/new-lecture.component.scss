@@ -32,10 +32,20 @@
   margin-left: calc(15% + 5px);
   width: 80%;
   background-color: $gray_bright;
-  .selectButton:active {
-    background-color: $main_color01;
+  .selectButton{
+    border-radius: 10px;
+    background-color: #204124;
+  }
+  // .selectButton:active {
+  //   background-color: rgb(29, 164, 156);
+  // }
+  input {
+    padding: 3px;
+    height: 1.8em;
+    font-size: 16px;
   }
   button {
+    border-radius: 5px;
     margin-left: 5px;
     width: 120px;
   }
@@ -59,3 +69,123 @@
       box-shadow: none;
     }
   }
+
+  .valid-error {
+    padding:5px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    margin-left: 20px;
+    border-radius: 5px;
+    background-color: rgb(255, 182, 170);
+    color: $main_color01;
+    font-weight: bold;
+    border-color:inherit;
+  }
+  .valid-warning{
+    padding:5px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    margin-left: 20px;
+    border-radius: 5px;
+    background-color: rgb(242, 240, 189);
+    color: rgb(196, 141, 0);
+    font-weight: bold;
+    border-color:inherit;
+  }
+
+  // .pre-viewer{
+  //   display: absolute;
+  // }
+
+.viewer-wrapper {
+    .viewer-background {
+      position: fixed;
+      left:0;
+      top:0;
+      z-index: 10;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    $viewer-width: 675px;
+    $viewer-height: 1250px;
+    $viewer-zoom-out: .6;
+    .viewer {
+      position: fixed;
+      z-index: 11;
+      zoom: $viewer-zoom-out;
+      left:50%;
+      top:50%;
+      transform: translate(-50%, -50%);
+      width: $viewer-width;
+      height: $viewer-height;
+      background-color: transparent;
+      border-radius: 50px;
+      background-image: url('./../../../../../../assets/img/Android-Wireframe.png');
+
+        .viewer-content{
+          position: absolute;
+          width: 600px;
+          height: 900px;
+          top: 153px;
+          left: 37px;
+          border: 2px solid red;
+        }
+
+        .viewer-off{
+          position: absolute;
+          cursor: pointer;
+          left: 600px;
+          top: 30px;
+          width: 40px;
+          height: 40px;
+          color: white;
+          font-size: 30px;
+          font-family: 'NanumGothicEXB';
+          font-weight: border;
+          text-align: center;
+          border-radius: 3px;
+          border: 3px solid $gray_light;
+
+          -webkit-transition: background-color .2s;
+          -moz-transition: background-color .2s;
+          transition: background-color .2s;
+        }
+        .viewer-off:hover{
+          background-color: $gray_light;
+        }
+
+        .viewer-move {
+          cursor: pointer;
+          position: absolute;
+          font-size: 50px;
+          color: white;
+          top:1060px;
+          padding-left: 40px;
+          padding-right: 40px;
+          padding-top: 10px;
+          padding-bottom: 5px;
+          border-radius: 5px;
+
+          -webkit-transition: background-color .2s;
+          -moz-transition: background-color .2s;
+          transition: background-color .2s;
+        }
+
+        .viewer-move:hover {
+          background-color: $gray_light;
+        }
+
+        #viewer-next {
+          left:450px;
+        }
+        #viewer-prev {
+          left:100px;
+        }
+    }
+
+
+}

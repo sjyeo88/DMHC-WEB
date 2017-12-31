@@ -26,6 +26,7 @@ import { SelectButtonModule } from 'primeng/primeng';
 import { ConfirmDialogModule } from 'primeng/primeng';
 import { ConfirmationService } from 'primeng/primeng';
 import { DialogModule } from 'primeng/primeng';
+import { OverlayPanelModule } from 'primeng/primeng';
 
 import { QuillModule } from 'ngx-quill'
 
@@ -82,6 +83,7 @@ import { FrameComponent } from './top/main/frame/frame.component';
     SelectButtonModule,
     ConfirmDialogModule,
     DialogModule,
+    OverlayPanelModule,
   ],
   providers: [
     Title,
