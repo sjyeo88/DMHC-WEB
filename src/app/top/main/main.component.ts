@@ -11,11 +11,25 @@
 
 import { Component, OnInit, ViewChild  } from '@angular/core';
 import { ShortcutComponent } from './shortcut/shortcut.component';
+import { NewLectureData } from './frame/lecture/new-lecture-data';
+import { LectureRegexValidators } from './frame/lecture/new-lecture.validator'
+import { LectureService } from './frame/lecture/lecture.service'
+import { NewSurveyForm } from './frame/survey/new-survey/new-survey.form'
+import { EditSurveyForm } from './frame/survey/edit-survey/edit-survey.form'
+import { AssignForm } from './frame/assign/assign/assign.form'
 
 @Component({
   selector: 'app-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  providers: [
+    NewLectureData,
+    LectureRegexValidators,
+    LectureService,
+    EditSurveyForm,
+    NewSurveyForm,
+    AssignForm,
+  ]
 })
 export class MainComponent implements OnInit {
   @ViewChild(ShortcutComponent) shortcut: ShortcutComponent;

@@ -27,12 +27,22 @@
   </div>
   <div class="viewer">
     <div class="viewer-content">
-      <div [innerHTML]="sanitizer.bypassSecurityTrustHtml(quill.container.firstChild.innerHTML)"></div>
+
+      <div *ngIf="!isPDF" [innerHTML]="sanitizer.bypassSecurityTrustHtml(quill.container.firstChild.innerHTML)"></div>
         <!-- Need to check For Security -->
+        <pdf-viewer id=pdf-viewer *ngIf="isPDF"
+        [(src)]="pdfSrc"
+        [show-all]="false"
+        [(page)]="pdfPage"
+        style="display: block;"
+        > </pdf-viewer>
+        <!-- <canvas id="pdf-canvas"></canvas> -->
     </div>
     <div class="viewer-off" (click)='viewPreViewer(false)'>X</div>
-    <div class="viewer-move" id="viewer-next" (click)="movePreview(true)">▷</div>
-    <div class="viewer-move" id="viewer-prev" (click)="movePreview(false)">◁</div>
+    <div class="viewer-move" id="viewer-next" *ngIf="!isPDF" (click)="movePreview(true)">▷</div>
+    <div class="viewer-move" id="viewer-prev" *ngIf="!isPDF" (click)="movePreview(false)">◁</div>
+    <div class="viewer-move" id="viewer-next" *ngIf="isPDF" (click)="movePdfPreview(true)">▷</div>
+    <div class="viewer-move" id="viewer-prev" *ngIf="isPDF" (click)="movePdfPreview(false)">◁</div>
   </div>
 </div>
 
@@ -79,7 +89,7 @@
               formControlName="asTitle"
               [style.width.%]="100">
               <p-footer>
-                  <button type="button" pButton icon="fa-check" (click)="saveAs()" label="저장하기"></button>
+                  <button type="submit" pButton icon="fa-check" (click)="saveAs()" label="저장하기"></button>
                   <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="취소"></button>
               </p-footer>
       </p-dialog>
@@ -95,7 +105,6 @@
             id="title"
             placeholder="심리교육 이름을 선택해주세요" filter="true"
             formControlName="loadedTitle"
-            [autofocus]="true"
             (onFocus)="focusTitle()"
             (onChange)="confirmLoad($event)"
             [style]="{'width': '320px'}"
@@ -129,7 +138,7 @@
           <p-selectButton
           [options]='optWay'
           [styleClass]="selectButton"
-          (onChange)="onWayChange($event)"
+          (onChange)="onWayChange()"
           [ngModelOptions]="{standalone: true}"
           [(ngModel)]="isPDF">
           </p-selectButton>
@@ -153,7 +162,6 @@
         [style]="{width: '600px'}"
         name="license_file"
         *ngIf="isPDF"
-        url="http://localhost:3001/api/auth/license"
         showCancelButton="false"  auto="true"
         customUpload="true"
         (onRemove)= "onRemoved($event)"
@@ -202,7 +210,7 @@
         <li  [style.margin-left.px]="210">
           <span>
             <button type="button" name="button" [style.width.px]="250" (click)="viewPreViewer(true)">미리보기</button>
-            <button type="button" name="button">작성 완료</button>
+            <button type="button" name="button" (click)=finishLecture()>작성 완료</button>
           </span>
         </li>
     </form>

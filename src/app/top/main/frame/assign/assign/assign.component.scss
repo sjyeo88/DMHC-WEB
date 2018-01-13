@@ -1,0 +1,140 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : assign                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../../scss-variable.scss';
+.assign {
+  font-family: 'NanumBarunGothicOTF';
+  color: white;
+}
+
+@mixin item($border-color) {
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 2px solid $border-color;
+  input {
+    margin-bottom: 25px;
+    height: 30px;
+    width: 300px;
+  }
+  p {
+    padding: 8px;
+    margin-bottom: 13px;
+    font-weight: bold;
+  }
+  label {
+    @extend p;
+    display: inline-block;
+    color: $gray_darken;
+    width: 170px;
+    margin-bottom: 0;
+    input {
+      margin-left: 10px;
+      margin-right: 10px;
+      margin-bottom: 0;
+    }
+  }
+  ul {
+    overflow: hidden;
+    color: $gray_darken;
+    padding-left: 30px;
+    margin-top: 30px;
+    p {
+        padding-left: 0;
+        font-weight: normal;
+        margin: 0;
+        color: $gray_darken;
+    }
+    li {
+      margin-top: 5px;
+      margin-bottom: 5px;
+
+      height: 30px;
+    }
+  }
+  span {
+    @extend label;
+    font-weight: normal;
+    width: auto;
+    padding: 0;
+    margin-bottom: 0;
+    margin-left: 10px;
+    padding: 0;
+  }
+}
+
+
+.title {
+  @include item(white);
+  background-color: $gray_bright;
+}
+.titleLabel {
+  @include item(white);
+  background-color: $main_color01;
+}
+.assignLabel {
+  @include item(white);
+  background-color: $main_color01;
+}
+
+
+
+
+.assign-obj-view {
+  @include item(white);
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-bottom: 5px;
+  -webkit-transition: max-height .5s;
+  -moz-transition: max-height .5s;
+  transition: max-height .5s;
+  max-height: 5000px;
+  background-color: #e2e2e2;
+
+  .accordion {
+    cursor: pointer;
+    .i-down {
+      color: $main_color01;
+      -webkit-transform: rotate(180deg);
+      -moz-transform: rotate(180deg);
+      transform: rotate(180deg);
+    }
+    .i-up {
+      color: $main_color01;
+    }
+    float: right;
+    color: $gray_darken;
+    font-size: 20px;
+    margin-right: 15px;
+    margin-top: 15px;
+  }
+
+
+  @mixin grids() {
+    @include item(#e2e2e2);
+    background-color: $gray_bright;
+    padding: 15px;
+    p {
+      color:$gray_darken;
+    }
+  }
+  .cond{ @include grids;}
+  .cond-hide{ @include grids; display:none;}
+}
+
+.assign-obj-hidden {
+  @extend .assign-obj-view;
+  -webkit-transition: max-height .2s;
+  -moz-transition: max-height .2s;
+  transition: max-height .2s;
+
+  max-height: 150px;
+}

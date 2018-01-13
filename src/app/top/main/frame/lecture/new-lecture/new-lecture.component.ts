@@ -18,15 +18,19 @@ import { NewLectureData, Lecture} from  '../new-lecture-data';
 import * as Quill from 'quill/dist/quill'
 import { Req2 } from './../../../../../service/get-public-data.service';
 import { ConfirmationService } from 'primeng/primeng'
-import { ValidMsgs, RegexValidators } from './../new-lecture.validator'
+import { LectureValidMsgs, LectureRegexValidators } from './../new-lecture.validator'
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router'
 
 // Observable operators
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/pairwise';
 import 'rxjs/add/observable/from';
+
+// PDF to HTML 3rd Party
+
 
 // import { YQuill } from './../../../../../ysjmodule/yquill.module'
 
@@ -34,7 +38,7 @@ import 'rxjs/add/observable/from';
   selector: 'app-new-lecture',
   templateUrl: './new-lecture.component.html',
   styleUrls: ['./new-lecture.component.scss'],
-  providers: [ NewLectureData, ValidMsgs, RegexValidators],
+  providers: [ LectureValidMsgs, ],
 })
 export class NewLectureComponent implements OnInit {
 
@@ -68,12 +72,26 @@ export class NewLectureComponent implements OnInit {
   public preViewer:boolean= false;
 
   public asTitleSub:Subscription;
+
+  public fileSelected:boolean;
+  public lecture_files:any[] = [];
+
+  public pdfPage:number = 1;
+  public pdfPageMax:number = 0;
+  public pdfSrc = {
+    url:'',
+    // httpHeaders: {"Access-Control-Allow-Headers": "Accept-Ranges"},
+    withCredentials: true,
+  }
+  public isSaved:boolean ;
+
   constructor(
     public lay: Layout,
     public ltr:NewLectureData,
     public confirm:ConfirmationService,
-    public vmsg:ValidMsgs,
-    private sanitizer: DomSanitizer
+    public vmsg:LectureValidMsgs,
+    private sanitizer: DomSanitizer,
+    public route: ActivatedRoute,
   ) {
     this.optWay = [
       {label:'직접작성', value: false},
@@ -87,9 +105,12 @@ export class NewLectureComponent implements OnInit {
 
   ngOnInit() {
     this.lay.asideView();
-    sessionStorage.setItem('title', this.lay.submenus.lecture.title);
-    sessionStorage.setItem('page', this.lay.submenus.lecture.menus[1]);
     this.lay.currentPage = this.lay.submenus.lecture.menus[1];
+    this.lay.cuTitle.title = this.lay.submenus.lecture.title
+    this.lay.cuTitle.page =  this.lay.submenus.lecture.menus[1];
+    this.lay.currentMenu =  this.lay.submenus.lecture;
+
+
 
     this.lectureModel = new LectureModelHTML();
     setTimeout(()=>{
@@ -112,35 +133,56 @@ export class NewLectureComponent implements OnInit {
       .subscribe(
         data => { this.onAsTitleChange(data) },
         () => {console.log('Finished')}
-    );
+      );
 
     this.ltr.lectureForm.controls.page.valueChanges
       .subscribe(
         data => { this.changePage(data) },
         () => {console.log('Finished')}
     );
-    // this.ltr.lectureForm.controls.title.valueChanges
-    //   .debounceTime(500)
-    //   .subscribe(
-    //     data => { this.onTitleChange(data) },
-    //     () => {console.log('Finished')}
-    //   );
 
     this.ltr.lectureForm.controls.loadedTitle.valueChanges
       .pairwise()
       .subscribe(pair => {
         this.lastSelectedTitle = pair[0];
-      })
+    })
 
+    this.ltr.lectureForm.controls.title.valueChanges
+      .debounceTime(500)
+      .subscribe(
+        data => {
+          this.isSaved = false;
+          this.pdfSrc.url = '';
+          this.getLecture(()=>{
+            this.lectures.map((obj)=>{
+              if(obj.title === this.title.value) {
+                this.isSaved=true;
+              }
+            })
+          })
+        },
+        () => {console.log('Finished')}
+      );
+
+    if(this.route.snapshot.paramMap.get('isParam')) {
+        let title = this.route.snapshot.paramMap.get('title')
+        console.log(title)
+        this.isNew = false;
+        this.focusTitle()
+        this.ltr.lectureForm.patchValue({loadedTitle: title})
+        this.onLoad()
+        // this.confirmLoad(null);
+    }
   }
 
 
-  onWayChange(eventlback) {
+  onWayChange() {
     this.Debug = this.isPDF;
     setTimeout(()=>{
       let line1 = document.getElementsByClassName('line1')[0];
       let height = window.getComputedStyle(line1, null).getPropertyValue('height');
       this.pageHeight = height.replace('px', '');
+
     }, 10)
   }
 
@@ -164,8 +206,8 @@ export class NewLectureComponent implements OnInit {
     let removedPage = this.lectureModel.delPage(this.cuPageNum, (number)=>{
       this.msgs = [];
       this.msgs.push({severity: 'success', summary:'삭제 완료', detail: number + '번째 페이지가 삭제되었습니다.'});
-      console.log(this.lectureModel.pages.length)
-      console.log(this.ltr.lectureForm.value.page)
+      // console.log(this.lectureModel.pages.length)
+      // console.log(this.ltr.lectureForm.value.page)
       if(this.lectureModel.pages.length <= this.ltr.lectureForm.value.page) {
         this.ltr.lectureForm.patchValue({page: this.lectureModel.pages.length});
         this.changePage(this.lectureModel.pages.length)
@@ -187,7 +229,7 @@ export class NewLectureComponent implements OnInit {
       // if(obj.value === this.cuPageNum) this.ltr.controls.['editor'].patchValue(obj.html);
       if(obj.value === this.cuPageNum) {
         this.quill.container.firstChild.innerHTML = obj.html;
-        console.log(obj.html);
+        // console.log(obj.html);
       }
     })
   }
@@ -236,7 +278,7 @@ export class NewLectureComponent implements OnInit {
 
   onAsTitleChange(value) {
     this.isAsTitle = false;
-    console.log('Work')
+    // console.log('Work')
     this.getLecture(()=>{
       this.lectures.map((obj)=>{
         if(obj.title === value ) {
@@ -246,13 +288,14 @@ export class NewLectureComponent implements OnInit {
     })
   }
 
-  focusTitle(){
+  focusTitle(callback?){
     if(!this.lectureLoading) {
       this.getLecture(()=>{
         this.lectureModel.titles=[];
         this.lectures.map((obj)=>{
           this.lectureModel.titles.push({value:obj.title, label:obj.title, id:obj.idLECTURE})
         })
+        if(callback) callback();
       })
     }
     return null
@@ -260,25 +303,48 @@ export class NewLectureComponent implements OnInit {
 
   onLoad() {
     this.loadDialogView = false;
-    let formData = new FormData();
-    this.lectureModel.titles.map((obj)=>{
-      if(obj.value === this.loadedTitle.value) {
-        const url:string = '/data/lecture/html/'+obj.id;
-        let http = new Req2('get', url)
-            http.send()
-            http.Complete = ()=>{
-              this.lectureModel.pages=[];
-              JSON.parse(http.response).map((obj)=>{
-                this.lectureModel.pages.push({value:obj.page_no, label:'Page '+obj.page_no, html:obj.html})
-              });
-              setTimeout(()=>{
-                this.ltr.lectureForm.patchValue({page: 1});
-                this.changePage(1);
-              }, 500)
-            }
-      }
-    })
+    console.log('Works')
+    this.getLecture(()=>{
+    // console.log(this.lectures);
+    this.lectures.map((obj)=>{
+    if(obj.title === this.loadedTitle.value) {
+    this.isPDF = (obj.type===1) ? true : false;
+    this.onWayChange();
+    // console.log(this.isPDF);
+    if(!this.isPDF) {
+      let formData = new FormData();
+      this.lectureModel.titles.map((obj)=>{
+        if(obj.value === this.loadedTitle.value) {
+          const url:string = '/data/lecture/html/'+obj.id;
+          let http = new Req2('get', url)
+              http.send()
+              http.Complete = ()=>{
+                this.lectureModel.pages=[];
+                JSON.parse(http.response).map((obj)=>{
+                  this.lectureModel.pages.push({value:obj.page_no, label:'Page '+obj.page_no, html:obj.html})
+                });
+                setTimeout(()=>{
+                  this.ltr.lectureForm.patchValue({page: 1});
+                  this.changePage(1);
+                  this.isSaved = true;
+                }, 500)
+              }
+          }
+        })
+    } else {
+      // if(this.isSaved) {
+        console.log(this.isSaved);
+        this.pdfPageMax = obj.page_no
+        this.isSaved = true;
+        this.msgs = [];
+        this.msgs.push({severity: 'success',
+        summary:'불러오기 완료',
+        detail: this.loadedTitle.value+ ' 교육을 불러오기 하였습니다.'})
+    }
+  }})
+  })
   }
+
   onLoadReject() {
     if(this.lastSelectedTitle) {
       this.ltr.lectureForm.patchValue({loadedTitle: this.lastSelectedTitle})
@@ -310,12 +376,15 @@ export class NewLectureComponent implements OnInit {
         formData.append('lectureId', id);
         http.send(formData)
         http.Complete = () =>{
+          this.isSaved = true;
           this.msgs = [];
           this.msgs.push({
           severity: 'success',
           summary: '페이지 저장 완료',
           detail: '모든 페이지가 저장되었습니다.'})
         }
+        if(this.isNew && title) this.ltr.lectureForm.patchValue({title: title})
+        if(!this.isNew && title) this.ltr.lectureForm.patchValue({loadedTitle: title})
         http.ServErr = () =>{ this.msgs.push(http.smsgs) }
         http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
       })
@@ -326,8 +395,11 @@ export class NewLectureComponent implements OnInit {
  getLectureId(callback) {
    let lectureId:number;
     this.lectures.map((obj)=>{
-      if(obj.title ===  this.ltr.lectureForm.value.title)
-        lectureId = obj.idLECTURE;
+      if(this.isNew) {
+        if(obj.title ===  this.ltr.lectureForm.value.title) lectureId = obj.idLECTURE;
+      } else {
+        if(obj.title ===  this.ltr.lectureForm.value.loadedTitle) lectureId = obj.idLECTURE;
+      }
     })
     callback(lectureId)
  }
@@ -344,7 +416,7 @@ export class NewLectureComponent implements OnInit {
 
 confirmSave() {
   let prefix = ""
-  console.log(this.isTitle);
+  // console.log(this.isTitle);
   if(this.isTitle&&this.isNew)  {
     prefix = "동일한 이름을 가진 교육이 있습니다. "
   }
@@ -352,7 +424,8 @@ confirmSave() {
      message: prefix + '현재 교육을 저장하시겠습니까?',
      header: '저장 확인',
      accept: () => {
-       this.onSave();
+       if(!this.isPDF) this.onSave();
+       else this.onPdfSave();
      },
    })
  }
@@ -376,12 +449,32 @@ confirmSaveAs() {
 }
 
 saveAs() {
-  this.onSave(this.asTitle.value)
+  if(!this.isPDF) this.onSave(this.asTitle.value)
+  else  this.onPdfSave(this.asTitle.value)
   this.saveAsDialogView = false;
 }
 
 viewPreViewer(cond:boolean) {
-  this.preViewer = cond;
+  if(this.loadedTitle.value == "" && this.title.value == "" ) {
+    this.msgs= [];
+    this.msgs.push({severity: 'error',
+      summary:'교육 이름 미입력',
+      detail: '교육 이름을 먼저 입력해주세요.'})
+  } else {
+    if(this.isSaved) {
+      this.preViewer = cond;
+      if(this.isPDF) {
+        let url:string = 'http://localhost:3001/api/data/lecture/pdf/'
+        this.pdfSrc.url = this.isNew ? url + this.title.value : url + this.loadedTitle.value
+        console.log(this.pdfSrc);
+      }
+    } else {
+        this.msgs = [];
+        this.msgs.push({severity: 'error',
+        summary:'미리보기',
+        detail: '미리보기 전 저장해주세요.'})
+    }
+  }
 }
 
 //directon == true : Next, directon == Prev : Prev
@@ -390,7 +483,6 @@ movePreview(direction:boolean) {
   if((this.cuPageNum > 1 && !direction) ||
      (this.cuPageNum < this.lectureModel.pages.length && direction)) {
     this.cuPageNum = this.cuPageNum + (direction ? 1 : -1);
-    console.log(this.cuPageNum);
     this.ltr.lectureForm.patchValue({page: this.cuPageNum})
     this.msgs= [];
     this.msgs.push({severity: 'info', summary:'페이지', detail: this.cuPageNum + '번째 페이지입니다.'})
@@ -401,10 +493,111 @@ movePreview(direction:boolean) {
   }
 }
 
-ngOnDestroy() {
-    sessionStorage.removeItem('title');
-    sessionStorage.removeItem('page');
+movePdfPreview(direction:boolean) {
+  let page
+  if((this.pdfPage > 1 && !direction) ||
+     (this.pdfPage < this.pdfPageMax && direction)) {
+    this.pdfPage = this.pdfPage + (direction ? 1 : -1);
+    // this.ltr.lectureForm.patchValue({page: this.cuPageNum})
+    this.msgs= [];
+    this.msgs.push({severity: 'info', summary:'페이지', detail: this.pdfPage + '번째 페이지입니다.'})
+  } else {
+    let prefix = direction ? '마지막' : '첫번째'
+    this.msgs= [];
+    this.msgs.push({severity: 'warn', summary:'페이지', detail: prefix + ' 페이지입니다.'})
+  }
 }
+
+  onUpload(event) {
+      this.fileSelected = true;
+      for(let file of event.files) {
+          this.lecture_files.push(file);
+      }
+      this.onWayChange();
+      // console.log(this.lecture_files);
+      this.lecture_files = event.files; //To uploading file data.
+      this.msgs = [];
+      this.msgs.push({severity: 'success', summary: '파일 선택 완료', detail: ''});
+  }
+
+  onRemoved(event) {
+    this.lecture_files.splice(this.lecture_files.indexOf(event.file), 1);
+  }
+
+  public onPdfSave(title?) {
+      const url:string = '/data/lecture/pdf' ;
+      const formData = new FormData();
+      this.msgs = [];
+      if(this.lecture_files[0]) {
+        let reader = new FileReader();
+        let data= reader.readAsBinaryString(this.lecture_files[0]);
+        reader.onloadend = () =>{
+          let count = reader.result.match(/\/Type[\s]*\/Page[^s]/g).length;
+          // console.log(reader.result);
+          this.pdfPageMax = count;
+          formData.append('lecture_file', this.lecture_files[0], this.lecture_files[0].name);
+          formData.append('all_page_no', count);
+          let http = new Req2('post', url, formData)
+          if(title) {
+            formData.append('title', title);
+          } else {
+            if(!this.isNew) {
+              formData.append('title', this.ltr.lectureForm.value.loadedTitle);
+            } else {
+              formData.append('title', this.ltr.lectureForm.value.title);
+            }
+          }
+          http.send(formData)
+          http.Complete = () =>{
+            this.isSaved = true;
+            this.msgs = [];
+            this.msgs.push({
+              severity: 'success',
+              summary: '파일 저장 완료',
+              detail: '저장되었습니다.'})
+            this.focusTitle(()=>{
+              if(this.isNew && title) this.ltr.lectureForm.patchValue({title: title})
+              if(!this.isNew && title) this.ltr.lectureForm.patchValue({loadedTitle: title})
+            })
+          }
+          http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+          http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
+        }
+      } else {
+            this.msgs = [];
+            this.msgs.push({
+              severity: 'error',
+              summary: '파일 선택.',
+              detail: '저장할 파일이 없습니다.'})
+
+      }
+  }
+
+  finishLecture() {
+    if(this.isSaved) {
+      this.getLectureId((id)=>{
+        let http = new Req2('put', '/data/lecture/' + id)
+        http.send();
+        http.Complete = ()=> {
+          this.lectures= JSON.parse(http.response);
+          // console.log(this.lectures);
+          this.isLecturesLoaded = true
+          this.msgs = [];
+          this.msgs.push({severity: 'success',
+          summary:'작성 완료',
+          detail: '해당 교육이 작성완료 처리 되었습니다.'})
+        }
+        http.ServErr = () =>{ this.msgs.push(http.smsgs) }
+        http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
+      })
+    } else {
+        this.msgs = [];
+        this.msgs.push({severity: 'error',
+        summary:'작성 완료 실패',
+        detail: '교육 작성 완료 전 저장해주세요.'})
+    }
+  }
+
 
 
 get editor() {
@@ -425,6 +618,5 @@ get asTitle() {
   return this.ltr.lectureForm.get('asTitle');
 }
 
-
-
+  ngOnDestroy() {}
 }

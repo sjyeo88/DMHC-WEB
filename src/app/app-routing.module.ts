@@ -16,6 +16,11 @@ import { MainComponent } from './top/main/main.component'
 import { ShortcutComponent } from './top/main/shortcut/shortcut.component'
 import { FrameComponent } from './top/main/frame/frame.component'
 import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component'
+import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-lecture.component'
+import { NewSurveyComponent } from './top/main/frame/survey/new-survey/new-survey.component'
+import { EditSurveyComponent } from './top/main/frame/survey/edit-survey/edit-survey.component'
+import { HashComponent } from './top/main/frame/assign/hash/hash.component'
+import { AssignComponent } from './top/main/frame/assign/assign/assign.component'
 
 
 const routes: Routes = [
@@ -31,8 +36,13 @@ const routes: Routes = [
             {path: 'shortcut', component: ShortcutComponent },
             {path: 'frame', component: FrameComponent,
               children: [
+                {path: 'lecture/all', component: AllLectureComponent },
                 {path: 'lecture/new', component: NewLectureComponent },
-              ]
+                {path: 'survey/new', component: NewSurveyComponent },
+                {path: 'survey/edit', component: EditSurveyComponent },
+                {path: 'assign/new', component: AssignComponent },
+                {path: 'assign/hash', component: HashComponent },
+                ]
             },
           ]
         },

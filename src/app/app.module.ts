@@ -1,9 +1,7 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, COMPOSITION_BUFFER_MODE } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClientModule } from '@angular/common/http'
 
 import { AppComponent } from './app.component';
 import { FooterComponent } from './footer/footer.component';
@@ -15,7 +13,6 @@ import { RegisterComponent } from './login-panel/register/register.component';
 import { WelcomeComponent } from './login-panel/welcome/welcome.component'
 import { ConfirmComponent } from './login-panel/confirm/confirm.component'
 
-import { AccordionModule } from 'primeng/components/accordion/accordion';
 import { MenuItem } from 'primeng/components/common/api';
 import { CalendarModule } from 'primeng/primeng'
 import { DropdownModule } from 'primeng/primeng';
@@ -27,8 +24,12 @@ import { ConfirmDialogModule } from 'primeng/primeng';
 import { ConfirmationService } from 'primeng/primeng';
 import { DialogModule } from 'primeng/primeng';
 import { OverlayPanelModule } from 'primeng/primeng';
+import { PaginatorModule } from 'primeng/primeng';
+import { RadioButtonModule } from 'primeng/primeng';
+import { SpinnerModule } from 'primeng/primeng';
 
 import { QuillModule } from 'ngx-quill'
+import { PdfViewerModule } from 'ng2-pdf-viewer'
 
 import { AppRoutingModule } from './app-routing.module';
 import { UserService } from './top/user.service'
@@ -42,8 +43,13 @@ import { AsideComponent } from './top/aside/aside.component';
 import { MainComponent } from './top/main/main.component';
 import { ShortcutComponent } from './top/main/shortcut/shortcut.component';
 import { ExpireComponent } from './expire/expire.component';
-import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component';
 import { FrameComponent } from './top/main/frame/frame.component';
+import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component';
+import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-lecture.component';
+import { HashComponent } from './top/main/frame/assign/hash/hash.component';
+import { NewSurveyComponent } from './top/main/frame/survey/new-survey/new-survey.component';
+import { EditSurveyComponent } from './top/main/frame/survey/edit-survey/edit-survey.component';
+import { AssignComponent } from './top/main/frame/assign/assign/assign.component';
 
 @NgModule({
   declarations: [
@@ -65,15 +71,17 @@ import { FrameComponent } from './top/main/frame/frame.component';
     ExpireComponent,
     NewLectureComponent,
     FrameComponent,
+    AllLectureComponent,
+    HashComponent,
+    NewSurveyComponent,
+    EditSurveyComponent,
+    AssignComponent,
   ],
   imports: [
     BrowserModule,
-    FormsModule,
-    HttpClientModule,
     ReactiveFormsModule,
     BrowserAnimationsModule,
     CalendarModule,
-    AccordionModule,
     DropdownModule,
     AppRoutingModule,
     CheckboxModule,
@@ -84,11 +92,18 @@ import { FrameComponent } from './top/main/frame/frame.component';
     ConfirmDialogModule,
     DialogModule,
     OverlayPanelModule,
+    PdfViewerModule,
+    PaginatorModule,
+    RadioButtonModule,
+    SpinnerModule, 
   ],
   providers: [
     Title,
     UserService,
     ConfirmationService,
+    { provide: COMPOSITION_BUFFER_MODE, // 한글 입력시 반영 타이밍 문제
+      useValue: false,
+    },
     Layout,
   ],
   bootstrap: [

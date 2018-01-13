@@ -1,10 +1,46 @@
 
 .date-picker {
   position: relative;
-  width: 200px;
+  width: 270px;
   height: 30px;
   border: solid 1px $form_border_color;
   font-size: 11pt;
+}
+
+.ui-spinner {
+  .ui-inputtext {
+    height: 30px;
+  }
+  margin-left: 10px;
+  margin-right: 10px;
+  height: 30px;
+  .ui-spinner-up{
+    box-shadow: none;
+    background: white;
+    color: $main_color01;
+    border: none;
+    border-right: 1px solid  $form_border_color;
+    border-top: 1px solid  $form_border_color;
+  }
+  .ui-spinner-down{
+    @extend .ui-spinner-up;
+    border-top:none;
+    border-right: 1px solid  $form_border_color;
+    border-bottom: 1px solid  $form_border_color;
+  }
+
+}
+
+.ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:focus {
+  color: $main_color01;
+  background-color: white;
+  border: 1px dotted  $form_border_color;
+}
+.ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:active,
+.ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:hover {
+  border-color: $button_hover_color;
+  background-color: $button_hover_color;
+  color: white;
 }
 
 
@@ -26,13 +62,74 @@
 .regist-form .date-picker, .regist-form .dropdown, .regist-form .fileUploader{
   margin-top: $regist_input_top_margin;
 }
+.ui-togglebutton.ui-button,
+.ui-selectbutton .ui-button, {
+  background-color: $main_color01;
+  box-shadow: none;
+}
+
+.time-picker {
+  margin: 10px;
+  margin: 10px;
+  .ui-calendar {
+    .ui-inputtext {
+      width: 120px;
+    }
+    .ui-datepicker{
+      position: absolute !important;
+      width: 120px;
+    }
+    .ui-timepicker{
+      div {
+        margin-left: 0;
+      }
+    }
+  }
+}
+
 .ui-togglebutton.ui-button.ui-state-active,
 .ui-selectbutton .ui-button.ui-state-active, {
   background-color: $main_color01;
-  box-shadow: 0 0 5px $form_border_color;
+  box-shadow: none;
 }
 .ui-togglebutton .ui-button.ui-state-focus.ui-state-active,
 .ui-selectbutton .ui-button.ui-state-focus.ui-state-active {
-  border: none;
-  box-shadow: 0 0 5px $form_border_color;
+  border: 1px solid $main_color01;
+  box-shadow: none;
+  // box-shadow: 0 0 5px $form_border_color;
+}
+
+.ui-paginator .ui-paginator-page.ui-state-active {
+  background-color: $main_color01;
+  border-color: $main_color01;
+}
+
+
+.ui-datatable th.ui-state-default {
+  background-color: $main_color01;
+  color: white;
+  font-family: "NanumBarunGothicOTF";
+}
+
+.ui-datatable .ui-datatable-thead > tr > th,
+.ui-datatable .ui-datatable-tfoot > tr > td {
+  font-weight: bold;
+  border: 2px solid white;
+}
+
+.ui-datatable .ui-datatable-thead > tr > th,
+.ui-datatable .ui-datatable-tfoot > tr > td,
+.ui-datatable .ui-datatable-data > tr > td {
+  border: 2px solid white;
+  height: 30px;
+  padding-left: 5px;
+}
+
+
+.ui-datatable .ui-datatable-data > tr > td {
+  background-color: $gray_bright;
+}
+
+.ui-datatable tbody > tr.ui-widget-content {
+  height: 30px;
 }

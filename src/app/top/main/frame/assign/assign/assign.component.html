@@ -1,0 +1,215 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : assign                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<div class="assign" [formGroup]="fm.assignForm">
+<div class="ui-g">
+  <div class="ui-g-2 titleLabel">
+    <p>과제 그룹 이름</p>
+    <p>필요 교육 선택</p>
+  </div>
+  <div class="ui-g-10 title">
+    <div><input type="text" formControlName="title" placeholder="새 과제 그룹 이름을 입력해 주세요."></div>
+    <div><p-dropdown [style]="{'width':'300px'}" formControlName="lecture" placeholder="작성한 교육 이름을 선택해주세요."></p-dropdown></div>
+  </div>
+</div>
+<div class="ui-g">
+  <div class="ui-g-2 assignLabel">
+      <p>과제 목록</p>
+  </div>
+  <div class="ui-g-10 ui-g-nopad">
+    <div formArrayName="assigns">
+          <div  *ngFor="let item of assigns.controls; let i=index" [formGroupName]="i">
+            <div class="grid-g-12 assign-title" [ngClass]="item.controls.expand.value ? 'assign-obj-view' : 'assign-obj-hidden'">
+              <div>
+                <label [style.width.px]="80">과제명</label>
+                <input type="text" formControlName="subTitle" placeholder="과제 이름을 입력해주세요.">
+              </div>
+              <div>
+                <label [style.width.px]="80">지시문</label>
+                <input type="text"  formControlName="command" placeholder="치료자에게 제시할 문장을 입력해주세요." value="">
+                <span class="accordion" (click)="expandAssign(item, i)">
+                  <i class="fa fa-caret-down fa-lg" [ngClass]="item.controls.expand.value ? 'i-down' : 'i-up'"></i>
+                  <span [style.margin-left.px]="10">세부설정</span>
+                </span>
+              </div>
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="create">
+                <label>과제 생성 조건</label>
+                <p><p-dropdown
+                  [options]="fm.createTimeCond"
+                  formControlName="type"
+                  [style]="{'width':'600px'}"
+                  (onChange)= "fm.createFormControl($event, item)"
+                  ></p-dropdown></p>
+                <ul>
+                  <li [ngClass]="item.controls.create.controls.byDate.disabled ? 'disabled' : ''">
+                    <span>
+                      첫 로그인 후 <p-spinner size="1" formControlName="byDate"></p-spinner> 일 이후 개시
+                    </span>
+                  </li>
+                  <li [ngClass]="item.controls.create.controls.byNum.disabled ? 'disabled' : ''">
+                    <span>
+                      내담자 전체 과제 <p-spinner size="1" formControlName="byNum"></p-spinner> 개 수행 후 개시
+                    </span>
+                  </li>
+                  <li [ngClass]="item.controls.create.controls.byNoAndAssign.disabled ? 'disabled' : ''">
+                    <div formGroupName="byNoAndAssign">
+                      <span>내담자 과제그룹 &nbsp;
+                      <p-dropdown [style]="{'width':'300px'}" formControlName="byAssign"
+                      placeholder="과제 그룹을 선택해 주세요."
+                      ></p-dropdown> 내의 과제를
+                      <p-spinner size="1" formControlName="byNum"></p-spinner> 개 수행 후 개시
+                      </span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="prod">
+                <label>과제 생성 수량 선택 </label>
+                <p><p-dropdown
+                [options]="fm.createNumCond"
+                formControlName="type"
+                (onChange)="fm.prodFormControl($event, item)"
+                [style]="{'width':'600px'}">
+                </p-dropdown></p>
+                <ul>
+                  <li><span>생성 개수 :&nbsp; <p-spinner size="1" formControlName="byNum"></p-spinner>개</span></li>
+                  <li [ngClass]="item.controls.prod.controls.byDate.disabled ? 'disabled' : ''">
+                    <span>
+                      생성 날짜:&nbsp;&nbsp; 매달 <p-spinner size="1" formControlName="byDate"></p-spinner> 일 생성
+                    </span>
+                  </li>
+                  <li [ngClass]="item.controls.prod.controls.byWeekDate.disabled ? 'disabled' : ''">
+                    <span>
+                      생성 요일 :&nbsp;&nbsp;
+                      <p-selectButton formControlName="byWeekDate" [options]="fm.weekDayOpt" multiple="multiple">
+                      </p-selectButton>
+                    </span>
+                  </li>
+
+                </ul>
+              </div>
+
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="input">
+                <label>내담자 입력방식 선택 </label>
+                <p><p-dropdown
+                [options]="fm.inputType"
+                formControlName="type"
+                [style]="{'width':'600px'}">
+                </p-dropdown></p>
+                <ul>
+                  <li><span><p-checkbox formControlName="photo" label="사진 입력 받기"></p-checkbox> </span></li>
+                  <li><span>입력 횟수: <p-spinner size="1" formControlName="num"></p-spinner> </span></li>
+                  <li>
+                    <span>시간 단위 선택: &nbsp;&nbsp;
+                      <p-selectButton formControlName="time" [options]="fm.timeScheOpt">
+                      </p-selectButton>
+                    </span>
+                  </li>
+                  <li><span>테이블 포멧 작성하기: &nbsp;&nbsp;&nbsp;&nbsp;
+                      행 개수 <input type="text" formControlName="row" value="" [style.width.px]="50">
+                      열 개수 <input type="text" formControlName="column" value="" [style.width.px]="50">
+                  </span></li>
+                </ul>
+              </div>
+
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="push">
+                <label>과제 푸시 알림 설정</label>
+                <p> 시간설정 :
+                  <p-calendar class="time-picker" formControlName="fromTime"
+                  [stepMinute]=15
+                  timeOnly=true
+                  placeholder="AM 00:00"
+                  hourFormat="12"></p-calendar> 에서
+                  <p-calendar class="time-picker" formControlName="toTime"
+                  [stepMinute]=15
+                  placeholder="AM 00:00"
+                  timeOnly=true
+                  hourFormat="12"></p-calendar> 사이
+                </p>
+                <ul>
+
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_push_type" [value]=0 formControlName="push_type"></p-radioButton>
+                      미확인 시 반복제시 없음.
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <p-radioButton  name="{{i}}_push_type" [value]=1 formControlName="push_type"></p-radioButton>
+                      미확인 시
+                      <p-spinner size="1" formControlName="time"></p-spinner> 분 마다 반복 제시.   (PM 10:00 ~ AM 08:00 까지는 알리지 않습니다.)
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="del">
+                <label>제시 과제 소멸 설정</label>
+                <ul>
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_del_type" formControlName="del_type" [value]=0></p-radioButton>
+                      과제 소멸없이 지속
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_del_type" formControlName="del_type" [value]=1></p-radioButton>
+                      완료하지 않은 과제 수가
+                      <p-spinner size="1" formControlName="byNum"></p-spinner> 개 일 때, 가장 오래된 과제부터 소멸.
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_del_type" formControlName="del_type" [value]=2></p-radioButton>
+                      완료하지 않은 과제가
+                      <p-spinner size="1" formControlName="byDate"></p-spinner>
+                      일 이상 났을 때 해당 과제 소멸.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+
+              <div [ngClass]="item.controls.expand.value ? 'cond' : 'cond-hide'" formGroupName="stop">
+                <label>과제 제시 중지 설정</label>
+                <ul>
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_stop_type" [value]=0 formControlName="stop_type"></p-radioButton>
+                      첫 과제가 제시된 지
+                      <p-spinner size="1" formControlName="byDate" ></p-spinner>
+                      일이 경과할 시 중지.
+                    </span>
+                  </li>
+                  <li>
+                    <span>
+                      <p-radioButton name="{{i}}_stop_type" [value]=1 formControlName="stop_type"></p-radioButton>
+                      내담자의 수행 과제 수가
+                      <p-spinner size="1"  formControlName="byNum"></p-spinner>
+                      개 이상일 때 중지.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+    </div>
+  <button type="button" (click)="fm.addAssign()">추가</button>
+  </div>
+</div>

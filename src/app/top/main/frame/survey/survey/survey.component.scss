@@ -1,0 +1,121 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : new-survey                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+@import './../../../../../../scss-variable.scss';
+
+.new-survey {
+  display: grid;
+  grid-template-columns: 15% 85%;
+  grid-column-gap: 5px;
+}
+
+.line0 {
+  grid-column:0/1;
+  background-color: $main_color01;
+  color: white;
+  padding-left: 15px;
+  padding-top : 28px;
+  li {list-style: none;}
+  .label{
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 35px;
+  }
+}
+
+.line1 {
+  grid-column:2;
+  background-color: $gray_bright;
+  padding-left: 15px;
+  padding-top : 25px;
+  padding-bottom: 25px;
+
+  .title {
+    width: 300px;
+    height: 35px;
+  }
+  li {
+    list-style: none;
+    margin-bottom: 26px;
+  }
+
+  button {
+    border-radius: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .all-del-button {
+    width: 195px;
+    margin-top: 30px;
+    margin-left: 573px;
+  }
+
+  .measure-text {
+    margin-right: 10px;
+    input {
+      margin-top: 0px;
+      height: 28px;
+      width: 95px;
+    }
+  }
+  .survey-text {
+    margin-top: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    label {
+      float: left;
+      font-weight: bold;
+      width: 30px;
+      margin-right: 15px;
+    }
+    input {
+      width: 358px;
+      margin-right: 20px;
+    }
+    .button-div {
+      margin-left: 20px;
+      button {
+        height: 28px;
+        border-radius: 3px;
+        padding-left: 10px;
+        padding-right: 10px;
+        margin-left: 5px;
+      }
+    }
+    .valid-error {
+      padding: 3px;
+      text-align: center;
+      font-size: 14px;
+
+      margin-left: 43px;
+      width: 300px;
+    }
+  }
+  .valid-error {
+    font-size: 14px;
+    margin-left: 0;
+    margin-right: 10px;
+  }
+  .submit {
+    margin-top: 50px;
+    margin-left: 367px;
+    .isNew-button {
+      width: 400px;
+    }
+    button {
+      width: 150px;
+    }
+  }
+
+  .delete {
+    border-radius: 3px;
+    color: $gray_bright;
+  }
+}

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { AbstractControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { ValidMsgs, RegexValidators } from "./new-lecture.validator";
+import { LectureValidMsgs, LectureRegexValidators } from "./new-lecture.validator";
 
 @Injectable()
 export class NewLectureData {
@@ -8,7 +8,7 @@ export class NewLectureData {
     defaultPageNum:number = 1;
     constructor(
       private fb: FormBuilder,
-      private valider: RegexValidators,
+      private valider: LectureRegexValidators,
     ) {
           this.lectureForm= this.fb.group({
           title: ['', [
@@ -41,5 +41,15 @@ export interface Lecture {
   status :number
   title :string;
   ADD_TIME:string;
+  UPDATE_TIME :string;
+}
+
+
+export interface LectureTable {
+  index :number
+  title :string;
+  type :string
+  page_no :number
+  status :string
   UPDATE_TIME :string;
 }

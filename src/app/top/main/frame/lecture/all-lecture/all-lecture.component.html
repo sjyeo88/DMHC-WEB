@@ -1,0 +1,86 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : all-lecture                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="425"></p-confirmDialog>
+
+ <!-- predefiend loading template -->
+<ng-template #loading>
+  <div class="loading">
+    <svg class="spinner"  viewbox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
+    </svg>
+    <div style="left: 10px">
+      loading...
+    </div>
+  </div>
+</ng-template>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<form class="search" [formGroup]="searchForm" action="index.html" method="post">
+  <input type="text" formControlName="name" placeholder="교육 이름을 입력해주세요.">
+  <!-- <button type="submit" name="button">검색</button> -->
+</form>
+
+<div class="all-lecture">
+  <table>
+    <tr class="table-field">
+      <th>No</th>
+      <th class="clickable-tr" (click)="onSortList(0)">
+        심리교육 이름
+        <span  *ngIf="titleSortStatus!==0" [style.margin-left.px]="10">{{titleSortChar}} </span>
+      </th>
+      <th >타입</th>
+      <th>Page</th>
+      <th class="clickable-tr" (click)="onSortList(1)">
+        상태
+        <span  *ngIf="statusSortStatus!==0" [style.margin-left.px]="10">{{statusSortChar}} </span>
+      </th>
+      <th class="clickable-tr" (click)="onSortList(2)">작성일
+        <span *ngIf="dateSortStatus!==0" [style.margin-left.px]="10">{{dateSortChar}} </span>
+      </th>
+      <th>수정</th>
+      <th>삭제</th>
+    </tr>
+
+    <tr class="table-data" *ngFor="let item of lectures; let i=index">
+      <td [style.width.%]="5">{{i + pagFirstIndex}}</td>
+      <td [style.width.%]="45">{{item.title}}</td>
+      <td [style.width.%]="10" *ngIf="item.type===0">HTML</td>
+      <td [style.width.%]="10" *ngIf="item.type===1">PDF</td>
+      <td [style.width.%]="5">{{item.page_no}}</td>
+      <td [style.width.%]="10" *ngIf="item.status===1" class=lecture-edit>작성중</td>
+      <td [style.width.%]="10" *ngIf="item.status===0" class=lecture-finish>완료</td>
+      <td [style.width.%]="15">{{item.UPDATE_TIME | date:'yyyy-MM-dd'}}</td>
+      <td class="clickable-td" (click)="onEditMove(item.title, item.type)" [style.width.%]="5">
+        <img src="./../../../../../../assets/img/icons/ic-mode-edit-18px.png">
+      </td>
+      <td class="clickable-td" (click)="confirmDel(item.idLECTURE, item.title)" [style.width.%]="5" >
+          <img  src="./../../../../../../assets/img/icons/ic-mode-delete-18px.png">
+      </td>
+    </tr>
+  </table>
+
+  <div  [style.margin-top.px]="10">
+    <p-paginator *ngIf="allLecturesLoaded && !isSearch"
+    rows="pagPerView"
+    [first]="pagFirstIndex"
+    [style]="{'border':'none'}"
+    [style]="{'background-color':'white'}"
+    (onPageChange)="onPageMove($event)"
+    [totalRecords]="allLectures.length">
+    </p-paginator>
+    <!-- <p-paginator rows="15" totalRecords="gth"></p-paginator> -->
+  </div>
+</div>

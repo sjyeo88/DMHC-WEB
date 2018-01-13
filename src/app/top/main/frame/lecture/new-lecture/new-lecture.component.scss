@@ -54,6 +54,12 @@
     list-style: none;
     margin-bottom: 20px;
   }
+  
+  quill-editor{
+    button {
+      width:28px;
+    }
+  }
 
   .editor {
     width: 600px;
@@ -188,4 +194,9 @@
     }
 
 
+    #pdf-viewer{
+      width:600px;
+      height:900px;
+      // overflow: hidden;
+    }
 }

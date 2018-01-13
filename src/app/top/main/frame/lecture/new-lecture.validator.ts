@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 
 
+@Injectable()
 export class ValidatorMSG {
   value: string;
   dirty: string;
@@ -26,18 +27,19 @@ export class ValidatorMSG {
   }
 }
 
-export class RegexValidators {
+@Injectable()
+export class LectureRegexValidators {
   titleMin:number = 1;
   titleMax:number = 30;
 };
 
 
 @Injectable()
-export class ValidMsgs {
+export class LectureValidMsgs {
 
   titleLabel: ValidatorMSG;
 
-  constructor(private valider: RegexValidators)
+  constructor(private valider: LectureRegexValidators)
   {
     this.titleLabel = new ValidatorMSG();
 

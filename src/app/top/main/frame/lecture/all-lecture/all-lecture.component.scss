@@ -1,0 +1,71 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : all-lecture                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../../scss-variable.scss';
+
+.search {
+  font-family: "NanumBarunGothicOTF";
+  float:right;
+  input {
+    width:266px;
+    height: 30px;
+  }
+  button {
+    width:100px;
+    height: 30px;
+  }
+}
+
+.all-lecture {
+  font-family: "NanumBarunGothicOTF";
+  margin-top: 70px;
+  table {
+    width: 100%;
+    tr th, tr td{
+      height: 30px;
+      -webkit-transition: background-color .5s;
+      -moz-transition: background-color .5s;
+      transition: background-color .5s;
+    }
+    tr td {
+      text-align: center;
+      color: $gray_darken;
+      font-weight: bold;
+    }
+    .table-field {
+      background-color: $main-color01;
+      color: white;
+      font-size: 14px;
+      // font-weight: normal;
+    }
+    .table-data{
+      background-color: $gray_bright;
+      color: $gray_darken;
+      font-size: 14px;
+    }
+    tr .lecture-edit {
+      color: $error_color;
+    }
+    tr .lecture-finish {
+      color: $correct_color;
+    }
+  }
+
+  .clickable-td:hover {
+    cursor: pointer;
+    background-color: $gray_light;
+  }
+
+  .clickable-tr:hover {
+    cursor: pointer;
+    background-color: $button-hover-color;
+  }
+}

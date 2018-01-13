@@ -1,0 +1,105 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : hash                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="600"></p-confirmDialog>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="">
+  <button type="button" class="add-button" (click)="addTag()">+ Hash Tag 추가하기</button>
+</div>
+<form class="" FormGroup="newHash.hashForm" method="post">
+<table class="hash-table">
+  <tr class="header">
+    <th [style.width.%]="5">No</th>
+    <th>Hash Tag명</th>
+    <th [style.width.%]="10">개수</th>
+    <th [style.width.%]="15">추가일</th>
+    <th [style.width.%]="8">저장</th>
+    <th [style.width.%]="8">추가</th>
+    <th [style.width.%]="8">삭제</th>
+  </tr>
+  <!-- <tr [ngClass]="(item.rawId !==0)?'selectable-body':'body'" *ngFor="let item of tableModel.model; let i=index"> -->
+
+  <tr class="body" *ngFor="let item of tableModel.model; let i=index">
+    <td *ngIf="!item.sub && item.rawId !== -1"> {{item.rawId }} </td>
+    <td *ngIf="item.sub || item.rawId === -1"></td>
+    <td [ngStyle]="{'padding':'10px', 'padding-left':'calc('+ item.depth+'*40px)', 'text-align':'left'}" >
+
+      <span class="expand" *ngIf="item.rawId !==-1 && !item.expand" (click)="onExpand(item)">
+        <i class="fa fa-caret-right fa-2x"></i>
+      </span>
+      <span class="expand-active" *ngIf="item.rawId !==-1 && item.expand" (click)="onExpand(item)">
+        <i class="fa fa-caret-down fa-2x"></i>
+      </span>
+
+      <div *ngIf="item.isSaved" class="word"> {{ item.name }} </div>
+      <div *ngIf="!item.isSaved && !item.sub"  [style.padding-left.px]="5">
+        <input class="word" type="text"
+          [id]="item.inputId"
+          [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="item.name"
+          pattern="[#a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}"
+          (ngModelChange)="checkValue(item)"
+          (paste)="hashPaste(item, $event)"
+          (keydown)="openRow(item, $event)"
+          required
+        >
+      </div>
+      <div *ngIf="!item.isSaved && item.sub"  [style.padding-left.px]="5">
+        <input class="word" type="text"
+          [id]="item.inputId"
+          [ngModelOptions]="{standalone: true}"
+          [(ngModel)]="item.name"
+          pattern="[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ|#a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}"
+          (ngModelChange)="checkValue(item)"
+          (paste)="hashPaste(item, $event)"
+          (keydown)="openRow(item, $event)"
+          required
+        >
+      </div>
+    </td>
+
+      <!-- <div class="editable-td" contenteditable>Test</div> -->
+    <td> {{ item.number }}</td>
+    <td>{{item.ADD_TIME  | date: 'yyyy-MM-dd' }}</td>
+    <td *ngIf="item.isSaved" ><i class="fa fa-check fa-lg finished"></i></td>
+    <td *ngIf="!item.isSaved && !item.isSaving && !item.sub && item.isSavable" (click)="onHashSave(item)"><i class="fa fa-floppy-o fa-lg editing"></i></td>
+    <td *ngIf="!item.isSaved && !item.isSaving && item.sub  && item.isSavable" (click)="onWordSave(item)"><i class="fa  fa-floppy-o fa-lg editing"></i></td>
+
+    <td *ngIf="!item.isSaved && !item.isSaving && !item.sub && !item.isSavable" ><i class="fa fa-times fa-lg editing"></i></td>
+    <td *ngIf="!item.isSaved && !item.isSaving && item.sub  && !item.isSavable" ><i class="fa  fa-times fa-lg editing"></i></td>
+
+
+    <td *ngIf="!item.isSaved && item.isSaving"><i class="fa fa-spinner fa-pulse fa-fw"></i></td>
+
+    <td *ngIf="!item.sub" (click)="addChild(item)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
+    <td *ngIf="item.rawId !==-1 && item.sub"></td>
+    <td *ngIf="item.rawId ===-1 && item.sub" (click)="addBro(item)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
+    <td (click)="confirmDel(item)"><i class="fa fa-minus-circle fa-lg icon"></i> </td>
+    <!-- <div class="">Test</div> -->
+  </tr>
+</table>
+</form>
+
+
+  <!-- <div  [style.margin-top.px]="10">
+    <p-paginator *ngIf="allHashLoaded"
+    rows="10"
+    [first]="pagFirstIndex"
+    [style]="{'border':'none'}"
+    [style]="{'background-color':'white'}"
+    (onPageChange)="onPageMove($event)"
+    [totalRecords]="allHashes.length">
+    </p-paginator>
+  </div> -->

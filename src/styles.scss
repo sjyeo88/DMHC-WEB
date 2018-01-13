@@ -33,7 +33,7 @@
   -webkit-box-sizing: border-box;
    -moz-box-sizing: border-box;
         box-sizing: border-box;
-  font-family: 'NanumBarunGothicOTF';
+  // font-family: 'NanumBarunGothicOTF';
 }
 
 *:focus {
@@ -65,7 +65,7 @@ button {
   height: 2.5em;
   color: $white;
   border: 0  ;
-  font-family: NanumBarunGothicOTF;
+  font-family: "NanumBarunGothicOTF";
   font-size: 14px;
   text-align: center;
 
@@ -99,6 +99,7 @@ input {
   border-radius: 4px;
   background-color: $white;
   height: 2.2em;
+  font-size: 16px;
 
 
   -webkit-transition: .2s;
@@ -144,7 +145,6 @@ a:hover {
 
 
 textarea {
-  position: absolute;
   background-color: #e8e8e8;
   border: 1px;
   padding: 5px;
@@ -163,6 +163,43 @@ textarea {
   // font-weight: bold;
   margin-left: 2.0em;
 }
+
+.icon {
+  cursor: pointer;
+  -webkit-transition: color .5s;
+  -moz-transition: color .5s;
+  transition: color .5s;
+}
+
+.icon:hover {
+  color: $light_blue;
+}
+.valid-error {
+  padding:5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  // border: 1px solid $error_color;
+
+  margin-left: 20px;
+  border-radius: 5px;
+  background-color: rgb(255, 182, 170);
+  color: $main_color01;
+  font-weight: bold;
+  border-color:inherit;
+}
+
+.valid-warning{
+  @extend .valid-error;
+  // border: 1px solid rgb(196, 141, 0);
+  background-color: rgb(242, 240, 189);
+  color: rgb(196, 141, 0);
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.6
+}
+
 
 $offset: 187;
 $duration: 1.4s;

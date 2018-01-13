@@ -1,0 +1,147 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : new-survey                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<div class="new-survey">
+  <div class="line0">
+    <div class="label"> 설문지 이름 </div>
+    <div class="label"> 점수 척도 </div>
+    <div class="label"> 척도별 텍스트 </div>
+    <div class="label"> 설문 항목 작성 </div>
+  </div>
+
+  <div class="line1">
+    <form class="" [formGroup]="nsf.surveyForm">
+      <li>
+        <input *ngIf="isNew" type="text" [(ngModel)]="title.value" class="title" autofocus formControlName="title" placeholder="설문지 이름을 작성해 주세요.">
+        <p-dropdown *ngIf="!isNew"
+          [style]="{'width':'300px'}"
+          [options]="nsf.titleList"
+          (onChange)="loadSurvey($event)"
+          formControlName="title"
+          placeholder="설문지 이름을 선택해 주세요."></p-dropdown>
+
+        <label class="valid-error" *ngIf="title.errors?.required&&title.dirty&& isNew">
+          {{nsf.valider.requireMsg  }}
+        </label>
+        <label class="valid-error" *ngIf="title.errors?.maxlength&&title.dirty&& isNew">
+          {{nsf.valider.titleMaxLengthMsg }}
+        </label>
+        <label class="valid-error"
+         *ngIf="title.errors?.notUnique&& title.dirty && isNew">
+           {{nsf.valider.titleDuplicateMsg}}
+        </label>
+      </li>
+
+      <li>
+        <p-dropdown
+          [options]="survModel.measures"
+          formControlName="measure"
+          (onChange)="onChangeMeasure($event)"
+          [style]="{'width': '300px'}"></p-dropdown>
+      </li>
+      <li formArrayName= "measureTextArray">
+        <span class="measure-text" *ngFor="let item of measureTextArray.controls; let i=index" [formGroupName]="i">
+          <input type="text" formControlName="text" placeholder="{{ i + 1 }} 점 텍스트">
+          <label class="valid-error"
+           *ngIf="item.controls.text.errors?.required && item.controls.text.dirty">
+             {{nsf.valider.requireMsg}}
+           </label>
+          <label class="valid-error"
+           *ngIf="item.controls.text.errors?.maxlength && item.controls.text.dirty">
+             {{nsf.valider.measureTxtMaxLengthMsg}}
+           </label>
+        </span>
+      </li>
+
+      <div formArrayName= "objectArray">
+        <div class="survey-text" *ngFor="let item of objectArray.controls; let i=index" [formGroupName]="i">
+          <label>{{ i+1 }}.</label>
+
+          <input type="text"
+          #focusInput
+          formControlName="text"
+          placeholder="설문 내용을 입력해 주세요"
+          (paste)="nsf.objectPaste($event, i)"
+          (keydown)="onEnter(i, $event)"
+          (change)="check(item)"
+          >
+          <!-- (keydown)="nsf.openRow(i, $event)" -->
+
+          <p-checkbox formControlName="type" label="역합산 항목" binary="true"></p-checkbox>
+          <span class="button-div">
+            <button type="button" (click)="onInsObject(i)">아래에 설문항목 추가</button>
+            <button type="button" (click)="confirmDel(i)">삭제</button>
+            <!-- <button type="button" (click)="check(item)">Test</button> -->
+          </span>
+          <div class="valid-error"
+           *ngIf="item.controls.text.errors?.required && item.controls.text.dirty">
+             {{nsf.valider.requireMsg}}
+           </div>
+          <div class="valid-error"
+           *ngIf="item.controls.text.errors?.maxlength && item.controls.text.dirty">
+             {{nsf.valider.objectTxtMaxLengthMsg}}
+           </div>
+        </div>
+      </div>
+        <div *ngIf="isObjectText">
+          <button type="button" class="all-del-button" (click)="confirmAllDel()">
+            <i class="fa fa-minus-square"></i>&nbsp;&nbsp;설문항목 모두 삭제
+          </button>
+        </div>
+
+        <div *ngIf="!isObjectText">
+          <button type="button" name="button" (click)="onAddObject()">
+            <i class="fa fa-plus-square"></i>&nbsp;&nbsp;설문항목 추가하기
+          </button>
+        </div>
+
+        <p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="500" [responsive]="true">
+          <div [style.margin-bottom.px]="10">새 이름을 입력해 주세요.</div>
+          <div class="">
+            <input [style.width.%]="100"  type="text" formControlName="title" [(ngModel)]=title.value>
+          </div>
+          <label class="valid-error" *ngIf="title.errors?.required&&title.dirty">
+            {{nsf.valider.requireMsg}}
+          </label>
+          <label class="valid-error" *ngIf="title.errors?.maxlength&&title.dirty">
+            {{nsf.valider.titleMaxLengthMsg}}
+          </label>
+          <p-footer>
+              <button type="submit" pButton icon="fa-check" (click)="saveAs()" label="저장하기"></button>
+              <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="취소"></button>
+          </p-footer>
+        </p-dialog>
+    </form>
+
+    <div class="submit">
+      <button *ngIf="isNew" class="isNew-button"  (click)="confirmSave()">
+        <i class="fa fa-check fa-lg"></i>&nbsp;
+        작성완료
+      </button>
+      <button *ngIf="!isNew" (click)="confirmSave()">
+        <i class="fa fa-check fa-lg"></i>&nbsp; 작성완료
+      </button>
+      <button *ngIf="!isNew" (click)="confirmSaveAs()">
+        <i class="fa fa-floppy-o fa-lg"></i> &nbsp; 다른이름으로 저장
+      </button>
+      <button *ngIf="!isNew" type="button" class="delete" (click)="removeSurvey()">
+        <i class="fa fa-trash fa-lg"></i>&nbsp; 삭제하기
+      </button>
+    </div>
+  </div>
+</div>

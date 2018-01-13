@@ -15,6 +15,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/fromEvent';
 
 
 @Component({
@@ -24,20 +25,22 @@ import 'rxjs/add/observable/from';
 })
 export class FrameComponent implements OnInit {
 
-  public title: string;
+  public title: any;
   public page: string;
-  public titleSubscription:Subscription;
-  public pageSubscription:Subscription;
 
   constructor(
     public lay: Layout,
-  ) {}
+  ) {
+      this.title = this.lay.cuTitle.title;
+      this.page = this.lay.cuTitle.page;
+      console.log('X')
+    }
+
 
   ngOnInit() {
-    setTimeout(()=>{
-      this.title = sessionStorage.getItem('title');
-      this.page = sessionStorage.getItem('page');
-    }, 100)
+    this.title = sessionStorage.getItem('title');
+    this.page = sessionStorage.getItem('page');
   }
+
 
 }

@@ -45,7 +45,6 @@ export class AsideComponent implements OnInit {
   }
 
   subMenuClick(name) {
-    console.log(name);
     let url="";
     let i:number;
     sessionStorage.removeItem('index');

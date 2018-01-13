@@ -1,0 +1,96 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : hash                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../../scss-variable.scss';
+
+.hash-table {
+  width: 100%;
+  font-family: "NanumBarunGothicOTF";
+  // border-collapse: collapse;
+  tr th, tr td{
+    height: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .header {
+    background-color: $main_color01;
+    color: white;
+  }
+
+  .body {
+    td {
+      background-color: $gray_bright;
+      color: $gray_darken;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+  .selectable-body {
+    td {
+      background-color: $gray_light;
+      color: $gray_darken;
+      font-weight: bold;
+      text-align: center;
+    }
+  }
+
+  .editable-td {
+    text-align: left;
+  }
+  .editable-td:focus {
+    background-color: white;
+    text-align: left;
+  }
+
+  .expand {
+    color: $error_color;
+    cursor: pointer;
+    padding-left: 8px;
+    float: left;
+  }
+  .expand-active {
+    @extend .expand;
+    color: $correct_color;
+  }
+
+  .finished {
+    color: $correct_color;
+  }
+
+  .editing {
+    color: $error_color;
+  }
+}
+
+.button {
+  padding: 10px;
+  font-weight: bold;
+}
+
+.add-button {
+  @extend .button;
+  margin-bottom: 15px;
+  float: right;
+}
+
+
+.word {
+  overflow: hidden;
+  margin: 5px;
+  padding: 2px;
+  padding-left: 10px;
+  height: 1.4em;
+  font-size: 18px;
+}
+
+.word:focus {
+  background-color: white;
+}

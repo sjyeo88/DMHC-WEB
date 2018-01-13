@@ -33,7 +33,7 @@ export class Req2 extends YHttp {
     summary: '로그인 시간이 만료되었습니다.',
     detail: '다시 로그인 해 주세요'
   };
-  
+
   constructor(method, url, formData?:FormData) {
     super(method, url, formData);
     this.url = this.apiUrl + url

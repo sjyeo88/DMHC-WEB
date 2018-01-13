@@ -1,0 +1,35 @@
+interface AssginConf {
+  idSB_SBJT_CONF: number;
+  idSBJT_CONF: number;
+  title:string;
+  sbjt_sbj_no: number;
+  command:string;
+  type_create_condition:number;
+  conf_create_condition_01:number;
+  conf_create_condition_02:number;
+  conf_create_condition_03:number;
+  conf_create_condition_04:number;
+  type_create_num:number;
+  conf_crdate_num_01:number;
+  conf_crdate_num_02:number;
+  conf_crdate_num_03:number;
+  conf_crdate_num_04:number;
+  conf_push_time_01:string;
+  conf_push_time_02:string;
+  type_repush_time:number;
+  conf_repush_time_01:string;
+  type_input:number;
+  conf_input_01:number;
+  conf_input_02:number;
+  conf_input_03:number;
+  conf_input_04:number;
+  conf_input_05:number;
+  conf_input_06:number;
+  type_stop:number;
+  conf_stop_01:number;
+  conf_stop_02:number;
+  type_del:number;
+  conf_del:number;
+  conf_del_01:number;
+  conf_del_02:number;
+}
