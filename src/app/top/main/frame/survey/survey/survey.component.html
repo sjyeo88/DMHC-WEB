@@ -77,7 +77,7 @@
           formControlName="text"
           placeholder="설문 내용을 입력해 주세요"
           (paste)="nsf.objectPaste($event, i)"
-          (keydown)="onEnter(i, $event)"
+          (keydown)="onEnter($event)"
           (change)="check(item)"
           >
           <!-- (keydown)="nsf.openRow(i, $event)" -->

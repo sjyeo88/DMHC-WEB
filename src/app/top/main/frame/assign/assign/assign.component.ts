@@ -20,7 +20,7 @@ import { AssignForm } from './assign.form';
   styleUrls: ['./assign.component.scss']
 })
 export class AssignComponent implements OnInit {
-  // @ViewChildren('focusInput') objInput: QueryList<ElementRef>
+  @ViewChildren('rowLabel') objInput: QueryList<ElementRef>
 
   constructor(
     public lay:Layout,
@@ -47,6 +47,18 @@ export class AssignComponent implements OnInit {
   // ngAfterViewChecked() {
   //   this.cdr.detectChanges();
   // }
+  onEnter(idx, event, item) {
+    if(event.keyCode === 13) {
+      let tableData = item.get('input').get('table').get('tableData')
+      this.fm.openRow(idx, tableData)
+      .then(()=>{
+        setTimeout(()=>{
+          this.objInput.last.nativeElement.focus();
+        }, 10)
+      })
+    }
+    // this.objInput.last.
+  }
 
 
   expandAssign(item, i) {
@@ -68,5 +80,8 @@ export class AssignComponent implements OnInit {
 
   get assigns() {
     return this.fm.assignForm.get('assigns') as FormArray;
+  }
+  get surveys() {
+    return this.fm.assignForm.get('surveys') as FormArray;
   }
 }

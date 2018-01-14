@@ -15,11 +15,14 @@
   color: white;
 }
 
+
+
 @mixin item($border-color) {
-  padding-top: 15px;
+  padding-top: 20px;
   padding-left: 15px;
   padding-right: 15px;
   border: 2px solid $border-color;
+
   input {
     margin-bottom: 25px;
     height: 30px;
@@ -55,9 +58,15 @@
     }
     li {
       margin-top: 5px;
-      margin-bottom: 5px;
+      margin-bottom: 10px;
 
       height: 30px;
+    }
+  }
+  td {
+    input {
+      margin:0;
+      width:150px;
     }
   }
   span {
@@ -86,13 +95,23 @@
 }
 
 
-
+.control-panel {
+  @include item(white);
+  .button-bundle{
+    text-align: right;
+    button{
+        padding: 10px;
+        margin: 5px;
+    }
+  }
+  background-color: #e2e2e2;
+  padding-bottom: 20px;
+}
 
 .assign-obj-view {
   @include item(white);
   padding-left: 5px;
   padding-right: 5px;
-  padding-bottom: 5px;
   -webkit-transition: max-height .5s;
   -moz-transition: max-height .5s;
   transition: max-height .5s;
@@ -116,6 +135,8 @@
     margin-right: 15px;
     margin-top: 15px;
   }
+
+
 
 
   @mixin grids() {
