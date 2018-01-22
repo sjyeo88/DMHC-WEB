@@ -1,0 +1,69 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : board                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<div class="board">
+  <form class="search" [formGroup]="fm.searchForm">
+    <p-dropdown
+    [options]="fm.boardSearchOption"
+    formControlName="option"
+    ></p-dropdown>
+    <input type="text"
+    formControlName="name"
+    >
+  </form>
+  <table [formGroup]="fm.boardForm">
+    <th>No</th>
+    <th class="title">제목</th>
+    <th class="author">작성자</th>
+    <th>작성일</th>
+    <th *ngIf="isAdmin">수정</th>
+    <th *ngIf="isAdmin">삭제</th>
+    <tr *ngIf="isAdmin && isEdit">
+      <td align="center" rowspan="2">&nbsp;</td>
+      <td><input type="text" value="" formControlName="title"></td>
+      <td align="center">{{adminName}}</td>
+      <td align="center">{{ this.getDate() | date:'yyyy-MM-dd' }}</td>
+      <td align="center" class="clickable-td" (click)="postBoard()"> <i class="fa fa-floppy-o fa-lg"></i> </td>
+      <td align="center" class="clickable-td" (click)="onEditCancle()"> <i class="fa fa-times fa-lg"></i> </td>
+    </tr>
+    <tr *ngIf="isAdmin && isEdit">
+      <td colspan="5"><textarea name="name" rows="8" cols="80" formControlName="text"></textarea>  </td>
+    </tr>
+    <tr *ngFor="let item of boardAllByPage; let i=index">
+      <td align="center" *ngIf="i%2==0"  rowspan="2">{{item.no}}</td>
+      <td  *ngIf="i%2==1" [ngClass]="boardAllByPage[i-1].expand ? 'table-detail' : 'table-detail-hide'" colspan="7" [innerHTML]="item.text">
+      </td>
+      <td *ngIf="i%2==0"  class="clickable-td"  [ngClass]="item.expand ? 'title-selected' : ''"  (click)="onExpand(item)">{{item.title}}</td>
+      <td align="center" *ngIf="i%2==0" [style.width.px]="300">{{item.author}}</td>
+      <td align="center" *ngIf="i%2==0">{{item.date | date:'yyyy-MM-dd'}}</td>
+      <td  align="center" class="clickable-td" *ngIf="i%2==0 && isAdmin" (click)="onEdit(item, i)"> <i class="fa fa-pencil"></i> </td>
+      <td  align="center" class="clickable-td" *ngIf="i%2==0 && isAdmin" (click)="confirmDel(item, i)"> <i class="fa fa-trash"></i> </td>
+    </tr>
+  </table>
+  <div class="control"  [style.margin-top.px]="10">
+    <button class="search" type="button" *ngIf="isAdmin" (click)="newBoard()"> <i class="fa fa-plus"></i> 새 글 작성</button>
+    <p-paginator
+    [rows]="rowPerPage*2"
+    [first]="0"
+    [style]="{'border':'none'}"
+    [style]="{'background-color':'white'}"
+    (onPageChange)="onPageMove($event.page)"
+    [totalRecords]="boardAll.length">
+    </p-paginator>
+  </div>
+</div>

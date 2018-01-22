@@ -1,0 +1,99 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : board                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+@import './../../../../../../scss-variable.scss';
+
+.board{
+  .search {
+    float: right;
+    margin: 10px;
+    input {
+      height: 30px;
+    }
+  }
+  table {
+    width:100%;
+    border-collapse: collapse;
+    font-weight: bold;
+    font-size: 14px;
+    color: $gray_darken;
+    height: 30px;
+    .title {
+      width:60%;
+    }
+    .author {
+      width:10%;
+    }
+    th {
+      background-color: $main_color01;
+      padding: 5px;
+      color: white;
+      text-align: center;
+      border: 3px solid white;
+      height: 30px;
+    }
+
+
+    tr {
+      td {
+        padding: 5px;
+        background-color: lighten($gray_light, 18);
+        border: 3px solid white;
+        border-bottom: none;
+        input{
+          width:100%;
+        }
+        textarea {
+          width: 100%;
+          background-color: white;
+          color: $gray_darken;
+          font-size: 16px;
+        }
+      }
+      .title-selected {
+        cursor: pointer;
+        background-color: $gray_light;
+      }
+    }
+
+    .clickable-td:hover {
+      cursor: pointer;
+      background-color: $gray_light;
+    }
+
+
+
+    .edit {
+      color: $error_color;
+    }
+
+    .finished{
+      color: $correct_color;
+    }
+
+
+
+    .table-detail {
+      border-top: 2px solid white;
+      padding: 10px;
+      font-weight: normal;
+    }
+    .table-detail-hide {
+      @extend .table-detail;
+      display: none;
+    }
+  }
+  .control {
+    button {
+      padding: 5px;
+      width: 100px;
+    }
+  }
+}

@@ -1,0 +1,69 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : assign-all                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="all-assign">
+  <form class="search" [formGroup]="fm.searchForm">
+    <p-dropdown
+      [options]="fm.searchOpt"
+      formControlName="option"
+    ></p-dropdown>
+    <input type="text" formControlName="name">
+  </form>
+  <table>
+    <th>No</th>
+    <th>과제 그룹</th>
+    <th>설정된 교육이름</th>
+    <th>상태</th>
+    <th>작성일</th>
+    <th>펼침</th>
+    <th>수정</th>
+    <th>삭제</th>
+    <tr *ngFor="let item of assignBoardByPage; let i=index">
+      <td align="center" *ngIf="i%2==0"  rowspan="2">{{item.no}}</td>
+      <td  *ngIf="i%2==1" [ngClass]="assignBoardByPage[i-1].expand ? 'table-detail' : 'table-detail-hide'" [style.padding.px]="0" colspan="7">
+        <table>
+              <div *ngFor="let obj of item.detailList;">
+                <li *ngFor="let li of obj">
+                  {{li}}
+                </li>
+              </div>
+        </table>
+      </td>
+      <td *ngIf="i%2==0" [style.width.px]="300">{{item.title}}</td>
+      <td *ngIf="i%2==0" [style.width.px]="300">{{item.lecture}}</td>
+      <td align="center" *ngIf="i%2==0" [ngClass]="item.status ? 'edit' : 'finished'">{{item.statusMsg}}</td>
+      <td align="center" *ngIf="i%2==0">{{item.date | date:'yyyy-MM-dd'}}</td>
+      <td align="center" class="clickable-td" *ngIf="i%2==0" (click)="onExpand(item, i)">
+        <i *ngIf="item.expand" class="fa fa-caret-up"></i>
+        <i *ngIf="!item.expand" class="fa fa-caret-down"></i>
+      </td>
+      <td align="center" class="clickable-td" *ngIf="i%2==0" (click)="onEditMove(item)"> <i class="fa fa-pencil"></i> </td>
+      <td align="center" class="clickable-td" *ngIf="i%2==0" (click)="confirmDel(item, i)"> <i class="fa fa-trash"></i> </td>
+    </tr>
+  </table>
+  <div  [style.margin-top.px]="10">
+    <p-paginator *ngIf="!isSearch"
+    [rows]="rowPerPage*2"
+    [first]="0"
+    [style]="{'border':'none'}"
+    [style]="{'background-color':'white'}"
+    (onPageChange)="onPageMove($event.page)"
+    [totalRecords]="allAssignBoard.length">
+    </p-paginator>
+    <!-- <p-paginator rows="15" totalRecords="gth"></p-paginator> -->
+  </div>
+</div>

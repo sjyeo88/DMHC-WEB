@@ -38,12 +38,11 @@
       치료자 정보
     </div>
     <ul>
-      <!-- <li>E-Mail: {{ this.userService.user.email }}</li> -->
-      <li>이름 :  {{ this.userService.user.name }}</li>
-      <li>소속 :  {{ this.userService.user.dept }}</li>
-      <li>직책 :  {{ this.userService.user.job }}</li>
-      <li>접속일: {{ this.userService.user.loginTime | date: 'yyyy/MM/dd' }}</li>
-      <li>접속시간 : {{ this.userService.user.loginTime | date: 'HH:mm:ss' }}</li>
+      <li>이름 :  {{ us.userServ.name }}</li>
+      <li>소속 :  {{ us.userServ.dept }}</li>
+      <li>직책 :  {{ us.userServ.job }}</li>
+      <li>접속일: {{ us.userServ.loginDate | date: 'yyyy/MM/dd' }}</li>
+      <li>접속시간 : {{ us.userServ.loginDate | date: 'HH:mm:ss' }}</li>
     </ul>
   </div>
 </div>
@@ -69,7 +68,10 @@
     <img src="./../../../../assets/img/icons/ic-people-48px.png" alt="">
   </span>
   <div class="info">
-    <span class="infoNum">{{ patient.patient.length }}</span>
+    <span class="infoNum">
+      0
+      <!-- {{ patient.patient.length }} -->
+    </span>
     <span>명</span>
   </div>
 </div>
@@ -95,13 +97,13 @@
     </div>
     <br>
       <ul>
-        <li  *ngFor="let notice of notices.notice; let i=index">
-          <a href="#">{{ notice.title }}</a>
-          <span
-          [style.margin-left.em]="12"
-          >
-            [{{ notice.ADD_TIME | date: 'yyyy/MM/dd'}}]
+        <li  *ngFor="let item of notices; let i=index">
+          <a [routerLink]="['../frame/guest/notice', item.idNOTICE]">
+          {{ (item.title.length > 12) ? item.title.slice(0, 12) + '...' : item.title }}
+          <span>
+            [{{ item.ADD_TIME | date: 'yyyy/MM/dd'}}]
           </span>
+          </a>
         </li>
       </ul>
 

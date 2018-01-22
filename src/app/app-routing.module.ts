@@ -20,7 +20,11 @@ import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-le
 import { NewSurveyComponent } from './top/main/frame/survey/new-survey/new-survey.component'
 import { EditSurveyComponent } from './top/main/frame/survey/edit-survey/edit-survey.component'
 import { HashComponent } from './top/main/frame/assign/hash/hash.component'
-import { AssignComponent } from './top/main/frame/assign/assign/assign.component'
+import { AssignNewComponent } from './top/main/frame/assign/assign-new/assign-new.component';
+import { AssignEditComponent } from './top/main/frame/assign/assign-edit/assign-edit.component';
+import { AssignAllComponent } from './top/main/frame/assign/assign-all/assign-all.component';
+import { NoticeComponent } from './top/main/frame/guest/notice/notice.component';
+import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
 
 
 const routes: Routes = [
@@ -40,8 +44,13 @@ const routes: Routes = [
                 {path: 'lecture/new', component: NewLectureComponent },
                 {path: 'survey/new', component: NewSurveyComponent },
                 {path: 'survey/edit', component: EditSurveyComponent },
-                {path: 'assign/new', component: AssignComponent },
+                {path: 'assign/all', component: AssignAllComponent},
+                {path: 'assign/new', component: AssignNewComponent },
+                {path: 'assign/edit', component: AssignEditComponent },
                 {path: 'assign/hash', component: HashComponent },
+                {path: 'guest/notice', component: NoticeComponent },
+                {path: 'guest/notice/:idNOTICE', component: NoticeComponent },
+                {path: 'guest/faq', component: FaqComponent },
                 ]
             },
           ]

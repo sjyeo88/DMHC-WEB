@@ -118,6 +118,7 @@ export class RegisterComponent implements OnInit {
     http.Complete = ()=> {
       // console.log(typeof http.response)
       this.jobs = JSON.parse(http.response);
+      console.log(this.jobs);
       this.isJobLoaded = true
     }
     http.ServErr = () =>{ this.msgs.push(http.smsgs) }

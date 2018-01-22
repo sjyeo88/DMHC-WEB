@@ -113,12 +113,12 @@
         <p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="500" [responsive]="true">
           <div [style.margin-bottom.px]="10">새 이름을 입력해 주세요.</div>
           <div class="">
-            <input [style.width.%]="100"  type="text" formControlName="title" [(ngModel)]=title.value>
+            <input [style.width.%]="100"  type="text" [ngModelOptions]="{standalone: true}"  [(ngModel)]="titleAs">
           </div>
-          <label class="valid-error" *ngIf="title.errors?.required&&title.dirty">
+          <label class="valid-error" *ngIf="titleAs === ''">
             {{nsf.valider.requireMsg}}
           </label>
-          <label class="valid-error" *ngIf="title.errors?.maxlength&&title.dirty">
+          <label class="valid-error" *ngIf="titleAs.length > nsf.valider.titleMax">
             {{nsf.valider.titleMaxLengthMsg}}
           </label>
           <p-footer>

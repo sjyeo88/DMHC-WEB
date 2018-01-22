@@ -32,10 +32,9 @@
         list-style-type: none;
         margin-left: 500px;
         li{
-          img {
-            width: 30px;
-            height: 20px;
+          i {
             padding-right: 10px;
+            color: $gray_darken;
           }
           cursor:pointer;
           text-align: center;

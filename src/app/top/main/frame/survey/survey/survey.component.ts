@@ -34,6 +34,7 @@ import { EditSurveyComponent } from '../edit-survey/edit-survey.component'
 export class SurveyComponent implements OnInit {
   @ViewChildren('focusInput') objInput: QueryList<ElementRef>
 
+  public titleAs:string = ''
   public isObjectText:boolean = true;
   public pageHeight:number;
   public msgs: Message[] = []
@@ -51,6 +52,37 @@ export class SurveyComponent implements OnInit {
 
   ngOnInit() {}
 
+
+  public getTitle(idx) {
+    let result = this.nsf.titleList.filter((row)=>{
+      return row.value === idx;
+    })
+    return result[0].label;
+  }
+
+  public getSurveyList(msg?:boolean, value?) {
+    this.nsf.titleList = [];
+    this.sserv.getSurveys()
+    .then(data=>{
+      data.map(obj=>{
+        this.nsf.titleList.push({label: obj.title, value: obj.idSURVEY});
+        if (msg) {
+        this.msgs = []
+        this.msgs.push({severity:'success', summary:'새로고침 완료'})
+        }
+      })
+      return this.nsf.titleList;
+    })
+    .then(titleList=>{
+      if(value) {
+        this.title.setValue(titleList.filter((obj)=>{ return obj.label === value})[0].value);
+      }
+    })
+    .catch(msg=>{
+      this.msgs=[];
+      this.msgs.push(msg);
+    })
+  }
 
   onChangeMeasure(event) {
     this.nsf.setMeasureText(event.value);
@@ -97,8 +129,8 @@ export class SurveyComponent implements OnInit {
     return new Promise((resolve)=>{
       let data = new FormData();
       let objectData = [];
-      if(this.isNew) data.append('title', title? title: this.title.value);
-      else data.append('title', title? title: this.title.value.title);
+      if(this.isNew) data.append('title', title? title:this.title.value);
+      else data.append('title', title? title:  this.getTitle(this.title.value));
       data.append('measure', this.measure.value);
       for(let i=0; i < this.measureTextArray.length; i++) {
         data.append('text0' + (i+1), (this.measureTextArray.controls[i] as FormGroup).controls.text.value);
@@ -149,6 +181,7 @@ export class SurveyComponent implements OnInit {
   }
 
   confirmSaveAs() {
+    this.titleAs = this.getTitle(this.title.value);
     this.saveAsDialogView = true;
   }
 

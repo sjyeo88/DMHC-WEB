@@ -46,27 +46,13 @@ export class EditSurveyComponent extends SurveyComponent {
     this.lay.cuTitle.page =  this.lay.submenus.survey.menus[1];
     this.lay.currentMenu =  this.lay.submenus.survey;
     this.lay.currentPage = this.lay.cuTitle.page;
-    this.loadTitleList();
-  }
-
-
-  loadTitleList() {
-    this.nsf.titleList = [];
-    this.sserv.getSurveys()
-    .then(data=>{
-      data.map((obj)=>{
-        let addObject:Title = {idSURVEY:obj.idSURVEY, label: obj.title, value: obj.title}
-        this.nsf.titleList.push(addObject)
-      })
-      this.title.value !== "" ? this.nsf.surveyForm.patchValue({title: this.title.value}) : null;
-    })
+    this.getSurveyList();
   }
 
   loadSurvey(event) {
-    this.sserv.getSurveyData(this.getSurveyID(event.value))
+    this.sserv.getSurveyData(event.value)
     .then(data=>{
       let arrText:string[]=[];
-      this.nsf.surveyForm.patchValue({title: data[0].title});
       this.nsf.surveyForm.patchValue({measure: data[0].measure});
       for (let i=0; i < 7; i++) {
         data[0]['text0' + (i+1)] ? arrText[i]=data[0]['text0' + (i+1)] : null;
@@ -75,10 +61,8 @@ export class EditSurveyComponent extends SurveyComponent {
       return data;
     })
     .then(data=>{
-      // console.log(data.length);
       this.nsf.allDeleleteObject();
       for(let i=0; i<data.length; i++) {
-        // console.log(data[i]);
         this.nsf.insertObjectText(i-1, data[i].text, data[i].type)
       }
     })
@@ -87,32 +71,19 @@ export class EditSurveyComponent extends SurveyComponent {
     })
   }
 
-  getSurveyID(title) {
-    return this.nsf.titleList.filter((row)=>{ return row.value == title })[0].idSURVEY
-  }
-
-  saveAs() {
-    console.log(this.title);
-    this.saveAsDialogView = false;
-    if(this.nsf.surveyForm.valid && this.objectArray.controls) {
-      this.saveSurvey(this.title.value)
-      .then((res)=>{
-        let addOption ={ value: this.title.value, label: this.title.value, idSURVEY: (res as any).insertId}
-        this.nsf.titleList.push(addOption);
-        this.nsf.surveyForm.patchValue({title: this.title.value});
-      })
+  protected saveAs() {
+    if(this.titleAs !== "" && this.titleAs.length < 30) {
+      this.saveSurvey(this.titleAs);
+      this.getSurveyList(null, this.titleAs);
     } else {
-      this.msgs = []
-      this.msgs.push({
-        severity: 'error',
-        summary: '미작성',
-        detail: '미작성된 항목이 있습니다.'
-      })
+      this.msgs = [];
+      this.msgs.push({severity: 'error', summary: '전송 실패', detail: '미작성된 부분이 있습니다.'})
     }
+    this.saveAsDialogView = false;
   }
 
   removeSurvey() {
-    this.sserv.deleteSurvey(this.getSurveyID(this.title.value))
+    this.sserv.deleteSurvey(this.title.value)
     .then(()=>{
       this.msgs = []
       this.msgs.push({

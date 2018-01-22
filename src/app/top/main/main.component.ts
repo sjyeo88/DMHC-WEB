@@ -16,7 +16,8 @@ import { LectureRegexValidators } from './frame/lecture/new-lecture.validator'
 import { LectureService } from './frame/lecture/lecture.service'
 import { NewSurveyForm } from './frame/survey/new-survey/new-survey.form'
 import { EditSurveyForm } from './frame/survey/edit-survey/edit-survey.form'
-import { AssignForm } from './frame/assign/assign/assign.form'
+import { AssignEditForm } from './frame/assign/assign-edit/assign-edit.form';
+import { AssignNewForm } from './frame/assign/assign-new/assign-new.form';
 
 @Component({
   selector: 'app-main',
@@ -28,7 +29,8 @@ import { AssignForm } from './frame/assign/assign/assign.form'
     LectureService,
     EditSurveyForm,
     NewSurveyForm,
-    AssignForm,
+    AssignEditForm,
+    AssignNewForm,
   ]
 })
 export class MainComponent implements OnInit {

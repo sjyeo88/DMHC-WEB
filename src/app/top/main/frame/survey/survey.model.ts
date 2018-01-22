@@ -29,8 +29,7 @@ interface SurveyMeasure {
 
 export interface Title {
   label:string;
-  value:string;
-  idSURVEY:number;
+  value:number;
 }
 
 export class SurveyModel {

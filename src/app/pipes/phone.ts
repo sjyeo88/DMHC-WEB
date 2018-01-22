@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Req2 } from '../service/get-public-data.service'
 
 @Pipe({
   name: 'phone'

@@ -19,7 +19,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor(public lay: Layout, public userService:UserService ) { }
+  constructor(public lay: Layout, public us:UserService ) { }
 
   ngOnInit() {
 

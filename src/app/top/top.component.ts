@@ -17,8 +17,6 @@ import { Message } from 'primeng/components/common/api';
 import { HeaderComponent } from './header/header.component';
 import { Layout } from './layout.service';
 import { UserService } from './user.service';
-import { Patient } from './patient.service';
-import { Notice } from './notice.service';
 import { Router, ActivatedRoute } from '@angular/router'
 
 
@@ -26,7 +24,7 @@ import { Router, ActivatedRoute } from '@angular/router'
   selector: 'app-top',
   templateUrl: './top.component.html',
   styleUrls: ['./top.component.scss'],
-  providers:[Patient, Notice],
+  providers:[],
 })
 
 export class TopComponent implements OnInit {
@@ -35,106 +33,41 @@ export class TopComponent implements OnInit {
   public msgs: Message[] = [];
   constructor(
     public msgSrv: MessageService,
+    public us:UserService,
     public lay:Layout,
-    public userService:UserService,
-    public patient:Patient,
-    public notice:Notice,
     private router: Router,
     public route: ActivatedRoute,
-  ) {
-    this.getUser(()=>{
-      this.getAddedInfo();
-    });
-  }
+  ) {}
 
   ngOnInit() {
+    this.getUser();
   }
 
 
-  getUser(callback:Function):void {
-    let http = new Req2('get', '/auth/user')
-    http.send();
-    http.Complete = ()=> {
-      let user;
-      // console.log(typeof http.response)
-      user= JSON.parse(http.response);
-      this.userService.user.name = user.name;
-      this.userService.user.email= user.email;
-      this.userService.user.idJOBS = user.idJOBS;
-      this.userService.user.idDEPT = user.idDEPT;
-      this.userService.user.loginTime = user.LAST_LOGIN_DATE;
-      callback();
-      // console.log(http.response);
-    }
-    http.AuthErr = () =>{
-      this.userService.isLogedIn = false;
-      this.router.navigate(['../expire'])
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs);}
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs);}
+  public getUser() {
+    this.us.getUser()
+    .then(data=>{
+      this.us.userServ.name = data.name;
+      this.us.userServ.dept = data.idDEPT;
+      this.us.userServ.job = data.idJOBS;
+      this.us.userServ.loginDate = new Date(data.last_login_date);
+      return this.us.userServ;
+      // console.log(data);
+    })
+    .then(user=>{
+      this.us.getDeptName(user.dept)
+      .then(dept =>{
+       user.dept = dept[0].name
+      })
 
+      this.us.getJobName(user.job)
+      .then(job=>{
+       user.job= job[0].name
+      })
+      return user
+    })
   }
 
-  getAddedInfo() {
-    this.getJobName();
-    this.getDeptName();
-    this.getPatient();
-    this.getNotices();
-  }
 
-  getJobName():void {
-    let http = new Req2('get', '/data/jobs/' + this.userService.user.idJOBS)
-    let job
-    http.send();
-    http.Complete = ()=> {
-      job= JSON.parse(http.response);
-      this.userService.user.job = job[0].name
-      // console.log(typeof http.response)
-      // this.user= JSON.parse(http.response);
-      // this.main.shortcut.user.name = this.user.name;
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs); }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs);  }
-  }
-
-  getDeptName():void {
-    let http = new Req2('get', '/data/depts/' + this.userService.user.idDEPT)
-    let dept;
-    http.send();
-    http.Complete = ()=> {
-      dept= JSON.parse(http.response);
-      this.userService.user.dept= dept[0].name
-      // console.log(typeof http.response)
-      // this.user= JSON.parse(http.response);
-      // this.main.shortcut.user.name = this.user.name;
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs); }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs);  }
-  }
-
-  getPatient():void {
-    let http = new Req2('get', '/data/patient/' + this.userService.user.idDEPT)
-    let patient;
-    http.send();
-    http.Complete = ()=> {
-      patient= JSON.parse(http.response);
-      this.patient.patient = patient;
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs); }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs);  }
-
-  }
-
-  getNotices():void {
-    let http = new Req2('get', '/data/notices')
-    let notices;
-    http.send();
-    http.Complete = ()=> {
-      notices= JSON.parse(http.response);
-      this.notice.notice= notices;
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs);  }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs);  }
-  }
 
 }

@@ -11,6 +11,7 @@
 
  <!-- need for message service of primeng -->
 <p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
 
 <!-- code start  ---------------------------------------------------------->
 
@@ -22,8 +23,51 @@
     <p>필요 교육 선택</p>
   </div>
   <div class="ui-g-10 title">
-    <div><input type="text" formControlName="title" placeholder="새 과제 그룹 이름을 입력해 주세요."></div>
-    <div><p-dropdown [style]="{'width':'300px'}" formControlName="lecture" placeholder="작성한 교육 이름을 선택해주세요."></p-dropdown></div>
+    <div *ngIf="isNew">
+      <input type="text" formControlName="title" placeholder="새 과제 그룹 이름을 입력해 주세요.">
+      <label class="valid-error" *ngIf="title.errors?.required&&title.dirty">
+        {{fm.valider.requireMsg  }}
+      </label>
+      <label class="valid-error" *ngIf="title.errors?.maxlength&&title.dirty">
+        {{fm.valider.titleMaxLengthMsg }}
+      </label>
+    </div>
+
+    <div *ngIf="!isNew" [style]="{'margin-bottom':'25px'}">
+      <p-dropdown
+      [style]="{'margin-bottom':'25px'}"
+      formControlName="title"
+      [options]="assignList"
+      (onChange)="loadAssign($event.value)"
+      filter=true
+      placeholder="작성한 과제 이름을 선택해주세요.">
+    </p-dropdown>
+      <p-dialog header="다른 이름으로 저장하기" [(visible)]="saveAsDialogView" modal="modal" width="500" [responsive]="true">
+          <div [style.margin-bottom.px]="10">새 이름을 입력해 주세요.</div>
+          <div class="">
+            <input #Test [style.width.%]="100"  type="text" [ngModelOptions]="{standalone: true}"  [(ngModel)]="titleAs">
+          </div>
+          <label class="valid-error" [style]="{'width':'auto'}" *ngIf="titleAs==''">
+            {{fm.valider.requireMsg}}
+          </label>
+          <label class="valid-error"  [style]="{'width':'auto'}" *ngIf="titleAs.length > 30">
+            {{fm.valider.titleMaxLengthMsg}}
+          </label>
+          <p-footer>
+              <button type="submit" pButton icon="fa-check" (click)="saveAs()" label="저장하기"></button>
+              <button type="button" pButton icon="fa-close" (click)="saveAsDialogView=false" label="취소"></button>
+          </p-footer>
+      </p-dialog>
+    </div>
+
+    <div>
+      <p-dropdown [style]="{'width':'300px'}"
+      formControlName="lecture"
+      [options]="lectures"
+      filter=true
+      placeholder="작성한 교육 이름을 선택해주세요."></p-dropdown>
+      <i class="fa fa-refresh refresh fa-lg" (click)="getLecture(true)"></i>
+    </div>
   </div>
 </div>
 <div class="ui-g">
@@ -37,10 +81,25 @@
               <div>
                 <label [style.width.px]="80">과제명</label>
                 <input type="text" formControlName="subTitle" placeholder="과제 이름을 입력해주세요.">
+                <label class="valid-error" *ngIf="item.get('subTitle').errors?.required&&item.get('subTitle').dirty">
+                  {{fm.valider.requireMsg }}
+                </label>
+                <label class="valid-error" *ngIf="item.get('subTitle').errors?.maxlength&&item.get('subTitle').dirty">
+                  {{fm.valider.titleMaxLengthMsg }}
+                </label>
+                <span class="remove" (click)="confirmDel(item, i)">
+                  <i class="fa fa-times fa-lg"></i>
+                </span>
               </div>
               <div>
                 <label [style.width.px]="80">지시문</label>
                 <input type="text"  formControlName="command" placeholder="치료자에게 제시할 문장을 입력해주세요." value="">
+                <label class="valid-error" *ngIf="item.get('command').errors?.required&&item.get('command').dirty">
+                  {{fm.valider.requireMsg }}
+                </label>
+                <label class="valid-error" *ngIf="item.get('command').errors?.maxlength&&item.get('command').dirty">
+                  {{fm.valider.commandMaxLengthMsg}}
+                </label>
                 <span class="accordion" (click)="expandAssign(item, i)">
                   <i class="fa fa-caret-down fa-lg" [ngClass]="item.get('expand').value ? 'i-down' : 'i-up'"></i>
                   <span [style.margin-left.px]="10">세부설정</span>
@@ -49,7 +108,7 @@
               <div [ngClass]="item.get('expand').value ? 'cond' : 'cond-hide'" formGroupName="create">
                 <label>과제 생성 조건</label>
                 <p><p-dropdown
-                  [options]="fm.createTimeCond"
+                  [options]="opt.createTimeCond"
                   formControlName="type"
                   [style]="{'width':'600px'}"
                   (onChange)= "fm.createFormControl($event, item)"
@@ -57,9 +116,10 @@
                 <ul>
                   <li [ngClass]="item.get('create').get('byDate').disabled ? 'disabled' : ''">
                     <span>
-                      첫 로그인 후
+                      첫 등록 후
                       <p-spinner size="1" formControlName="byDate"
-                      (onChange)="fm.spinnerMinMax(0, 30, item,'create', 'byDate')">
+                      (onChange)="fm.spinnerMinMax(0, 30, item.get('create').get('byDate'))"
+                      >
                       </p-spinner> 일 이후 개시
                     </span>
                   </li>
@@ -68,7 +128,7 @@
                       내담자 전체 과제
                       <p-spinner size="1"
                       formControlName="byNum"
-                      (onChange)="fm.spinnerMinMax(1, 500, item,'create', 'byNum')"
+                      (onChange)="fm.spinnerMinMax(1, 500, item.get('create').get('byNum'))"
                       >
                       </p-spinner> 개 수행 후 개시
                     </span>
@@ -77,12 +137,16 @@
                     <div formGroupName="byNoAndAssign">
                       <span>내담자 과제그룹 &nbsp;
                       <p-dropdown [style]="{'width':'300px'}" formControlName="byAssign"
+                      [options]="assignFinished"
+                      filter=true
                       placeholder="과제 그룹을 선택해 주세요."
-                      ></p-dropdown> 내의 과제를
+                      ></p-dropdown>
+                      <i class="fa fa-refresh fa-lg refresh" (click)="getAssignFinished(true)"></i>
+                      내의 과제를
                       <p-spinner size="1"
                       formControlName="byNum"
+                      (onChange)="fm.spinnerMinMax(1, 100, item.get('create').get('byNoAndAssign').get('byNum'))"
                       ></p-spinner> 개 수행 후 개시
-                      <!-- (onChange)="fm.spinnerMinMax(1, 100, item, 'byNoAndAssign', 'byNum')" -->
                       </span>
                     </div>
                   </li>
@@ -92,7 +156,7 @@
               <div [ngClass]="item.get('expand').value ? 'cond' : 'cond-hide'" formGroupName="prod">
                 <label>과제 생성 수량 선택 </label>
                 <p><p-dropdown
-                [options]="fm.createNumCond"
+                [options]="opt.createNumCond"
                 formControlName="type"
                 (onChange)="fm.prodFormControl($event, item)"
                 [style]="{'width':'600px'}">
@@ -101,7 +165,7 @@
                   <li>
                     <span>생성 개수 :&nbsp;
                       <p-spinner size="1"
-                      (onChange)="fm.spinnerMinMax(1, 20, item, 'prod', 'byNum')"
+                      (onChange)="fm.spinnerMinMax(1, 20, item.get('prod').get('byNum'))"
                       formControlName="byNum"></p-spinner>개
                     </span>
                   </li>
@@ -109,14 +173,14 @@
                     <span>
                       생성 날짜:&nbsp;&nbsp; 매달
                       <p-spinner size="1"
-                      (onChange)="fm.spinnerMinMax(1, 28, item, 'prod', 'byDate')"
+                      (onChange)="fm.spinnerMinMax(1, 20, item.get('prod').get('byDate'))"
                       formControlName="byDate"></p-spinner> 일 생성
                     </span>
                   </li>
                   <li [ngClass]="item.get('prod').get('byWeekDate').disabled ? 'disabled' : ''">
                     <span>
                       생성 요일 :&nbsp;&nbsp;
-                      <p-selectButton formControlName="byWeekDate" [options]="fm.weekDayOpt" multiple="multiple">
+                      <p-selectButton formControlName="byWeekDate" [options]="opt.weekDayOpt" multiple="multiple">
                       </p-selectButton>
                     </span>
                   </li>
@@ -127,7 +191,7 @@
               <div [ngClass]="item.get('expand').value ? 'cond' : 'cond-hide'" formGroupName="input">
                 <label>내담자 입력방식 선택 </label>
                 <p><p-dropdown
-                [options]="fm.inputType"
+                [options]="opt.inputType"
                 formControlName="type"
                 (onChange)="fm.inputFormControl($event, item)"
                 [style]="{'width':'600px'}">
@@ -137,17 +201,25 @@
                     <span><p-checkbox formControlName="photo" label="사진 입력 받기"></p-checkbox></span>
                   </li>
                   <li [ngClass]="item.get('input').get('num').disabled ? 'disabled': ''">
-                    <span>입력 횟수: <p-spinner size="1" formControlName="num" (onChange)="fm.spinnerMinMax(0, 5, item,'input', 'num')"></p-spinner></span>
+                    <span>입력 횟수:
+                      <p-spinner size="1" formControlName="num"
+                      (onChange)="fm.spinnerMinMax(1, 5, item.get('input').get('num'))"
+                      ></p-spinner></span>
                   </li>
                   <li [ngClass]="item.get('input').get('time').disabled ? 'disabled' : ''">
                     <span>시간 단위 선택: &nbsp;&nbsp;
-                      <p-selectButton formControlName="time" [options]="fm.timeScheOpt">
+                      <p-selectButton formControlName="time" [options]="opt.timeScheOpt">
                       </p-selectButton>
                     </span>
                   </li>
                   <li [ngClass]="item.get('input').get('survey').disabled ? 'disabled' : ''">
                     <span>설문 선택: &nbsp;&nbsp;</span>
-                    <p-dropdown [style]="{'width':'300px'}" formControlName="survey" placeholder="작성한 설문지를 선택해주세요."></p-dropdown>
+                    <p-dropdown [style]="{'width':'300px'}"
+                    formControlName="survey"
+                    filter=true
+                    [options]="surveyFinished"
+                    placeholder="작성한 설문지를 선택해주세요."></p-dropdown>
+                    <i class="fa fa-refresh fa-lg refresh" (click)="getSurvey(true)"></i>
                   </li>
                   <div formGroupName="table" [ngClass]="item.get('input').get('table').disabled ? 'disabled' : ''">
                     <li >테이블 포멧 작성하기: &nbsp;&nbsp;&nbsp;&nbsp;
@@ -160,6 +232,7 @@
                           <td *ngFor="let column of rows.controls; let c=index"  [formGroupName]="c">
                             <input *ngIf="c==0 && r==0 && (rows.parent.length > 1 || rows.length > 1 )" class="disabled" type="text" value="" disabled="true">
                             <input #rowLabel *ngIf="c==0 && r!=0" formControlName="data" type="text" placeholder="행 입력"
+                            (change)="fm.getTableData(item)"
                             (paste)="fm.tablePaste($event, item, r)"
                             (keydown)="onEnter(row, $event, item)"
                             >
@@ -178,6 +251,7 @@
                   <p-calendar class="time-picker" formControlName="fromTime"
                   [ngClass]="item.get('push').get('times').valid ? 'ng-valid': 'ng-invalid'"
                   [stepMinute]=15
+                  (onSelect)="checkCal($event)"
                   timeOnly=true
                   placeholder="AM 00:00"
                   hourFormat="12"></p-calendar> 에서
@@ -187,6 +261,9 @@
                   placeholder="AM 00:00"
                   timeOnly=true
                   hourFormat="12"></p-calendar> 사이
+                  <label class="valid-error" *ngIf="item.get('push').get('times').errors?.match&&item.get('push').get('times').dirty">
+                    {{fm.valider.pushTimeValidMsg}}
+                  </label>
                 </p>
                 <ul>
 
@@ -206,9 +283,9 @@
                        [value]=1 formControlName="push_type"></p-radioButton>
                       미확인 시
                       <p-spinner size="3"
-                      [step]="10"
-                      (onChange)="fm.spinnerMinMax(1, 1440, item, 'push', 'time')"
-                      formControlName="time"></p-spinner> 분 마다 반복 제시.   (PM 10:00 ~ AM 08:00 까지는 알리지 않습니다.)
+                      [step]="item.get('push').get('time').value == 1 ? 9 : 10"
+                      (onChange)="fm.spinnerMinMax(1, 1440, item.get('push').get('time'))"
+                      formControlName="time"></p-spinner> 분 마다 반복 제시.   (반복 제시는 PM 10:00 ~ AM 08:00 까지 알리지 않습니다.)
                     </span>
                   </li>
                 </ul>
@@ -228,7 +305,7 @@
                       <p-radioButton name="{{i}}_del_type" (onClick)="fm.delFormControl(item) "formControlName="del_type" [value]=1></p-radioButton>
                       완료하지 않은 과제 수가
                       <p-spinner size="3"
-                      (onChange)="fm.spinnerMinMax(1, 1000, item, 'del', 'byNum')"
+                      (onChange)="fm.spinnerMinMax(1, 1000, item.get('del').get('byNum'))"
                       formControlName="byNum"></p-spinner> 개 일 때, 가장 오래된 과제부터 소멸.
                     </span>
                   </li>
@@ -237,9 +314,9 @@
                       <p-radioButton name="{{i}}_del_type" (onClick)="fm.delFormControl(item)" formControlName="del_type" [value]=2></p-radioButton>
                       완료하지 않은 과제가
                       <p-spinner size="3"
-                      (onChange)="fm.spinnerMinMax(1, 1000, item, 'del', 'byDate')"
+                      (onChange)="fm.spinnerMinMax(1, 1000, item.get('del').get('byDate'))"
                       formControlName="byDate"></p-spinner>
-                      일 이상 났을 때 해당 과제 소멸.
+                      일 이상 지났을 때 해당 과제 소멸.
                     </span>
                   </li>
                 </ul>
@@ -259,7 +336,7 @@
                       <p-radioButton name="{{i}}_stop_type" [value]=1 (click)="fm.stopFormControl(item)" formControlName="stop_type"></p-radioButton>
                       첫 과제가 제시된 지
                       <p-spinner size="1" formControlName="byDate"
-                      (onChange)="fm.spinnerMinMax(1, 100, item, 'stop', 'byDate')"
+                      (onChange)="fm.spinnerMinMax(1, 100, item.get('stop').get('byDate'))"
                        ></p-spinner>
                       일이 경과할 시 중지.
                     </span>
@@ -269,7 +346,7 @@
                       <p-radioButton name="{{i}}_stop_type" [value]=2  (click)="fm.stopFormControl(item)" formControlName="stop_type"></p-radioButton>
                       내담자의 수행 과제 수가
                       <p-spinner size="1"
-                      (onChange)="fm.spinnerMinMax(1, 100, item, 'stop', 'byNum')"
+                      (onChange)="fm.spinnerMinMax(1, 100, item.get('stop').get('byNum'))"
                       formControlName="byNum"></p-spinner>
                       개 이상일 때 중지.
                     </span>
@@ -279,18 +356,31 @@
             </div>
           </div>
     </div>
+
     <div class="control-panel">
     <div class="button-bundle">
       <button type="button" (click)="fm.addAssign()">
         <i class="fa fa-plus"></i>
         이 그룹에 과제추가
       </button>
-      <button type="button">
+      <button type="button"
+      *ngIf="!isNew"
+      (click)="confirmSaveAs()"
+      >
+        <i class="fa fa-plus"></i>
+        <i class="fa fa-floppy-o"></i>
+        현재 과제 그룹 설정 다른이름으로 저장
+      </button>
+      <button type="button"
+      (click)="confirmSave()"
+      >
         <i class="fa fa-floppy-o"></i>
         현재 과제 그룹 설정 저장
       </button>
       <div class="">
-        <button type="button" [style.width.px]="325">
+        <button type="button" [style.width.px]="325"
+        (click)="confirmAssign()"
+        >
           <i class="fa fa-check"></i>
           현재 과제 그룹 설정 완료
         </button>

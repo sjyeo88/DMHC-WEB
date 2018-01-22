@@ -10,28 +10,44 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
-import { UserService } from '../../user.service';
-import { Patient } from '../../patient.service';
-import { Notice } from '../../notice.service';
 import { Layout } from '../../layout.service';
+import { ShortcutService } from './shortcut.service'
+import { UserService } from '../../user.service'
 
 @Component({
   selector: 'app-shortcut',
   templateUrl: './shortcut.component.html',
-  styleUrls: ['./shortcut.component.scss']
+  styleUrls: ['./shortcut.component.scss'],
+  providers: [ ShortcutService ]
 })
 export class ShortcutComponent implements OnInit {
+  public userServ = {
+      name: '',
+      dept: '',
+      job: '',
+      loginDate:new Date(),
+  }
+  public notices = []
   constructor(
-    public userService: UserService,
-    public patient: Patient,
-    public notices: Notice,
     public lay: Layout,
+    public serv: ShortcutService,
+    public us: UserService,
   ) {
+    this.getNotice();
   }
 
   ngOnInit() {
     this.lay.asideHide();
     this.lay.currentPage = '';
+  }
+
+
+
+  public getNotice() {
+    this.serv.getNotices()
+    .then(data=>{
+      this.notices = data.slice(0, 7)
+    })
   }
 
 }

@@ -64,17 +64,17 @@
       <td [style.width.%]="10" *ngIf="item.status===0" class=lecture-finish>완료</td>
       <td [style.width.%]="15">{{item.UPDATE_TIME | date:'yyyy-MM-dd'}}</td>
       <td class="clickable-td" (click)="onEditMove(item.title, item.type)" [style.width.%]="5">
-        <img src="./../../../../../../assets/img/icons/ic-mode-edit-18px.png">
+        <i class="fa fa-pencil"></i>
       </td>
       <td class="clickable-td" (click)="confirmDel(item.idLECTURE, item.title)" [style.width.%]="5" >
-          <img  src="./../../../../../../assets/img/icons/ic-mode-delete-18px.png">
+        <i class="fa fa-trash"></i>
       </td>
     </tr>
   </table>
 
   <div  [style.margin-top.px]="10">
     <p-paginator *ngIf="allLecturesLoaded && !isSearch"
-    rows="pagPerView"
+    [rows]="pagPerView"
     [first]="pagFirstIndex"
     [style]="{'border':'none'}"
     [style]="{'background-color':'white'}"

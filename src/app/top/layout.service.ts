@@ -21,7 +21,7 @@ export class Layout {
     },
     lecture: {title: '심리교육 설정',
       menus:  ['전체 교육 정보보기', '새 심리교육 생성하기', '기존교육 수정하기', '심리교육설정 메뉴얼'],
-      urls:   ['./main/frame/lecture/all', './main/frame/lecture/new', '', ''],
+      urls:   ['./main/frame/lecture/all', './main/frame/lecture/new', './main/frame/lecture/edit', ''],
       // urls:   ['./', './main/frame/lecture_new', './', './'],
     },
     survey:  {title: '설문지 설정',
@@ -30,7 +30,7 @@ export class Layout {
     },
     assign: {title: '내담자 과제설정',
       menus:  ['전체 과제 정보보기', '새 과제 생성하기', '기존 과제 수정하기', 'Hash Tag 설정하기'],
-      urls:   ['', './main/frame/assign/new', '', './main/frame/assign/hash',],
+      urls:   ['./main/frame/assign/all', './main/frame/assign/new', './main/frame/assign/edit', './main/frame/assign/hash',],
     },
     manage: {title: '내담자 관리',
       menus:  ['전체 내담자 정보관리', '특정 내담자 정보보기', '내담자 관리 메뉴얼'],
@@ -42,7 +42,7 @@ export class Layout {
     },
     guest:  {title: '고객센터',
       menus: ['공지사항', '자주하는 질문', '서비스 이용문의'],
-      urls:   ['', '', '',],
+      urls:   ['./main/frame/guest/notice', './main/frame/guest/faq', '',],
     }
   }
   public currentMenu = {title:'', menus: [], urls: []};

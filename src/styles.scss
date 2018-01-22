@@ -176,14 +176,15 @@ textarea {
 }
 .valid-error {
   padding:5px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  width: 250px !important;
   // border: 1px solid $error_color;
 
   margin-left: 20px;
   border-radius: 5px;
   background-color: rgb(255, 182, 170);
-  color: $main_color01;
+  color: $main_color01 !important;
   font-weight: bold;
   border-color:inherit;
 }
@@ -192,7 +193,7 @@ textarea {
   @extend .valid-error;
   // border: 1px solid rgb(196, 141, 0);
   background-color: rgb(242, 240, 189);
-  color: rgb(196, 141, 0);
+  color: rgb(196, 141, 0)  !important;
 }
 
 .disabled {
@@ -201,6 +202,23 @@ textarea {
   -moz-transition: opacity .5s;
   transition: opacity .5s;
   opacity: 0.6
+}
+
+
+
+.refresh {
+  color: $correct_color;
+  margin-left: 10px;
+  margin-right : 10px;
+  cursor: pointer;
+
+}
+
+.refresh:hover {
+  color: lighten($correct_color, 10);
+  -webkit-transition: color .5s;
+  -moz-transition: color.5s;
+  transition: color .5s;
 }
 
 

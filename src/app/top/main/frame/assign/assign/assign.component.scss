@@ -46,7 +46,7 @@
     }
   }
   ul {
-    overflow: hidden;
+    overflow: visible;
     color: $gray_darken;
     padding-left: 30px;
     margin-top: 30px;
@@ -97,6 +97,7 @@
 
 .control-panel {
   @include item(white);
+
   .button-bundle{
     text-align: right;
     button{
@@ -134,6 +135,23 @@
     font-size: 20px;
     margin-right: 15px;
     margin-top: 15px;
+  }
+  .remove {
+    cursor: pointer;
+    float: right;
+    margin-right: 20px;
+    i {
+      color: $main_color01;
+      -webkit-transition: color 0.5s;
+      -moz-transform: color 0.5s;
+      transform: color 0.5s;
+    }
+    i:hover {
+      color: lighten($main_color01, 20);
+      -webkit-transition: color 0.5s;
+      -moz-transform: color 0.5s;
+      transform: color 0.5s;
+    }
   }
 
 

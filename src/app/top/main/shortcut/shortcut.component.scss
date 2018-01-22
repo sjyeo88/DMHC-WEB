@@ -65,7 +65,7 @@
     border: 3px solid white;
   }
   .info {
-    margin-left: 34px;
+    margin-left: 30px;
     margin-bottom: 27px;
   }
   overflow: hidden;
@@ -153,10 +153,17 @@
     margin-left: 10px;
   }
 
-  ul { margin-left: 30px;}
-  li {
-    color: $gray-darken;
-    margin-bottom: 5px;
+  ul {
+    padding: 5px;
+    margin-left: 30px;
+    margin-right: 10px;
+    li {
+      span {
+        float:right;
+      }
+      color: $gray-darken;
+      margin-bottom: 5px;
+    }
   }
   // .notice-list {
     // color: $gray-darken;

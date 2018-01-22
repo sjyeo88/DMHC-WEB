@@ -1,53 +1,34 @@
 import { Injectable } from '@angular/core'
 import { FormArray, AbstractControl, FormControl,FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { DropDownOpt } from '../assign.model'
 import  cloneDeep = require('lodash.cloneDeep');
+
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
+
+import 'rxjs/add/operator/debounceTime';
+import 'rxjs/add/observable/from';
+
+class ValidConfig {
+  requireMsg = "입력 란을 작성하세요.";
+  titleMax:number = 30;
+  titleMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.titleMax+ ' 자 이하]'
+  titleDuplicateMsg:string = '기존 과제 중 중복된 설문이 있습니다.'
+  subTitleMax:number = 30;
+  subTitleMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.subTitleMax+ ' 자 이하]'
+  commandMax:number = 30;
+  commandMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.commandMax+ ' 자 이하]'
+  tableMax:number = 10;
+  tableMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.tableMax+ ' 자 이하]'
+  pushTimeValidMsg:string = '사이 시간을 구할 수 없습니다.'
+}
 
 @Injectable()
 export class AssignForm {
+  public valider = new ValidConfig()
   public assignForm:FormGroup
   public assignGroup:FormGroup
   public surveyGroup:FormGroup
-  public weekDayOpt = [
-    {label: '월요일', value:'mon'},
-    {label: '화요일', value:'tue'},
-    {label: '수요일', value:'wed'},
-    {label: '목요일', value:'thu'},
-    {label: '금요일', value:'fri'},
-    {label: '토요일', value:'sat'},
-    {label: '일요일', value:'sun'},
-  ]
-  public timeScheOpt = [
-    {label: '30분', value:0},
-    {label: '2시간', value:2},
-    {label: '1시간', value:1},
-  ]
-  public createTimeCond= [
-    {label: '내담자 로그인 시 바로 해당 과제 생성 시작', value:0},
-    {label: '지정된 날짜 이후로 해당 과제 생성 시작', value:1},
-    {label: '내담자가 전체 과제를 지정된 횟수 이상 수행한 이후 해당 과제 생성 시작', value:2},
-    {label: '내담자가 지정된 과제를 지정된 횟수 이상 수행한 이후 해당 과제 생성 시작', value:3},
-  ]
-  public createNumCond= [
-    {label: '매일 지정된 개수 생성', value:0},
-    {label: '지정된 날짜 마다 지정된 개수 생성', value:2},
-    {label: '지정된 요일 마다 지정된 개수 생성', value:1},
-  ]
-  public inputType= [
-    {label: '단순 텍스트 입력', value:0},
-    {label: '단순 음성 입력', value:1},
-    {label: '텍스트 / 음성 사용자 선택', value:2},
-    {label: '일일 기준 시간 별 입력', value:3},
-    {label: '주간 계획 입력', value:4},
-    {label: '설문 작성하기', value:7},
-    {label: '사용자 정의 테이블 형식', value:5},
-    {label: '교육 다시보기', value:6},
-  ]
-
-  public surveySchOpt= [
-    {label: '월 1회', value:0},
-    {label: '주 1회', value:1},
-    {label: '일 1회', value:2},
-  ]
 
   constructor(
     private fb: FormBuilder,
@@ -56,9 +37,11 @@ export class AssignForm {
     this.assignGroup = this.fb.group({
       subTitle: ['', [
         Validators.required,
+        Validators.maxLength(this.valider.subTitleMax),
       ]],
       command: ['', [
         Validators.required,
+        Validators.maxLength(this.valider.commandMax),
       ]],
 
       create: this.fb.group({
@@ -66,14 +49,14 @@ export class AssignForm {
           Validators.required,
         ]],
         byDate: [{value:1, disabled:true}, [
-          // Validators.required,
+          Validators.required,
         ]],
         byNum: [{value:1, disabled:true}, [
-          // Validators.required,
+          Validators.required,
         ]],
         byNoAndAssign: this.fb.group({
-          byNum: [{value:1, disabled:true}, []],
-          byAssign: [{value:1, disabled:true}, []],
+          byNum: [{value:1, disabled:true}, [Validators.required]],
+          byAssign: [{value:null, disabled:true}, [Validators.required]],
         }),
       }),
 
@@ -87,7 +70,7 @@ export class AssignForm {
         byDate: [{value:1, disabled:true}, [
           Validators.required,
         ]],
-        byWeekDate: [{value:[], disabled:true}, [
+        byWeekDate: [{value:[0], disabled:true}, [
           Validators.required,
         ]],
       }),
@@ -100,27 +83,25 @@ export class AssignForm {
           // Validators.required,
         ]],
         num: [1, [
-          // Validators.required,
-        ]],
-        time: [{value:[], disabled: true}, [
           Validators.required,
         ]],
-        survey: [{value:0, disabled: true}, [
+        time: [{value:0, disabled: true}, [
+          Validators.required,
+        ]],
+        survey: [{value:null, disabled: true}, [
           Validators.required,
         ]],
 
         table: this.fb.group({
-          // column: [{value:0, disabled:true}, [
           column: [{value:1, disabled: true}, [
-            // Validators.required,
+            Validators.required,
           ]],
-          // row: [{value:0, disabled:true}, [
           row: [{value:1, disabled: true}, [
-            // Validators.required,
+            Validators.required,
           ]],
           tableData: this.fb.array([
             this.fb.array([
-              this.fb.group({data: [{value:'', disabled: true},[Validators.required]]})
+              this.fb.group({data: [{value:'', disabled: true},[]]})
             ]),
           ]),
         }),
@@ -151,7 +132,7 @@ export class AssignForm {
         byDate: [{value:1, disabled: true}, []],
         byNum: [{value:1, disabled: true}, []],
       }),
-      expand: true,
+      expand: false,
     })
 
 
@@ -164,7 +145,7 @@ export class AssignForm {
     this.assignForm = this.fb.group({
         title: ['', [
           Validators.required,
-          // Validators.maxLength(this.valider.titleMax),
+          Validators.maxLength(this.valider.titleMax),
         ]],
         lecture: ['', [
           Validators.required,
@@ -177,8 +158,13 @@ export class AssignForm {
 
 
   addAssign() {
-    let assigns = (this.assignForm.controls.assigns as FormArray)
-    assigns.insert(assigns.length, cloneDeep(this.assignGroup))
+    let assigns = (this.assignForm.get('assigns') as FormArray);
+    assigns.insert(assigns.length, cloneDeep(this.assignGroup));
+  }
+
+  delAssign(item, idx) {
+    let assigns = item.parent;
+    assigns.removeAt(idx);
   }
 
   createFormControl(event, item) {
@@ -224,15 +210,22 @@ export class AssignForm {
     // console.log(item);
     let form = item.get('input')
     // document.getElementById('createByNum').disable()
+    form.get('num').enable();
+    form.get('photo').enable();
+
     form.get('time').disable();
     form.get('table').disable();
     form.get('survey').disable();
     // console.log(form.get('time'));
     switch(event.value) {
       case 3:
+        form.get('num').disable();
+        form.get('photo').disable();
         form.get('time').enable();
         break;
       case 5:
+        form.get('num').disable();
+        form.get('photo').disable();
         form.get('table').enable();
         break;
       case 6:
@@ -313,12 +306,18 @@ export class AssignForm {
     }
     if(setCol < 4) {
       for(let i=0; i < Math.abs(adjColVal); i++) {
-        row.map((obj)=>{
+        row.map((obj, idx)=>{
           if(adjColVal < 0) {
             obj.removeAt(obj.length-1)
-            // controls.splice(obj.length, 1)
           } else if(adjColVal > 0) {
-            obj.insert(obj.length, this.fb.group({data:['',[Validators.required]]}));
+            if(idx === 0) {
+              obj.insert(obj.length, this.fb.group({data:['',[
+                Validators.required,
+                Validators.maxLength(this.valider.tableMax),
+              ]]}));
+            } else {
+              obj.insert(obj.length, this.fb.group({data:'',}));
+            }
           }
         })
       }
@@ -344,10 +343,12 @@ export class AssignForm {
     }
     if(setRow < 121) {
     for(let i=0; i < colLen; i++) {
-      if(idx && value) {
-        addCol.insert(addCol.length, this.fb.group({data:[i!==0 ? value : '',[Validators.required]]}));
-      } else {
-        addCol.insert(addCol.length, this.fb.group({data:['',[Validators.required]]}));
+      if(i!==0) addCol.insert(addCol.length, this.fb.group({data:''}));
+      else {
+        addCol.insert(addCol.length, this.fb.group({data:[i!==0 && idx&& value ? value : '',[
+          Validators.required,
+          Validators.maxLength(this.valider.tableMax),
+        ]]}));
       }
     }
     for(let i=0; i < Math.abs(adjRowVal); i++) {
@@ -362,17 +363,13 @@ export class AssignForm {
     }
   }
 
-  spinnerMinMax(min, max, item, parent, formCtrl){
-    let form = item.get(parent);
-    let tgtForm = form.get(formCtrl);
-    // console.log('Works');
-    if(isNaN(tgtForm.value) || tgtForm.value < min) {
-      // console.log(tgtForm.value);
-      form.controls[formCtrl].patchValue(min);
+  spinnerMinMax(min, max, formCtrl){
+    if(isNaN(formCtrl.value) || formCtrl.value < min) {
+      formCtrl.patchValue(min);
       return false;
     }
-    if(tgtForm.value > max) {
-      form.controls[formCtrl].patchValue(max);
+    if(formCtrl.value > max) {
+      formCtrl.patchValue(min);
       return false;
     }
   }
@@ -381,7 +378,7 @@ export class AssignForm {
     const fromTime = form.get('fromTime').value;
     const toTime = form.get('toTime').value;
     // console.log(fromTime.getTime() - toTime.getTime());
-    if((fromTime.getTime() - toTime.getTime()) > 0) {
+    if((toTime && fromTime) && (fromTime.getTime() - toTime.getTime()) > 0) {
       return {match: {fromTime, toTime}};
     } else {
       return null;
@@ -427,4 +424,49 @@ export class AssignForm {
       resolve(true)
     })
   }
+
+  getTableData(item) {
+    let tgtInput =  item.get('input').get('table').get('tableData');
+    let table = [];
+    let tableRow = [];
+    for(let i = 0; i < tgtInput.length; i++) {
+      for(let j = 0; j < tgtInput.controls.length; j++) {
+        tableRow.push(tgtInput.controls[i].controls[j].get('data').value);
+      }
+      table[i] = tableRow;
+      tableRow = [];
+      // console.log(table);
+    }
+    return JSON.stringify(table);
+  }
+
+  setTableData(item, data) {
+    let rowNum = data.length;
+    let colNum = data[0].length;
+    let tgtInput =  item.get('input').get('table')
+    tgtInput.patchValue({ 'row': rowNum, 'column': colNum, })
+    this.adjRow(null, item);
+    this.adjCol(null, item);
+    for(let i=0; i < rowNum; i++) {
+      for(let j=0; j < colNum; j++) {
+        tgtInput.get('tableData').controls[i].controls[j].get('data').setValue(data[i][j]);
+        // console.log(data[i][j]);
+      }
+    }
+
+
+    // let tgtInput =  item.get('input').get('table').get('tableData');
+    // let table = [];
+    // let tableRow = [];
+    // for(let i = 0; i < tgtInput.length; i++) {
+    //   for(let j = 0; j < tgtInput.controls.length; j++) {
+    //     tableRow.push(tgtInput.controls[i].controls[j].get('data').value);
+    //   }
+    //   table[i] = tableRow;
+    //   tableRow = [];
+    //   // console.log(table);
+    // }
+    // return JSON.stringify(table);
+  }
+
 }
