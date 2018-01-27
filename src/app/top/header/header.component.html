@@ -33,8 +33,12 @@
     <div class="sub">
       <ul>
         <li>환영합니다. {{us.userServ.name}} {{us.userServ.job}}님! </li>
-        <li><i class="fa fa-unlock fa-lg"></i>Logout</li>
-        <li><i class="fa fa-sitemap fa-lg"></i>Site map</li>
+        <li class="logout">
+          <i class="fa fa-unlock fa-lg"></i>
+          <i class="fa fa-lock fa-lg"></i>
+          Logout
+        </li>
+        <li><a routerLink="/top/main/frame/sitemap"><i class="fa fa-sitemap fa-lg"></i>Site map</a></li>
       </ul>
     </div>
 

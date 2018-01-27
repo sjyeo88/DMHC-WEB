@@ -1,0 +1,26 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : use-process                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<div class="">
+  <div *ngFor="let item of processOpt; let i=index" [ngClass]="'step'+i">
+      <h5 class="title">{{item.title}}</h5>
+      <div align="center">
+        <div class="detail">{{item.detail}}</div>
+        <div class="appendix" [innerHTML]=item.appendix></div>
+      </div>
+  </div>
+</div>

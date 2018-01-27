@@ -1,0 +1,63 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : use-process                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+
+@mixin procObj($background-color) {
+  position: relative;
+  font-family: "NanumBarunGothicOTF";
+  float: left;
+  width: 185px;
+  height: 248px;
+  color: white;
+  background-color: $background-color;
+  margin: 0 9px;
+  padding: 14px 14px;
+  text-align: center;
+  .title {
+    font-size: 24px;
+    padding: 8px;
+    border-bottom: 2px solid white;
+  }
+  .detail {
+    text-align: left;
+    width: 140px;
+    margin-top: 30px;
+    font-size: 14px;
+  }
+  .appendix {
+    display: inline-block;
+    text-align: left;
+    margin-top: 50px;
+    font-size: 14px;
+  }
+}
+@mixin procObjArrow($background-color) {
+  content: " ";
+  position: absolute;
+  top: calc(50% - 11px);
+  left: 100%;
+  width: 0px;
+  height: 0px;
+  border-top: 22px solid transparent ;
+  border-right: 10px solid transparent;
+  border-left: 18px solid $background-color;
+  border-bottom: 22px solid transparent;
+}
+
+.step0 { @include procObj(#94282C); }; 
+.step0::after{ @include procObjArrow(#94282C); }
+.step1 { @include procObj(#945228); }
+.step1::after{ @include procObjArrow(#945228); }
+.step2 { @include procObj(#947828); }
+.step2::after{ @include procObjArrow(#947828); }
+.step3 { @include procObj(#7D9428); }
+.step3::after{ @include procObjArrow(#7D9428); }
+.step4 { @include procObj(#2D9428); }

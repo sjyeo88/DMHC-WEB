@@ -15,7 +15,8 @@
 .map {
   font-family: 'NanumGothicOTF';
   font-size: 14px;
-  margin-left: 70%;
+  margin-right: 50px;
+  text-align: right;
 }
 
 .frame-title {
@@ -24,5 +25,6 @@
   border-bottom: 2px solid $gray_darken;
   margin-top: 20px;
   margin-bottom: 23px;
+  padding-bottom: 10px;
 }
 }

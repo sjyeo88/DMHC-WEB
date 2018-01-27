@@ -1,0 +1,80 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : manage-all                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="all-manage" [formGroup]="fm.form">
+  <div class="search">
+    <p-dropdown
+    formControlName="searchOpt"
+    [options]="fm.searchOpt"
+    >
+    </p-dropdown>
+    <input type="text" formControlName="search" value="">
+    <br>
+    <br>
+  </div>
+  <div class="table">
+    <table>
+      <th>No</th>
+      <th>성명</th>
+      <th>성별</th>
+      <th>나이</th>
+      <th>전화번호</th>
+      <th>이메일</th>
+      <th>등록과제 그룹</th>
+      <th align="left">수행<br>과제수</th>
+      <th align="left">전체<br>과제수</th>
+      <th>수행률</th>
+      <th>자세히</th>
+
+      <tr *ngFor="let item of patientsByPage; let i = index">
+        <td align="center">{{('000'+ item.idPATIENT_USER).slice(-4)}}</td>
+        <td>{{ item.name }}</td>
+        <td align="center">{{ item.gender | gender }}</td>
+        <td>만 {{ serv.getAge(item.birth) }} 세</td>
+        <td align="center">{{ item.phone | phone }}</td>
+        <td>{{ item.email }}</td>
+        <td [formGroup]="item.assigns">
+          <!-- formControlName="assigns[i]" -->
+          <p-dropdown
+          placeholder="과제그룹이 선택되지 않았습니다."
+          formControlName="assign"
+          [options]="assignList"
+          [style]="{'width':'300px'}"
+          (onChange)="confirmAssign($event, i)"
+          ></p-dropdown>
+        </td>
+        <td>{{ item.fin_sbjt }}</td>
+        <td>{{ item.all_sbjt }}</td>
+        <td>{{ item.all_sbjt ? (item.fin_sbjt / item.all_sbjt * 100).toFixed(1) : 0 }}%</td>
+        <td align="center" class="clickable-td" (click)="onDetailPatient(item)">
+             <i class="fa fa-pencil"></i>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div  [style.margin-top.px]="10">
+    <p-paginator *ngIf="!isSearch"
+    [rows]="rowPerPage"
+    [first]="0"
+    [style]="{'border':'none'}"
+    (onPageChange)="onPageMove($event.page)"
+    [style]="{'background-color':'white'}"
+    [totalRecords]="patients.length">
+    </p-paginator>
+  </div>
+</div>

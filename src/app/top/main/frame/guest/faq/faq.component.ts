@@ -44,6 +44,7 @@ export class FaqComponent extends BoardComponent {
   }
 
   ngOnInit() {
+    this.lay.asideView();
     this.lay.cuTitle.title = this.lay.submenus.guest.title
     this.lay.cuTitle.page =  this.lay.submenus.guest.menus[1];
     this.lay.currentMenu =  this.lay.submenus.guest;

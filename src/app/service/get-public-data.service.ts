@@ -9,6 +9,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 import { Job, Dept, Admin } from './get-data';
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
+import { environment } from './../../environments/environment';
 // import {CookieService} from 'angular2-cookie/core';
 
 const httpOptions = {
@@ -16,7 +17,7 @@ const httpOptions = {
 };
 
 export class Req2 extends YHttp {
-  private apiUrl:string = 'http://localhost:3001/api';
+  private apiUrl:string = environment.apiUrl;
 
   public cmsgs:any = {
     severity: 'error',

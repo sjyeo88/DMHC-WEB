@@ -23,6 +23,7 @@
   }
   .menu {
     float: right;
+    margin-left: 102px;
     width: 1000px;
     .sub {
       float: right;
@@ -81,5 +82,15 @@
 
   }
 
+  .logout .fa-unlock,
+  .logout:hover .fa-lock, {
+    width: 100px;
+    display: none;
+  }
+
+  .logout:hover .fa-unlock, {
+    width: 100px;
+    display: inline;
+  }
   // border-bottom: 2px, bold, $main_color01;
 }

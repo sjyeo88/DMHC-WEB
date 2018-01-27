@@ -27,8 +27,10 @@
 <!-- code start  ---------------------------------------------------------->
 
 
-<div class="aside"
-[style.transform]="lay.values.transform" >
+<!-- class="aside-hide" -->
+<!-- [style.transform]="lay.values.transform" > -->
+<div [ngClass]="lay.isSlide ? 'aside-view' : 'aside-hide'" >
+<!-- <div class="aside-hide" > -->
 <div class="sub-title">
   {{ lay.currentMenu.title }}
 </div>
@@ -36,14 +38,15 @@
   <ol>
     <li
       *ngFor="let menu of lay.currentMenu.menus; let i=index;">
-        <div (click)="subMenuClick(menu)">
+        <a [routerLink]="'./main/frame' + lay.currentMenu.urls[i]">
+          <div >
           {{ menu }}
-
-        <span *ngIf="lay.currentPage === menu"
-          class="arrow-red">></span>
-        <span *ngIf="lay.currentPage !== menu"
-          class="arrow">></span>
-        </div>
+          <span *ngIf="lay.currentPage === menu"
+            class="arrow-red">></span>
+          <span *ngIf="lay.currentPage !== menu"
+            class="arrow">></span>
+          </div>
+        </a>
     </li>
   </ol>
 </div>

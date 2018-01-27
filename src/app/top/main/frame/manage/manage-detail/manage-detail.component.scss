@@ -1,0 +1,84 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : manage-detail                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../../scss-variable.scss';
+
+.search {
+  float: right;
+  input {
+    height: 30px;
+  }
+}
+.patient-detail {
+  width:100%;
+  .sub-title {
+    background-color: $main_color01;
+    border-bottom: 5px solid white;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    height: 55px;
+    padding:8px 15px;
+  }
+
+  .assign-dropdown{
+    padding:0;
+    float:right;
+    width:300px;
+  }
+  .detail {
+    padding: 10px;
+    ul {
+      list-style: none;
+      margin-bottom: 30px;
+    }
+    background-color:  $gray_bright;
+    color:  $gray_darken;
+  }
+
+  .survey-ctrl {
+    background-color: $gray_darken;
+    color: white;
+    height: 80px;
+    .year {
+      background-color: inherit;
+      font-size: 36px;
+      padding: 0.2em 0 0 0;
+      float: right;
+    }
+    .year-move {
+      background-color: inherit;
+      font-size: 36px;
+      padding: 0.25em 0 0 0;
+      border-left: 1px solid white;
+      text-align: center;
+      height: 100%;
+      cursor: pointer;
+    }
+    .year-move:hover {
+      background-color: $gray_light;
+
+    }
+    .survey {
+      background-color: inherit;
+      list-style: none;
+      font-size: 16px;
+      padding: 0.5em 2.0em;
+    }
+    .survey-detail {
+      float:left;
+    }
+  }
+
+  canvas {
+    width: 100% !important;
+  }
+}

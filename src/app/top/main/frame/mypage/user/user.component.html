@@ -1,0 +1,81 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : user                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<form class="ui-g user" [formGroup]="fm.form">
+  <div class="ui-g-2 label">
+    <li>치료자 Mail</li>
+    <li>치료자 성명</li>
+    <li>생년월일</li>
+    <li>전화번호</li>
+  </div>
+  <div class="ui-g-10 detail">
+    <li><input type="text" formControlName="email"> <button type="button" (click)="onChangeInfo(0)">변경</button> </li>
+    <li>{{user.userServ.name}}</li>
+    <li>{{user.userServ.birth | date:'yyyy-MM-dd'}}</li>
+    <li><input type="text"  formControlName="phone"> <button type="button" (click)="onChangeInfo(1)">변경</button></li>
+  </div>
+  <div class="ui-g-2 label">
+    <li>소속기관</li>
+    <li>직종</li>
+    <li>전문가 자격증</li>
+  </div>
+  <div class="ui-g-10 detail">
+    <li>
+      <p-dropdown
+      [style]="{'width':'300px'}"
+      [options]="fm.deptOpt"
+      formControlName="dept"
+      >
+      </p-dropdown>
+      <button type="button" (click)="onChangeInfo(2)">변경</button>
+    </li>
+    <li>
+      <p-dropdown
+      [style]="{'width':'300px'}"
+      [options]="fm.jobOpt"
+      formControlName="job"
+      >
+      </p-dropdown>
+      <button type="button" (click)="onChangeInfo(3)">변경</button>
+    </li>
+      <p-fileUpload
+        name="license_file"
+        showCancelButton="false"  auto="true"
+        customUpload="true"
+        accept="image/*"
+        [style]="{'margin':'20px'}"
+        maxFileSize="10000000"
+        (uploadHandler)="onUpload($event)"
+        invalidFileSizeMessageSummary= "{0}: 파일 사이즈가 맞지않습니다."
+        invalidFileSizeMessageDetail= "({0} 이하)"
+        invalidFileTypeMessageSummary= "{0}: 파일 타입이 맞지않습니다."
+        invalidFileTypeMessageDetail= "(jpg, jpeg, png, gif)">
+      </p-fileUpload>
+
+        <!-- (onRemove)= "onRemoved($event)" -->
+  </div>
+  <p-dialog header="비밀번호 재입력" [(visible)]="viewPwdDialog" modal="modal" width="500" [responsive]="true">
+    <div [style.margin-bottom.px]="10">정보 변경을 위해 비밀번호를 다시 입력해주세요.</div>
+    <div class="">
+      <input  [style.width.px]="300" formControlName="password" type="password">
+    </div>
+    <p-footer>
+        <button type="submit" pButton icon="fa-check" (click)="postData()" label="저장하기"></button>
+        <button type="button" pButton icon="fa-close" (click)="viewPwdDialog=false" label="취소"></button>
+    </p-footer>
+  </p-dialog>
+</form>

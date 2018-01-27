@@ -209,9 +209,9 @@ class="regist-form">
 
 
       <br>
+      <!-- url="http://localhost:3001/api/auth/license" -->
       <p-fileUpload
       name="license_file"
-      url="http://localhost:3001/api/auth/license"
       showCancelButton="false"  auto="true"
       customUpload="true"
       (onRemove)= "onRemoved($event)"
@@ -222,9 +222,6 @@ class="regist-form">
       invalidFileSizeMessageDetail= "({0} 이하)"
       invalidFileTypeMessageSummary= "{0}: 파일 타입이 맞지않습니다."
       invalidFileTypeMessageDetail= "(jpg, jpeg, png, gif)">
-            <!-- <ul *ngIf="license_imgs.length"> -->
-                <!-- <li *ngFor="let file of license_imgs">{{file.name}} - {{file.size}} bytes</li> -->
-            <!-- </ul> -->
       </p-fileUpload>
       <div class="label" >
         <label *ngIf="fileSelected == false">

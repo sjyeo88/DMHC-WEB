@@ -1,0 +1,63 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : sitemap                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+<!-- code start  ---------------------------------------------------------->
+
+
+<table class="sitemap">
+  <th> {{ sitemap.dmhc.title }} </th>
+  <th> {{ sitemap.lecture.title }} </th>
+  <th> {{ sitemap.survey.title }} </th>
+  <th> {{ sitemap.assign.title }} </th>
+  <th> {{ sitemap.manage.title }} </th>
+  <th> {{ sitemap.mypage.title }} </th>
+  <th> {{ sitemap.guest.title }} </th>
+  <tr valign="top">
+    <td>
+      <li *ngFor="let item of lay.submenus.dmhc.menus; let i=index">
+        <a [routerLink]=" '../' + lay.submenus.dmhc.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.lecture.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.lecture.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.survey.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.survey.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.assign.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.assign.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.manage.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.manage.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.mypage.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.mypage.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+    <td>
+      <li *ngFor="let item of lay.submenus.guest.menus; let i=index">
+        <a [routerLink]="'../'+ lay.submenus.guest.urls[i]">{{ item }}</a>
+      </li>
+    </td>
+  </tr>
+</table>

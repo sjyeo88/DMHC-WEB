@@ -9,7 +9,7 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Layout } from '../layout.service';
 import { Router, ActivatedRoute } from '@angular/router'
 
@@ -24,6 +24,7 @@ export class AsideComponent implements OnInit {
   constructor(
     public lay:Layout,
     private router: Router,
+    public ref:ChangeDetectorRef,
     public route: ActivatedRoute,
   ) {
 
@@ -39,25 +40,11 @@ export class AsideComponent implements OnInit {
           }
         this.lay.currentPage =  sessionStorage.getItem('page');
         })
-        // this.lay.currentMenu =
-        // sessionStorage.get('page')
     }
   }
 
-  subMenuClick(name) {
-    let url="";
-    let i:number;
-    sessionStorage.removeItem('index');
-    this.lay.currentMenu.menus.map((obj)=>{
-      if(obj == name) {
-        i = this.lay.currentMenu.menus.indexOf(name)
-        url = this.lay.currentMenu.urls[i]
-
-        this.router.navigate([url], {relativeTo: this.route});
-        console.log();
-      }
-    })
-    this.lay.currentPage = name;
+  ngAfterViewChecked(): void {
+    this.ref.detectChanges();
+    //for avoid ExpressionChangedAfterItHasBeenCheckedError
   }
-
 }

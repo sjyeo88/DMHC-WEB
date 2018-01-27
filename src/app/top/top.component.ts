@@ -10,7 +10,7 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild} from '@angular/core';
 import { Req2 } from '../service/get-public-data.service';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
@@ -47,9 +47,15 @@ export class TopComponent implements OnInit {
   public getUser() {
     this.us.getUser()
     .then(data=>{
+      this.us.userServ.idEXPERT_USER = data.idEXPERT_USER;
       this.us.userServ.name = data.name;
+      this.us.userServ.email= data.email;
       this.us.userServ.dept = data.idDEPT;
+      this.us.userServ.idDEPT = data.idDEPT;
       this.us.userServ.job = data.idJOBS;
+      this.us.userServ.idJOBS = data.idJOBS;
+      this.us.userServ.birth = data.birth;
+      this.us.userServ.phone= data.phone;
       this.us.userServ.loginDate = new Date(data.last_login_date);
       return this.us.userServ;
       // console.log(data);

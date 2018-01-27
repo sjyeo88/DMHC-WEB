@@ -1,0 +1,58 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : qna                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+
+<!-- code start  ---------------------------------------------------------->
+
+<div class="ui-g">
+  <div class="ui-g-2 label">
+    <li>질문 제목</li>
+    <li>질문 내용</li>
+  </div>
+  <div class="ui-g-10 detail" [formGroup]="fm.form">
+    <input type="text" formControlName="title" placeholder="제목을 입력해 주세요." >
+     <div class="editor">
+      <quill-editor [style]="{height: '600px'}"
+       placeholder="질문 내용을 작성해 주세요."
+       formControlName="editor"
+      >
+        <div quill-editor-toolbar>
+          <span class="ql-formats">
+            <select class="ql-size">
+              <option selected>Default</option>
+              <option value="10px">10px</option>
+              <option value="16px">16px</option>
+              <option value="32px">32px</option>
+              <option value="48px">48px</option>
+              <option value="64px">64px</option>
+              <option value="128px">128px</option>
+            </select>
+            <select class="ql-font"></select>
+            <select class="ql-color"></select>
+            <select class="ql-background"></select>
+            <button class="ql-bold"></button>
+            <button class="ql-italic"></button>
+            <button class="ql-underline"></button>
+            <button class="ql-blockquote"></button>
+            <button class="ql-strike"></button>
+            <button class="ql-list" value="ordered"></button>
+            <button class="ql-list" value="bullet"></button>
+            <button class="ql-image"></button>
+          </span>
+        </div>
+      </quill-editor>
+    </div>
+    <button type="submit" name="button" class="submit" (click)="submit()"> <i class="fa fa-envelope-o"></i> 전송하기</button>
+  </div>
+
+</div>

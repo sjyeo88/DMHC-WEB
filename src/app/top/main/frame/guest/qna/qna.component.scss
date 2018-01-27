@@ -1,0 +1,51 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : qna                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../../scss-variable.scss';
+
+.label {
+  font-family: "NanumBarunGothicOTF";
+  font-weight: bold;
+  text-align: center;
+  list-style: none;
+  background-color: $main_color01;
+  color: white;
+  padding: 25px 15px;
+  li {
+    margin-bottom: 30px;
+  }
+}
+.detail {
+  border-left: 5px solid white;
+  padding: 15px;
+  background-color: $gray_bright;
+  input {
+    width: 300px;
+    margin-bottom: 20px;
+  }
+  .submit {
+    margin-top: 15px;
+    margin-left: 300px;
+    width: 300px;
+  }
+}
+
+quill-editor{
+  button {
+    width:28px;
+    box-shadow: none;
+  }
+}
+
+.editor {
+  width: 600px;
+  background-color: white;
+}

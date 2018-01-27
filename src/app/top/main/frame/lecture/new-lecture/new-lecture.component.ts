@@ -23,6 +23,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router'
+import { environment } from './../../../../../../environments/environment';
 
 // Observable operators
 import 'rxjs/add/operator/debounceTime';
@@ -464,7 +465,7 @@ viewPreViewer(cond:boolean) {
     if(this.isSaved) {
       this.preViewer = cond;
       if(this.isPDF) {
-        let url:string = 'http://localhost:3001/api/data/lecture/pdf/'
+        let url:string = environment.apiUrl + '/data/lecture/pdf/';
         this.pdfSrc.url = this.isNew ? url + this.title.value : url + this.loadedTitle.value
         console.log(this.pdfSrc);
       }

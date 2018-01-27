@@ -1,0 +1,47 @@
+// ################################################################## //
+// #  COPYRIGHT © KU 마음건강연구소 ALL RIGHTS RESERVED.             # //
+// #  Name of app: DMHC (Web applcation of Daily Mind Health Care). # //
+// #  Client : KU Mind health care institute.                       # //
+// #  Developer : Yeo Sung Jun (sjyeo88@gmail.com).                 # //
+// #  Used Frameworks : Angular 4, Express, MySQL.                  # //
+// #  Name of Component : sitemap                    # //
+// #  Kick off : 2017-12-04                                         # //
+// #  End day  : 2017-01-31                                         # //
+// ################################################################## //
+
+@import './../../../../../scss-variable.scss';
+
+.sitemap {
+  font-family: 'NanumBarunGothicOTF';
+  width: 100%;
+  border-spacing: 8px 3px;
+
+  th {
+    font-size: 16px;
+    background-color: $main_color01;
+    color: white;
+    padding: 5px;
+  }
+  li {
+    font-size: 14px;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
+    padding: 5px;
+    list-style: none;
+    background-color: $gray_bright;
+    color: $gray_darken;
+
+    -webkit-transition: background-color .5s;
+    -moz-transition: background-color .5s;
+    transition: background-color .5s;
+  }
+
+  li:hover {
+    background-color: $gray_light;
+
+    -webkit-transition: background-color .5s;
+    -moz-transition: background-color .5s;
+    transition: background-color .5s;
+  }
+
+}

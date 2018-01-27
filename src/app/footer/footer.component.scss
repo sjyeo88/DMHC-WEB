@@ -13,7 +13,7 @@
 
 
 .address {
-  position: absolute;
+  display: inline-block;
 	width: $address_w;
 	height: $address_h;
   margin-top: $address_mg;
@@ -27,7 +27,8 @@
 }
 
 .footer {
-  position: absolute;
   width: 100%;
+  text-align: center;
+  margin: 0 auto;
   height: $address_h + 2*$address_mg;
 }

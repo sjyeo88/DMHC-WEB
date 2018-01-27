@@ -9,6 +9,7 @@ import { AccessTermComponent } from './login-panel/access-term/access-term.compo
 import { RegisterComponent } from './login-panel/register/register.component';
 import { WelcomeComponent } from './login-panel/welcome/welcome.component'
 import { ConfirmComponent } from './login-panel/confirm/confirm.component'
+import { ConfirmJobComponent } from './login-panel/confirm-job/confirm-job.component'
 import { ErrorComponent } from './error/error.component'
 import { ExpireComponent } from './expire/expire.component'
 import { TopComponent } from './top/top.component'
@@ -24,7 +25,13 @@ import { AssignNewComponent } from './top/main/frame/assign/assign-new/assign-ne
 import { AssignEditComponent } from './top/main/frame/assign/assign-edit/assign-edit.component';
 import { AssignAllComponent } from './top/main/frame/assign/assign-all/assign-all.component';
 import { NoticeComponent } from './top/main/frame/guest/notice/notice.component';
+import { ManageAllComponent } from './top/main/frame/manage/manage-all/manage-all.component';
+import { ManageDetailComponent } from './top/main/frame/manage/manage-detail/manage-detail.component';
+import { SitemapComponent } from './top/main/frame/sitemap/sitemap.component';
 import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
+import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
+import { UserComponent } from './top/main/frame/mypage/user/user.component';
+import { UseProcessComponent } from './top/main/frame/dmhc/use-process/use-process.component';
 
 
 const routes: Routes = [
@@ -40,6 +47,8 @@ const routes: Routes = [
             {path: 'shortcut', component: ShortcutComponent },
             {path: 'frame', component: FrameComponent,
               children: [
+                {path: 'sitemap', component: SitemapComponent },
+                {path: 'dmhc/process', component: UseProcessComponent },
                 {path: 'lecture/all', component: AllLectureComponent },
                 {path: 'lecture/new', component: NewLectureComponent },
                 {path: 'survey/new', component: NewSurveyComponent },
@@ -48,9 +57,14 @@ const routes: Routes = [
                 {path: 'assign/new', component: AssignNewComponent },
                 {path: 'assign/edit', component: AssignEditComponent },
                 {path: 'assign/hash', component: HashComponent },
+                {path: 'manage/all', component: ManageAllComponent },
+                {path: 'manage/detail', component: ManageDetailComponent },
+                {path: 'manage/detail/:idPATIENT_USER', component: ManageDetailComponent },
+                {path: 'mypage/user', component: UserComponent },
                 {path: 'guest/notice', component: NoticeComponent },
                 {path: 'guest/notice/:idNOTICE', component: NoticeComponent },
                 {path: 'guest/faq', component: FaqComponent },
+                {path: 'guest/qna', component: QnaComponent },
                 ]
             },
           ]
@@ -65,6 +79,7 @@ const routes: Routes = [
       {path: 'register', component: RegisterComponent},
       {path: 'welcome', component: WelcomeComponent},
       {path: 'confirm/:userId', component: ConfirmComponent },
+      {path: 'confirm/job/:userId', component: ConfirmJobComponent },
     ]
   },
   {path: 'expire', component: ExpireComponent},

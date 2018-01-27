@@ -1,0 +1,88 @@
+<!-- ##################################################################  -->
+<!-- #  copyright © ku 마음건강연구소 all rights reserved.             #  -->
+<!-- #  name of app: dmhc (web applcation of daily mind health care). #  -->
+<!-- #  client : ku mind health care institute.                       #  -->
+<!-- #  developer : yeo sung jun (sjyeo88@gmail.com).                 #  -->
+<!-- #  used frameworks : angular 4, express, mysql.                  #  -->
+<!-- #  name of component : manage-detail                    #  -->
+<!-- #  kick off : 2017-12-04                                         #  -->
+<!-- #  end day  : 2017-01-31                                         #  -->
+<!-- ##################################################################  -->
+
+ <!-- need for message service of primeng -->
+<p-growl [value]="msgs"></p-growl>
+<p-confirmDialog header="Confirmation" icon="fa fa-question-circle" width="500"></p-confirmDialog>
+<!-- code start  ---------------------------------------------------------->
+<div class=""   [formGroup]="fm.form">
+<div class="search">
+  <p-dropdown
+    [options]="allPatientList"
+    [style]="{'width':'300px'}"
+    placeholder="내담자를 선택해 주세요"
+    formControlName="patient"
+    (onChange)="loadPatient($event.value)"
+    filter="true"
+  ></p-dropdown>
+</div>
+<br>
+<br>
+<div class="patient-detail">
+  <div class="ui-g">
+    <div class="ui-g-3">
+      <div class="sub-title">
+        내담자 번호 : {{ ('000' + tgtPatient.idPATIENT_USER).slice(-4) }}
+      </div>
+      <div class="detail">
+        <ul>
+          <li>이름 : {{ tgtPatient.name }}</li>
+          <li>나이 : 만 {{ tgtPatient.age }} 세</li>
+          <li>성별 : {{ tgtPatient.gender | gender }}</li>
+          <li>생년월일: {{ tgtPatient.birth | date:'yyyy-MM-dd' }}</li>
+          <li>가입일: {{ tgtPatient.JOIN_DATE | date:'yyyy-MM-dd' }}</li>
+          <li>모바일 앱 접속일: <br>{{ tgtPatient.LAST_LOGIN_DATE }}</li>
+        </ul>
+        <ul>
+          <li> <i class="fa fa-phone"></i> : {{ tgtPatient.phone | phone }} </li>
+          <li> <i class="fa fa-envelope-o"></i> : {{ tgtPatient.email }} </li>
+        </ul>
+      </div>
+    </div>
+    <div class="ui-g-9">
+      <div class="sub-title">
+        내담자 과제 그룹
+        <div class="assign-dropdown">
+          <p-dropdown styleClass="dropdown"
+          [style]="{'width':'300px'}"
+          [options]="allAssignList"
+          formControlName="assign"
+          (onChange)="confirmAssign($event)"
+          ></p-dropdown>
+        </div>
+      </div>
+      <div class="survey-ctrl">
+        <div class="ui-g-10 survey">
+          <span class="year">{{year}} 년</span>
+          <div class="survey-detail">
+            <li>
+              <p-dropdown
+              [style]="{'width':'300px'}"
+              [options]="allSurveyList"
+              (onChange)="getSurveyResult($event)"
+              placeholder="설문을 선택해 주세요."
+              formControlName="survey"
+              ></p-dropdown>
+            </li>
+            <li [style.margin-top.px]="10">총과제 : 0개 | 수행 : 0개 | 수행률 : 0%</li>
+          </div>
+        </div>
+        <div class="ui-g-1 year-move" (click)="yearUp()">▲</div>
+        <div class="ui-g-1 year-move" (click)="yearDown()">▼</div>
+      </div>
+      <div class="">
+        <!-- <p-chart id="myChart" type="line" [data]="surveyResult" [options]="chartOpt"></p-chart> -->
+        <canvas id="myChart"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

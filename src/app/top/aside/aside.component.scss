@@ -11,15 +11,13 @@
 
 @import "../../../scss-variable.scss";
 
-.aside {
+.aside-hide {
   float: left;
   height: 642px;
-  // margin-left: 10px;
-  // transform: translate(-200px);
+  transform: translate(-120%);
+  opacity: 0;
   width: 287px;
   margin: 14px;
-  // background-color: rgb(34, 119, 72);
-  // border: 1px solid;
   overflow: hidden;
   font-family: "NanumBarunGothicOTF";
 
@@ -75,4 +73,13 @@
     }
 
   }
+}
+
+.aside-view {
+  @extend .aside-hide;
+  opacity: 1.0;
+  transform: translate(0px);
+  -webkit-transition: transform .2s, opacity .5s;
+  -moz-transition:  transform .2s, opacity .5s;
+  transition:  transform .2s, opacity .5s;
 }

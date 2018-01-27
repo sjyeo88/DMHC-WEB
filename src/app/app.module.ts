@@ -12,6 +12,7 @@ import { AccessTermComponent } from './login-panel/access-term/access-term.compo
 import { RegisterComponent } from './login-panel/register/register.component';
 import { WelcomeComponent } from './login-panel/welcome/welcome.component'
 import { ConfirmComponent } from './login-panel/confirm/confirm.component'
+import { ConfirmJobComponent } from './login-panel/confirm-job/confirm-job.component'
 
 import { MenuItem } from 'primeng/components/common/api';
 import { CalendarModule } from 'primeng/primeng'
@@ -27,6 +28,7 @@ import { OverlayPanelModule } from 'primeng/primeng';
 import { PaginatorModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/primeng';
 import { SpinnerModule } from 'primeng/primeng';
+import { ChartModule } from 'primeng/primeng';
 
 import { QuillModule } from 'ngx-quill'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
@@ -35,7 +37,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { UserService } from './top/user.service'
 import { Layout } from './top/layout.service'
 
-import { PhonePipe } from './pipes/phone';
+import { PhonePipe, GenderPipe } from './pipes/phone';
 import { ErrorComponent } from './error/error.component';
 import { TopComponent } from './top/top.component';
 import { HeaderComponent } from './top/header/header.component';
@@ -56,6 +58,12 @@ import { AssignAllComponent } from './top/main/frame/assign/assign-all/assign-al
 import { BoardComponent } from './top/main/frame/guest/board/board.component';
 import { NoticeComponent } from './top/main/frame/guest/notice/notice.component';
 import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
+import { UserComponent } from './top/main/frame/mypage/user/user.component';
+import { ManageAllComponent } from './top/main/frame/manage/manage-all/manage-all.component';
+import { ManageDetailComponent } from './top/main/frame/manage/manage-detail/manage-detail.component';
+import { SitemapComponent } from './top/main/frame/sitemap/sitemap.component';
+import { UseProcessComponent } from './top/main/frame/dmhc/use-process/use-process.component';
+import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
 
 @NgModule({
   declarations: [
@@ -67,9 +75,11 @@ import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
     LoginComponent,
     WelcomeComponent,
     PhonePipe,
+    GenderPipe,
     ErrorComponent,
     TopComponent,
     ConfirmComponent,
+    ConfirmJobComponent,
     HeaderComponent,
     AsideComponent,
     MainComponent,
@@ -88,6 +98,12 @@ import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
     BoardComponent,
     NoticeComponent,
     FaqComponent,
+    UserComponent,
+    ManageAllComponent,
+    ManageDetailComponent,
+    SitemapComponent,
+    UseProcessComponent,
+    QnaComponent,
   ],
   imports: [
     BrowserModule,
@@ -108,6 +124,7 @@ import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
     PaginatorModule,
     RadioButtonModule,
     SpinnerModule,
+    ChartModule,
   ],
   providers: [
     Title,

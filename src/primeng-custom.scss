@@ -31,6 +31,10 @@
 
 }
 
+.ui-helper-clearfix:before, .ui-helper-clearfix:after {
+  display:none;
+}
+
 .ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:focus {
   color: $main_color01;
   background-color: white;
@@ -47,7 +51,7 @@
 .dropdown {
   position: relative;
   border: solid 1px $form_border_color;
-  width: 100px;
+  width: 300px;
   height: 30px;
   font-size: 11pt;
 }
