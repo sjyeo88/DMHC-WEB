@@ -27,7 +27,7 @@
 
 <!-- Code start  ---------------------------------------------------------->
 
-<form class="term-wrap" (ngSubmit)="onSubmit()">
+<form class="term-wrap">
   <p-growl [value]="msgs"></p-growl>
   <div class="access-term">
     <h3 class="term-title">이용 약관</h3>
@@ -47,7 +47,7 @@
   </div>
 
   <div class="terms-agree-submit">
-    <button type="submit" name="terms-agree" id="terms-agree-button">동의</button>
+    <button type="submit" name="terms-agree" id="terms-agree-button" (click)="onSubmit()">동의</button>
   </div>
 </form>
 

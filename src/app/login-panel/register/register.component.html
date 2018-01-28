@@ -27,7 +27,7 @@
 <!-- Code start  ---------------------------------------------------------->
 
 <h2 id="register-title">매일마음관리 치료자 등록요청</h2>
-<form [formGroup]="rf.registForm" (ngSubmit)="onSubmit()" novalidate
+<form [formGroup]="rf.registForm"  novalidate
 class="regist-form">
   <!-- User Name Field -->
   <input type="text" formControlName="username"
@@ -235,5 +235,5 @@ class="regist-form">
         </label>
       </div>
 
-      <button type="submit" id="submit-register">치료자 등록 요청</button>
+      <button type="submit" id="submit-register" (click)="onSubmit()">치료자 등록 요청</button>
 </form>
