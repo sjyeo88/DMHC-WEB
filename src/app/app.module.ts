@@ -49,6 +49,7 @@ import { FrameComponent } from './top/main/frame/frame.component';
 import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component';
 import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-lecture.component';
 import { HashComponent } from './top/main/frame/assign/hash/hash.component';
+import { SurveyComponent } from './top/main/frame/survey/survey/survey.component';
 import { NewSurveyComponent } from './top/main/frame/survey/new-survey/new-survey.component';
 import { EditSurveyComponent } from './top/main/frame/survey/edit-survey/edit-survey.component';
 import { AssignComponent } from './top/main/frame/assign/assign/assign.component';
@@ -89,6 +90,7 @@ import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
     FrameComponent,
     AllLectureComponent,
     HashComponent,
+    SurveyComponent,
     NewSurveyComponent,
     EditSurveyComponent,
     AssignComponent,

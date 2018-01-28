@@ -1,13 +1,10 @@
 import { Injectable } from '@angular/core'
 import { FormArray, AbstractControl, FormControl,FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DropDownOpt } from '../assign.model'
-import  cloneDeep = require('lodash.cloneDeep');
+import {  cloneDeep } from 'lodash/cloneDeep';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
-
-import 'rxjs/add/operator/debounceTime';
-import 'rxjs/add/observable/from';
 
 class ValidConfig {
   requireMsg = "입력 란을 작성하세요.";

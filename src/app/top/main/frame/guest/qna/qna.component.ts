@@ -15,6 +15,8 @@ import { QnaForm } from './qna.form'
 import { QnaService } from '../qna.service'
 import * as Quill from 'quill/dist/quill'
 import { environment } from './../../../../../../environments/environment';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-qna',
@@ -26,6 +28,7 @@ export class QnaComponent implements OnInit {
 
   // imgRegExp = new RegExp("<img[^>]*src=[\"']?([^>\"']*(?:base64)+[^>\"']+)[\"']?[^>]*>")
   imgRegExp = /<img[^>]*src=[\"']?([^>\"']*(?:base64)+[^>\"']+)[\"']?[^>]*>/;
+  msgs: Message[] = [];
   // imgSrcExp = new RegExp("src=[\"']?([^>\"']*(?:base64)+[^>\"']+)[\"']?[^>]")
   constructor(
     public lay:Layout,

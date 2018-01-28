@@ -80,7 +80,7 @@ export class AssignComponent implements OnInit {
   //   this.cdr.detectChanges();
   // }
 
-  protected getLecture(msg?:boolean) {
+  public getLecture(msg?:boolean) {
     this.lectures = [];
     this.as.getLecture()
     .then(data=>{
@@ -98,7 +98,7 @@ export class AssignComponent implements OnInit {
     })
   }
 
-  protected getAssignFinished(msg?:boolean) {
+  public getAssignFinished(msg?:boolean) {
     this.assignFinished = [];
     this.as.getAssignFinished()
     .then(data=>{
@@ -116,7 +116,7 @@ export class AssignComponent implements OnInit {
     })
   }
 
-  protected getSurvey(msg?:boolean) {
+  public getSurvey(msg?:boolean) {
     this.surveyFinished = [];
     this.as.getSurvey()
     .then(data=>{
@@ -134,7 +134,7 @@ export class AssignComponent implements OnInit {
     })
   }
 
-  protected confirmAssign() {
+  public confirmAssign() {
     this.as.getAssignList()
     .then(data=>{
       if(!data.some((row)=>{ return this.isNew ? row.title : row.idSBJT_CONF_ALL ===  this.title.value; })){
@@ -154,7 +154,7 @@ export class AssignComponent implements OnInit {
     })
   }
 
-  protected resetPackage() {
+  public resetPackage() {
     this.assignConf = [];
     this.assignConfAll = {
       idSBJTS: 0,
@@ -182,7 +182,7 @@ export class AssignComponent implements OnInit {
   }
 
 
-  protected expandAssign(item, i) {
+  public expandAssign(item, i) {
     if (!item.controls.expand.value) {
       item.patchValue({'expand': true});
     }
@@ -191,12 +191,12 @@ export class AssignComponent implements OnInit {
     }
   }
 
-  protected createFormCtrl(idx, item) {
+  public createFormCtrl(idx, item) {
     this.fm.createFormControl(idx, item);
   }
 
 
-  protected saveAs() {
+  public saveAs() {
     if(this.titleAs !== "" && this.titleAs.length < 30) {
       this.saveAssignData(this.titleAs);
       this.getAssignList(null, this.titleAs);
@@ -207,7 +207,7 @@ export class AssignComponent implements OnInit {
     this.saveAsDialogView = false;
   }
 
-  protected saveAssignData(titleAs?) {
+  public saveAssignData(titleAs?) {
     if(this.fm.assignForm.valid && (this.assigns.length !==0)) {
       let assigns =  this.fm.assignForm.get('assigns') as FormArray;
       let title = this.fm.assignForm.get('title').value;
@@ -319,12 +319,12 @@ export class AssignComponent implements OnInit {
     return result[0].label;
   }
 
-  protected confirmSaveAs() {
+  public confirmSaveAs() {
     this.titleAs = this.getTitle(this.title.value);
     this.saveAsDialogView = true;
   }
 
-  protected confirmSave() {
+  public confirmSave() {
     let prefix = this.isDuplicated ? '동일한 이름을 가진 설문이 있습니다.' : '';
     this.confirm.confirm({
      message: prefix + ' 현재 설문을 저장하시겠습니까?',
@@ -334,7 +334,6 @@ export class AssignComponent implements OnInit {
      },
    })
  }
-
 
   get assigns() {
     return this.fm.assignForm.get('assigns') as FormArray;

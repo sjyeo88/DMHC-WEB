@@ -15,6 +15,8 @@ import { Layout } from './../../../../layout.service';
 import { NoticeService } from '../notice.service';
 import { BoardForm } from './board.form';
 import { ConfirmationService } from 'primeng/primeng'
+import { MessageService } from 'primeng/components/common/messageservice';
+import { Message } from 'primeng/components/common/api';
 
 import 'rxjs/add/operator/debounceTime';
 
@@ -26,6 +28,7 @@ import 'rxjs/add/operator/debounceTime';
 })
 export class BoardComponent implements OnInit {
   tgtBoardId = this.route.snapshot.paramMap.get('idNOTICE')
+  msgs: Message[] = [];
   boardAll = [];
   boardAllByPage = [];
   isAdmin:boolean = false;

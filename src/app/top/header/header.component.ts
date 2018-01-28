@@ -13,6 +13,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Layout } from '../layout.service';
 import { UserService } from '../user.service';
+import { MessageService } from 'primeng/components/common/messageservice';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-header',
@@ -20,6 +22,7 @@ import { UserService } from '../user.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  public msgs: Message[] = [];
   constructor(
     public lay: Layout,
     public us:UserService,

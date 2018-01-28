@@ -12,6 +12,8 @@ import { Component, OnInit } from '@angular/core';
 import { RegistData, LoginData } from '../service/auth-data';
 import { TermAgree } from  '../service/get-data';
 import { RegexValidators } from "./register/register.validator";
+import { MessageService } from 'primeng/components/common/messageservice';
+import { Message } from 'primeng/components/common/api';
 
 @Component({
   selector: 'app-login-panel',

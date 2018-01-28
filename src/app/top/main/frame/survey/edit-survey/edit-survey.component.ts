@@ -71,7 +71,7 @@ export class EditSurveyComponent extends SurveyComponent {
     })
   }
 
-  protected saveAs() {
+  public saveAs() {
     if(this.titleAs !== "" && this.titleAs.length < 30) {
       this.saveSurvey(this.titleAs);
       this.getSurveyList(null, this.titleAs);

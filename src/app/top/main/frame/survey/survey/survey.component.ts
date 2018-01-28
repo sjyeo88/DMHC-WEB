@@ -53,6 +53,7 @@ export class SurveyComponent implements OnInit {
   ngOnInit() {}
 
 
+  public saveAs() {};
   public getTitle(idx) {
     let result = this.nsf.titleList.filter((row)=>{
       return row.value === idx;
