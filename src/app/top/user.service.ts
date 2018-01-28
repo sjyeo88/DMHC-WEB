@@ -156,4 +156,16 @@ export class UserService {
     })
   }
 
+  delSession():Promise<any>{
+    return new Promise((resolve, reject)=>{
+    let http = new Req2('delete', '/auth/local')
+    http.send();
+    http.Complete = ()=> {
+      resolve(http.response);
+    }
+    http.ServErr = () =>{ reject(http.smsgs)}
+    http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
+
 }

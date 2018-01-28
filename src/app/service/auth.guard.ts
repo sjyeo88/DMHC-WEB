@@ -7,26 +7,16 @@ import { UserService } from './../top/user.service'
 export class AuthGuard implements CanActivateChild {
   constructor(
     private router: Router,
-    public userService: UserService,
+    public us: UserService,
   ) { }
 
-  checkAuth():boolean {
-    let http = new Req2('get', '/auth/check')
-    let isLogedIn: boolean
-
-    http.Complete = () => {
-      console.log('OK');
-      console.log(http.status);
-    }
-    // http.AuthErr= () =>{
-    //   console.log('NG');
-    //   console.log(http.status);
-    // }
-    return true;
-  }
-
   canActivateChild() {
-    if(!this.userService.isLogedIn) { return false}
-    else { return true};
+    if(!this.us.isLogedIn) {
+      this.router.navigate(['/expire']);
+      return false
+    }
+    else {
+      return true
+    };
   }
 }

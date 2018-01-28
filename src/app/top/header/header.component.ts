@@ -10,6 +10,7 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Layout } from '../layout.service';
 import { UserService } from '../user.service';
 
@@ -19,7 +20,11 @@ import { UserService } from '../user.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  constructor(public lay: Layout, public us:UserService ) { }
+  constructor(
+    public lay: Layout,
+    public us:UserService,
+    public router:Router,
+  ) { }
 
   ngOnInit() {
 
@@ -56,6 +61,13 @@ export class HeaderComponent implements OnInit {
     // this.lay.translateX_ani('transform', 0, -120, '%');
     // this.lay.animation('aside_width', 20, 0, '%')
     // this.lay.animation('aside_padding', 14, 0, 'px')
+  }
+  public logOut() {
+    this.us.delSession()
+    .then(()=>{
+      this.us.isLogedIn = false;
+      this.router.navigate(['/']);
+    })
   }
 
 

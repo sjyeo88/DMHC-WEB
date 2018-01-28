@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
+import { AuthGuard } from './service/auth.guard';
 
 import { LoginPanelComponent } from './login-panel/login-panel.component';
 import { LoginComponent } from './login-panel/login/login.component';
@@ -38,7 +39,7 @@ const routes: Routes = [
   // {path: '', redirectTo: '/login-panel', pathMatch: 'full'},
   {path: '', redirectTo: 'login-panel', pathMatch: 'full'},
   { path: 'top', component: TopComponent,
-
+    canActivateChild: [ AuthGuard ],
     children: [
         {path: '', redirectTo: 'main', pathMatch:'full'},
         {path: 'main', component: MainComponent,
@@ -89,7 +90,7 @@ const routes: Routes = [
 @NgModule({
   imports: [ RouterModule.forRoot(routes) ],
   exports: [ RouterModule ],
-  providers: [],
+  providers: [ AuthGuard ],
   // declarations: []
 })
 export class AppRoutingModule { }

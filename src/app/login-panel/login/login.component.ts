@@ -14,6 +14,7 @@ import { Req2 } from '../../service/get-public-data.service';
 import { Router, ActivatedRoute } from '@angular/router'
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
+import { UserService } from './../../top/user.service';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class LoginComponent implements OnInit {
     public lf:LoginData,
     private router: Router,
     public route: ActivatedRoute,
+    public us: UserService,
   ) { }
 
   ngOnInit() {}
@@ -55,6 +57,7 @@ public onSubmit() {
       http.send(formData)
       http.Complete = () =>{
         this.lf.loginForm.reset();
+        this.us.isLogedIn = true;
         this.router.navigate(['../../top'], {relativeTo: this.route})
       }
       http.ServErr = () =>{
