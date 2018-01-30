@@ -114,7 +114,7 @@ export class SurveyComponent implements OnInit {
     console.log(item)
   }
 
-  onEnter(idx, event) {
+  onEnter(event, idx) {
     if(event.keyCode === 13) {
       this.nsf.openRow(idx, event)
       .then(()=>{
@@ -123,7 +123,6 @@ export class SurveyComponent implements OnInit {
         }, 10)
       })
     }
-    // this.objInput.last.
   }
 
   saveSurvey(title?) {

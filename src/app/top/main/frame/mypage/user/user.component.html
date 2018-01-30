@@ -68,10 +68,11 @@
 
         <!-- (onRemove)= "onRemoved($event)" -->
   </div>
-  <p-dialog header="비밀번호 재입력" [(visible)]="viewPwdDialog" modal="modal" width="500" [responsive]="true">
+  <p-dialog header="비밀번호 재입력"  [(visible)]="viewPwdDialog" modal="modal" width="500" [responsive]="true">
     <div [style.margin-bottom.px]="10">정보 변경을 위해 비밀번호를 다시 입력해주세요.</div>
     <div class="">
-      <input  [style.width.px]="300" formControlName="password" type="password">
+      <input #inputObj  [style.width.px]="300" formControlName="password" type="password">
+      <!-- <input id="ConfirmPW"  [style.width.px]="300" formControlName="password" type="password"> -->
     </div>
     <p-footer>
         <button type="submit" pButton icon="fa-check" (click)="postData()" label="저장하기"></button>

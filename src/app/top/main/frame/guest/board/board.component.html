@@ -42,11 +42,45 @@
       <td align="center" class="clickable-td" (click)="onEditCancle()"> <i class="fa fa-times fa-lg"></i> </td>
     </tr>
     <tr *ngIf="isAdmin && isEdit">
-      <td colspan="5"><textarea name="name" rows="8" cols="80" formControlName="text"></textarea>  </td>
+      <td colspan="5">
+          <quill-editor class="editor"
+           [style]="{'background-color':'white'}"
+           placeholder="질문 내용을 작성해 주세요."
+           formControlName="text"
+          >
+            <div quill-editor-toolbar>
+              <span class="ql-formats">
+                <select class="ql-size">
+                  <option selected>Default</option>
+                  <option value="10px">10px</option>
+                  <option value="16px">16px</option>
+                  <option value="32px">32px</option>
+                  <option value="48px">48px</option>
+                  <option value="64px">64px</option>
+                  <option value="128px">128px</option>
+                </select>
+                <select class="ql-font"></select>
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-blockquote"></button>
+                <button class="ql-strike"></button>
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+                <button class="ql-image"></button>
+              </span>
+            </div>
+          </quill-editor>
+        <!-- <textarea name="name" rows="8" cols="80" formControlName="text"></textarea> -->
+      </td>
     </tr>
     <tr *ngFor="let item of boardAllByPage; let i=index">
       <td align="center" *ngIf="i%2==0"  rowspan="2">{{item.no}}</td>
-      <td  *ngIf="i%2==1" [ngClass]="boardAllByPage[i-1].expand ? 'table-detail' : 'table-detail-hide'" colspan="7" [innerHTML]="item.text">
+      <td  *ngIf="i%2==1" [ngClass]="boardAllByPage[i-1].expand ? 'table-detail' : 'table-detail-hide'" colspan="7">
+        <div class="textarea"  [innerHTML]="sanitizer.bypassSecurityTrustHtml(item.text)"></div>
+      <!-- <td  *ngIf="i%2==1" [ngClass]="boardAllByPage[i-1].expand ? 'table-detail' : 'table-detail-hide'" colspan="7" > -->
       </td>
       <td *ngIf="i%2==0"  class="clickable-td"  [ngClass]="item.expand ? 'title-selected' : ''"  (click)="onExpand(item)">{{item.title}}</td>
       <td align="center" *ngIf="i%2==0" [style.width.px]="300">{{item.author}}</td>

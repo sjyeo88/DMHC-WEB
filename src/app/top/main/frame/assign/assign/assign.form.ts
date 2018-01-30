@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core'
 import { FormArray, AbstractControl, FormControl,FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DropDownOpt } from '../assign.model'
-import {  cloneDeep } from 'lodash/cloneDeep';
+import * as cloneDeep from 'lodash.cloneDeep';
 
 import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
@@ -423,11 +423,12 @@ export class AssignForm {
   }
 
   getTableData(item) {
+    console.log(item);
     let tgtInput =  item.get('input').get('table').get('tableData');
     let table = [];
     let tableRow = [];
     for(let i = 0; i < tgtInput.length; i++) {
-      for(let j = 0; j < tgtInput.controls.length; j++) {
+      for(let j = 0; j < tgtInput.controls[0].controls.length; j++) {
         tableRow.push(tgtInput.controls[i].controls[j].get('data').value);
       }
       table[i] = tableRow;

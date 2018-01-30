@@ -16,6 +16,7 @@ import { Layout } from './../../../../layout.service';
 import { NoticeService } from '../notice.service';
 import { BoardForm } from '../board/board.form';
 import { ConfirmationService } from 'primeng/primeng'
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-faq',
@@ -30,8 +31,9 @@ export class NoticeComponent extends BoardComponent {
     public fm:BoardForm,
     public confirm:ConfirmationService,
     public route:ActivatedRoute,
+    public sanitizer:DomSanitizer,
   ) {
-    super(lay, serv, fm, confirm, route)
+    super(lay, serv, fm, confirm, route, sanitizer)
     this.name.valueChanges
     .debounceTime(500)
     .subscribe(data=>{

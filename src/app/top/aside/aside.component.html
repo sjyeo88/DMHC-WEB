@@ -9,29 +9,24 @@
 <!-- #  end day  : 2017-01-31                                         #  -->
 <!-- ##################################################################  -->
 
-<!-- class="aside-hide" -->
-<!-- [style.transform]="lay.values.transform" > -->
 <div [ngClass]="lay.isSlide ? 'aside-view' : 'aside-hide'" >
-<!-- <div class="aside-hide" > -->
-<div class="sub-title">
-  {{ lay.currentMenu.title }}
-</div>
-<div class="sub-menu">
-  <ol>
-    <li
-      *ngFor="let menu of lay.currentMenu.menus; let i=index;">
-        <a [routerLink]="'./main/frame' + lay.currentMenu.urls[i]">
-          <div >
-          {{ menu }}
-          <span *ngIf="lay.currentPage === menu"
-            class="arrow-red">></span>
-          <span *ngIf="lay.currentPage !== menu"
-            class="arrow">></span>
-          </div>
-        </a>
-    </li>
-  </ol>
-</div>
-
-
+  <div class="sub-title">
+    {{ lay.currentMenu.title }}
+  </div>
+  <div class="sub-menu">
+    <ol>
+      <li
+        *ngFor="let menu of lay.currentMenu.menus; let i=index;">
+          <a [routerLink]="'./main/frame' + lay.currentMenu.urls[i]">
+            <div >
+            {{ menu }}
+            <span *ngIf="lay.currentPage === menu"
+              class="arrow-red">></span>
+            <span *ngIf="lay.currentPage !== menu"
+              class="arrow">></span>
+            </div>
+          </a>
+      </li>
+    </ol>
+  </div>
 </div>

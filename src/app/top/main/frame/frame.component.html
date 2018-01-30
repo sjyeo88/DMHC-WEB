@@ -12,11 +12,8 @@
 <!-- code start  ---------------------------------------------------------->
 
 <div class="frame">
-  <div class="map" *ngIf="lay.cuTitle.title !== lay.cuTitle.page">
+  <div class="map">
     <a routerLink ="../">Home</a> >   {{lay.cuTitle.title}}  >  {{lay.cuTitle.page}}
-  </div>
-  <div class="map" *ngIf="lay.cuTitle.title === lay.cuTitle.page">
-    <a routerLink ="../">Home</a> >   {{lay.cuTitle.title}}
   </div>
 
   <div class="frame-title">

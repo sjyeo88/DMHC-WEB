@@ -11,12 +11,13 @@ export class AuthGuard implements CanActivateChild {
   ) { }
 
   canActivateChild() {
-    if(!this.us.isLogedIn) {
+    return this.us.chkSession()
+    .then(data=>{
+      return true;
+    })
+    .catch(()=>{
       this.router.navigate(['/expire']);
-      return false
-    }
-    else {
-      return true
-    };
+      return false;
+    })
   }
 }

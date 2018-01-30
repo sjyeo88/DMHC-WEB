@@ -28,12 +28,16 @@ export class ShortcutComponent implements OnInit {
       loginDate:new Date(),
   }
   public notices = []
+  public urNPatient:number = 0;
+  public NPatient:number = 0;
   constructor(
     public lay: Layout,
     public serv: ShortcutService,
     public us: UserService,
   ) {
     this.getNotice();
+    this.getUnregistedPatient();
+    this.getPatient();
   }
 
   ngOnInit() {
@@ -50,4 +54,17 @@ export class ShortcutComponent implements OnInit {
     })
   }
 
+  public getUnregistedPatient() {
+    this.serv.getUnregistedPatient()
+    .then(data=>{
+      this.urNPatient = data[0].count;
+    })
+  }
+
+  public getPatient() {
+    this.serv.getPatient()
+    .then(data=>{
+      this.NPatient = data[0].count;
+    })
+   }
 }

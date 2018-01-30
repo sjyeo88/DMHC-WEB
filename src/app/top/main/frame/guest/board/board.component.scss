@@ -11,6 +11,7 @@
 @import './../../../../../../scss-variable.scss';
 
 .board{
+
   .search {
     float: right;
     margin: 10px;
@@ -81,9 +82,15 @@
 
 
     .table-detail {
-      border-top: 2px solid white;
-      padding: 10px;
+      // border-top: 2px solid white;
+      // border: 2px solid $gray_bright !important;
+      padding: 3px !important;
       font-weight: normal;
+      .textarea {
+        list-style-position: inside;
+        padding: 10px !important;
+        background-color: white;
+      }
     }
     .table-detail-hide {
       @extend .table-detail;
@@ -95,5 +102,17 @@
       padding: 5px;
       width: 100px;
     }
+  }
+  quill-editor{
+    background-color: white;
+    button {
+      width:28px;
+      box-shadow: none;
+    }
+  }
+
+  .editor {
+    width: 600px;
+    background-color: white;
   }
 }

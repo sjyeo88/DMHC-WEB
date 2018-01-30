@@ -1,6 +1,6 @@
 import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { ReactiveFormsModule, COMPOSITION_BUFFER_MODE } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule, COMPOSITION_BUFFER_MODE } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './app.component';
@@ -110,6 +110,7 @@ import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
   imports: [
     BrowserModule,
     ReactiveFormsModule,
+    FormsModule,
     BrowserAnimationsModule,
     CalendarModule,
     DropdownModule,

@@ -16,6 +16,7 @@ export class UserService {
       loginDate:new Date(),
   }
   public notices = []
+  constructor() {}
 
   getUser():Promise<any>{
     return new Promise((resolve, reject)=>{
@@ -162,6 +163,21 @@ export class UserService {
     http.send();
     http.Complete = ()=> {
       resolve(http.response);
+    }
+    http.ServErr = () =>{ reject(http.smsgs)}
+    http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
+
+  chkSession():Promise<any>{
+    return new Promise((resolve, reject)=>{
+    let http = new Req2('get', '/auth/local')
+    http.send();
+    http.Complete = ()=> {
+      resolve(http.response);
+    }
+    http.AuthErr = ()=> {
+      reject(false);
     }
     http.ServErr = () =>{ reject(http.smsgs)}
     http.ConErr = () =>{ reject(http.cmsgs)}

@@ -12,128 +12,149 @@
 <!-- code start  ---------------------------------------------------------->
 
 
-<div class="grid-all">
+<div class="ui-g">
 
-<div class="shortcut" id="user-info">
-  <span class="icon">
-    <img src="./../../../../assets/img/icons/ic-person-48px.png" alt="">
-  </span>
-  <div class="info">
-    <div class="title">
-      치료자 정보
-    </div>
-    <ul>
-      <li>이름 :  {{ us.userServ.name }}</li>
-      <li>소속 :  {{ us.userServ.dept }}</li>
-      <li>직책 :  {{ us.userServ.job }}</li>
-      <li>접속일: {{ us.userServ.loginDate | date: 'yyyy/MM/dd' }}</li>
-      <li>접속시간 : {{ us.userServ.loginDate | date: 'HH:mm:ss' }}</li>
-    </ul>
-  </div>
-</div>
-
-<div class="shortcut" id="patient-regist">
-  <div class="title">
-    내담자 등록신청
-  </div>
-  <span class="icon">
-    <img src="./../../../../assets/img/icons/ic-notifications-active-48px.png" alt="">
-  </span>
-  <div class="info">
-    <span class="infoNum">0</span>
-    <span>건</span>
-  </div>
-</div>
-
-<div class="shortcut" id="current-regist">
-  <div class="title">
-    현재 담당 내담자
-  </div>
-  <span class="icon">
-    <img src="./../../../../assets/img/icons/ic-people-48px.png" alt="">
-  </span>
-  <div class="info">
-    <span class="infoNum">
-      0
-      <!-- {{ patient.patient.length }} -->
-    </span>
-    <span>명</span>
-  </div>
-</div>
-
-
-  <div class="shortcut" id="process">
+<div class="ui-g-4">
+  <a routerLink="../frame/mypage/user" class="shortcut" id="user-info">
     <span class="icon">
-      <img src="./../../../../assets/img/icons/ic-help-outline-24px.png" alt="">
+      <img src="./../../../../assets/img/icons/ic-person-48px.png" alt="">
     </span>
-    <div class="title">
-      이용절차
+    <div class="info">
+      <div class="title">
+        치료자 정보
+      </div>
+      <ul>
+        <li>이름 :  {{ us.userServ.name }}</li>
+        <li>소속 :  {{ us.userServ.dept }}</li>
+        <li>직책 :  {{ us.userServ.job }}</li>
+        <li>접속일: {{ us.userServ.loginDate | date: 'yyyy/MM/dd' }}</li>
+        <li>접속시간 : {{ us.userServ.loginDate | date: 'HH:mm:ss' }}</li>
+      </ul>
     </div>
-  </div>
+  </a>
+</div>
 
-  <div class="shortcut" id="notice">
-    <div class="notice-title">
+<div class="ui-g-4">
+  <a class="shortcut" id="patient-regist" routerLink="../frame/manage/all">
+    <div class="title">
+      내담자 등록신청
+    </div>
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-notifications-active-48px.png" alt="">
+    </span>
+    <div class="info">
+      <span class="infoNum">
+        {{ urNPatient }}
+      </span>
+      <span>건</span>
+    </div>
+  </a>
+</div>
+
+<div class="ui-g-4">
+  <a class="shortcut" id="current-regist" routerLink="../frame/manage/all">
+    <div class="title">
+      현재 담당 내담자
+    </div>
+    <span class="icon">
+      <img src="./../../../../assets/img/icons/ic-people-48px.png" alt="">
+    </span>
+    <div class="info">
+      <span class="infoNum">
+        {{ NPatient }}
+      </span>
+      <span>명</span>
+    </div>
+  </a>
+</div>
+
+
+<div class="ui-g-4  ui-g-nopad">
+  <a class="ui-g-12">
+    <div class="shortcut" id="process">
       <span class="icon">
-        <img src="./../../../../assets/img/icons/ic-textsms-48px.png" alt="">
+        <img src="./../../../../assets/img/icons/ic-help-outline-24px.png" alt="">
       </span>
       <div class="title">
-        공지사항
+        이용절차
       </div>
     </div>
-    <br>
-      <ul>
-        <li  *ngFor="let item of notices; let i=index">
-          <a [routerLink]="['../frame/guest/notice', item.idNOTICE]">
-          {{ (item.title.length > 12) ? item.title.slice(0, 12) + '...' : item.title }}
-          <span>
-            [{{ item.ADD_TIME | date: 'yyyy/MM/dd'}}]
-          </span>
-          </a>
-        </li>
-      </ul>
-
-  </div>
-
-  <div class="shortcut" id="lectureMan">
-    <span class="icon">
-      <img src="./../../../../assets/img/icons/ic-border-color-48px.png" alt="">
-    </span>
-    <div class="title">
-      심리교육 설정<br>메뉴얼
-    </div>
-  </div>
-
-  <div class="shortcut" id="assignMan">
-    <span class="icon">
-      <img src="./../../../../assets/img/icons/ic-content-paste-48px.png" alt="">
-    </span>
-    <div class="title">
-      내담자 과제설정<br>메뉴얼
-    </div>
-  </div>
-
-  <div class="shortcut" id="manageMan">
-    <span class="icon">
-      <img src="./../../../../assets/img/icons/ic-face-48px.png" alt="">
-    </span>
-    <div class="title">
-      내담자 관리<br>메뉴얼
-    </div>
-  </div>
-
-  <div class="shortcut" id="service">
-    <div class="title">
-      서비스 이용문의
-    </div>
-    <div class="phone">
-      02. 3290. 1676
-    </div>
-    <div class="sub">
-      전화문의: 평일 오전 10:00 ~ 18:00
+  </a>
+  <div class="ui-g-12">
+    <div class="shortcut" id="notice">
+      <div class="notice-title">
+        <span class="icon">
+          <img src="./../../../../assets/img/icons/ic-textsms-48px.png" alt="">
+        </span>
+        <div class="title">
+          공지사항
+        </div>
+      </div>
       <br>
-      메일 : kumh@korea.ac.kr
-    <img src="./../../../../assets/img/icons/ic-call-48px.png" alt="">
+        <ul>
+          <li  *ngFor="let item of notices; let i=index">
+            <a [routerLink]="['../frame/guest/notice', item.idNOTICE]">
+            {{ (item.title.length > 12) ? item.title.slice(0, 12) + '...' : item.title }}
+            <span>
+              [{{ item.ADD_TIME | date: 'yyyy/MM/dd'}}]
+            </span>
+            </a>
+          </li>
+        </ul>
+    </div>
+  </div>
+</div>
+
+
+  <div class="ui-g-4 ui-g-nopad">
+    <div class="ui-g-12">
+      <a class="shortcut" id="lectureMan">
+        <span class="icon">
+          <img src="./../../../../assets/img/icons/ic-border-color-48px.png" alt="">
+        </span>
+        <div class="title">
+          심리교육 설정<br>메뉴얼
+        </div>
+      </a>
+    </div>
+
+    <div class="ui-g-12">
+      <a class="shortcut" id="assignMan">
+        <span class="icon">
+          <img src="./../../../../assets/img/icons/ic-content-paste-48px.png" alt="">
+        </span>
+        <div class="title">
+          내담자 과제설정<br>메뉴얼
+        </div>
+      </a>
+    </div>
+
+    <div class="ui-g-12">
+      <a class="shortcut" id="manageMan">
+        <span class="icon">
+          <img src="./../../../../assets/img/icons/ic-face-48px.png" alt="">
+        </span>
+        <div class="title">
+          내담자 관리<br>메뉴얼
+        </div>
+      </a>
+    </div>
   </div>
 
-
+  <div class="ui-g-4">
+    <div class="shortcut" id="service">
+      <div class="title">
+        서비스 이용문의
+      </div>
+      <div class="phone">
+        02. 3290. 1676
+      </div>
+      <div class="sub">
+        전화문의: 평일 오전 10:00 ~ 18:00
+        <br>
+        메일 : kumh@korea.ac.kr
+        <img src="./../../../../assets/img/icons/ic-call-48px.png" alt="">
+      </div>
+    </div>
+  </div>
 </div>

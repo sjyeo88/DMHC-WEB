@@ -1,24 +1,11 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { YHttp } from  '../ysjmodule/yhttp.module';
-
-import { Observable } from 'rxjs/Observable';
-import { of } from 'rxjs/observable/of';
-import { catchError, map, tap } from 'rxjs/operators';
-
-import { Job, Dept, Admin } from './get-data';
-import { Message } from 'primeng/components/common/api';
-import { MessageService } from 'primeng/components/common/messageservice';
 import { environment } from './../../environments/environment';
 // import {CookieService} from 'angular2-cookie/core';
 
-const httpOptions = {
-    headers: new HttpHeaders({'Content-type': 'application/json'})
-};
-
 export class Req2 extends YHttp {
   private apiUrl:string = environment.apiUrl;
-
   public cmsgs:any = {
     severity: 'error',
     summary: '네트워크 연결이 불안합니다.',
@@ -36,8 +23,7 @@ export class Req2 extends YHttp {
   };
 
   constructor(method, url, formData?:FormData) {
-    super(method, url, formData);
+    super(method, url);
     this.url = this.apiUrl + url
   }
-
 }

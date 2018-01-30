@@ -10,21 +10,29 @@
 // ################################################################## //
 
 @import "../../../../scss-variable.scss";
-.grid-all {
-  display: grid;
-  height: 645px;
-  grid-template-columns: 34% 33% 32%;
-  grid-template-rows: 34% 20% 20% 20%;
-  grid-column-gap: 10px;
-  grid-row-gap: 10px;
-}
+// .grid-all {
+//   display: grid;
+//   height: 645px;
+//   grid-template-columns: 34% 33% 32%;
+//   grid-template-rows: 34% 20% 20% 20%;
+//   grid-column-gap: 10px;
+//   grid-row-gap: 10px;
+// }
 
+.ui-g-1, .ui-g-2, .ui-g-3, .ui-g-4, .ui-g-5, .ui-g-6, .ui-g-7, .ui-g-8, .ui-g-9, .ui-g-10, .ui-g-11, .ui-g-12 {
+  padding: 0.2em;
+}
+.ui-g-nopad {
+  padding: 0;
+}
 
 .shortcut {
   font-family: "NanumBarunGothicOTF";
   color: white;
   padding: 20px;
-  cursor: pointer;
+  width: 100%;
+  display: inline-block;
+  height: 231px;
   .icon {
     display: inline-block;
     float: left;
@@ -54,10 +62,7 @@
 // }
 
 #user-info {
-  /* autoprefixer: off */
   background-color: #BB2E33;
-  grid-row: 1;
-  grid-column: 1;
   img {
     width: 100px;
     height: 100px;
@@ -74,8 +79,7 @@
 #patient-regist {
   /* autoprefixer: off */
   background-color: #954B4C;
-  grid-row: 1;
-  grid-column: 2;
+  height: 231px;
 
   .title {
     margin-left:100px;
@@ -90,7 +94,7 @@
     margin-top: 44px;
     font-size: 24px;
     .infoNum {
-      font-size: 72px;
+      font-size: 60px;
     }
   }
 }
@@ -99,8 +103,7 @@
 #current-regist {
   /* autoprefixer: off */
   background-color: #DD661C;
-  grid-row: 1;
-  grid-column: 3;
+  height: 231px;
 
   .title {
     margin-left:90px;
@@ -116,7 +119,7 @@
     margin-top: 44px;
     font-size: 24px;
     .infoNum {
-      font-size: 72px;
+      font-size: 60px;
     }
   }
 }
@@ -124,8 +127,9 @@
 #process {
   /* autoprefixer: off */
   background-color: #9B8C48;
-  grid-row: 2;
-  grid-column: 1;
+  height: 128px;
+  // grid-row: 2;
+  // grid-column: 1;
   .title {
     margin-left: 5.0em;
     margin-top: 1.0em;
@@ -135,10 +139,11 @@
 #notice {
   /* autoprefixer: off */
   cursor: default;
+  height: 262px;
   background-color: white;
   border: 1px solid $gray_light;
-  grid-column: 1;
-  grid-row: 3 / 5;
+  // grid-column: 1;
+  // grid-row: 3 / 5;
   padding: 0;
   .notice-title {
     background-color: #684E80;
@@ -173,8 +178,9 @@
 #lectureMan {
   /* autoprefixer: off */
   background-color: #225D92;
-  grid-column: 2;
-  grid-row: 2;
+  height: 128px;
+  // grid-column: 2;
+  // grid-row: 2;
   .title {
     font-size: 24px;
     margin-left: 6.0em;
@@ -185,8 +191,9 @@
 #assignMan {
   /* autoprefixer: off */
   background-color: #1A6C67;
-  grid-column: 2;
-  grid-row: 3;
+  height: 128px;
+  // grid-column: 2;
+  // grid-row: 3;
   .title {
     font-size: 24px;
     margin-left: 6.0em;
@@ -197,8 +204,9 @@
 #manageMan {
   /* autoprefixer: off */
   background-color: #003447;
-  grid-column: 2;
-  grid-row: 4;
+  height: 128px;
+  // grid-column: 2;
+  // grid-row: 4;
   .title {
     font-size: 24px;
     margin-left: 6.0em;
@@ -209,8 +217,7 @@
 #service {
   /* autoprefixer: off */
   cursor:default;
-  grid-column: 3;
-  grid-row: 2/5;
+  height: 396px;
   background-color: #6D6D6D;
   .phone {
     font-size: 30px;

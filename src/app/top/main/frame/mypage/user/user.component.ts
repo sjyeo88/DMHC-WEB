@@ -9,7 +9,7 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit, HostListener  } from '@angular/core';
+import { Component, OnInit, HostListener, ViewChild, QueryList,ElementRef, Renderer2 } from '@angular/core';
 import { Layout } from './../../../../layout.service';
 import { UserService } from './../../../../user.service'
 import { UserForm } from './user.form'
@@ -22,13 +22,16 @@ import { Message } from 'primeng/components/common/api';
   providers: [UserForm]
 })
 export class UserComponent implements OnInit {
+  @ViewChild('inputObj') pwObj: ElementRef;
   public viewPwdDialog = false;
   public postData:Function;
+  public userData;
   public msgs:Message[];
   constructor(
     public lay:Layout,
     public user:UserService,
     public fm:UserForm,
+    public rd:Renderer2,
   ) { }
 
   ngOnInit() {
@@ -38,14 +41,19 @@ export class UserComponent implements OnInit {
     this.lay.cuTitle.page =  this.lay.submenus.mypage.menus[0];
     this.lay.currentMenu =  this.lay.submenus.mypage;
 
-    this.getJobs();
-    this.getDepts();
     this.user.getUser()
+    .then(data=>{
+      this.userData = data;
+      return data;
+    })
+    .then(data=>{
+      this.getJobs();
+      this.getDepts();
+      return data;
+    })
     .then(data=>{
       this.fm.form.get('email').patchValue(data.email);
       this.fm.form.get('phone').patchValue(data.phone);
-      this.fm.form.get('job').patchValue(data.idJOBS);
-      this.fm.form.get('dept').patchValue(data.idDEPT);
     })
   }
 
@@ -57,6 +65,9 @@ export class UserComponent implements OnInit {
         this.fm.jobOpt.push({label: obj.name , value: obj.idJOBS})
       })
     })
+    .then(()=>{
+      this.fm.form.get('job').patchValue(this.userData.idJOBS);
+    })
   }
 
   getDepts() {
@@ -66,11 +77,19 @@ export class UserComponent implements OnInit {
         this.fm.deptOpt.push({label: obj.name , value: obj.idDEPT})
       })
     })
+    .then(()=>{
+      this.fm.form.get('dept').patchValue(this.userData.idDEPT);
+    })
   }
 
 
 
   onChangeInfo(type) {
+    // console.log(this.pwObj)//nativeElement.focus();
+    setTimeout(()=>{
+      this.pwObj.nativeElement.focus()
+    }, 50);
+    // console.log(this.pwObj);
     switch(type) {
       case 0:
         if(this.email.valid) {
@@ -99,9 +118,8 @@ export class UserComponent implements OnInit {
         }
       break;
       case 2:
-        this.postData = ()=>{
-          this.updateDept();
-        }
+        this.viewPwdDialog= true;
+        this.postData = ()=>{ this.updateDept(); }
         break;
       case 3:
         if(this.license.valid) {

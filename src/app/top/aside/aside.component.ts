@@ -15,15 +15,15 @@ import { Router, ActivatedRoute } from '@angular/router'
 
 
 @Component({
+  // changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'app-aside',
   templateUrl: './aside.component.html',
   styleUrls: ['./aside.component.scss']
 })
 export class AsideComponent implements OnInit {
-
   constructor(
-    public lay:Layout,
     private router: Router,
+    public lay:Layout,
     public ref:ChangeDetectorRef,
     public route: ActivatedRoute,
   ) {
@@ -31,20 +31,6 @@ export class AsideComponent implements OnInit {
 
   }
 
-  ngOnInit() {
-    if(sessionStorage.getItem('title') && sessionStorage.getItem('page'))
-      {
-        Object.keys(this.lay.submenus).map((obj)=>{
-          if(this.lay.submenus[obj].title == sessionStorage.getItem('title')) {
-            this.lay.currentMenu = this.lay.submenus[obj];
-          }
-        this.lay.currentPage =  sessionStorage.getItem('page');
-        })
-    }
-  }
+  ngOnInit() {}
 
-  ngAfterViewChecked(): void {
-    this.ref.detectChanges();
-    //for avoid ExpressionChangedAfterItHasBeenCheckedError
-  }
 }

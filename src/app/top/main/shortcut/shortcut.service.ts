@@ -13,4 +13,28 @@ export class ShortcutService {
     http.ConErr = () =>{ reject(http.cmsgs)}
     })
   }
+
+  getUnregistedPatient():Promise<any>{
+    return new Promise((resolve, reject)=>{
+    let http = new Req2('get', '/data/patients/unregist/count')
+    http.send();
+    http.Complete = ()=> {
+      resolve(JSON.parse(http.response));
+    }
+    http.ServErr = () =>{ reject(http.smsgs)}
+    http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
+
+  getPatient():Promise<any>{
+    return new Promise((resolve, reject)=>{
+    let http = new Req2('get', '/data/patients/count')
+    http.send();
+    http.Complete = ()=> {
+      resolve(JSON.parse(http.response));
+    }
+    http.ServErr = () =>{ reject(http.smsgs)}
+    http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
 }

@@ -17,6 +17,8 @@ import { BoardForm } from './board.form';
 import { ConfirmationService } from 'primeng/primeng'
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
+import { DomSanitizer } from '@angular/platform-browser';
+import * as Quill from 'quill/dist/quill'
 
 import 'rxjs/add/operator/debounceTime';
 
@@ -43,7 +45,11 @@ export class BoardComponent implements OnInit {
     public fm:BoardForm,
     public confirm:ConfirmationService,
     public route:ActivatedRoute,
-  ) {
+    public sanitizer:DomSanitizer,
+    ) {
+    let fontSizeStyle = Quill.import('attributors/style/size');
+    fontSizeStyle.whitelist = ['10px', '16px', '32px', '48px', '64px', '128px'];
+    Quill.register(fontSizeStyle, true);
     this.name.valueChanges
     .debounceTime(500)
     .subscribe(data=>{
@@ -69,6 +75,7 @@ export class BoardComponent implements OnInit {
     this.boardAll = [];
     this.serv.getBoards()
     .then(data =>{
+      console.log(data);
       data.forEach(obj=>{
         this.boardAll.push({
           no: obj.idNOTICE,

@@ -30,14 +30,14 @@
   <img src="assets/img/1-2_pic.jpg" id="login-img">
   <div class="login-input">
     <h2 class="login-title">치료자 로그인</h2>
-    <form [formGroup]="lf.loginForm" novalidate class="regist-form">
+    <form [formGroup]="lf.loginForm" (submit)="onSubmit()" novalidate class="regist-form">
       <div class="input-text">
         <input type="text" name="emil" formControlName="email" placeholder="이메일">
         <input type="password" name="emil" formControlName="password" placeholder="비밀번호">
       </div>
 
       <div class="input-button">
-        <button type="submit" name="log-in" id="login-button" (click)="onSubmit()">로그인 하기</button>
+        <button type="submit" name="log-in" id="login-button">로그인 하기</button>
         <button type="button" name="register" id="register-button"
                 routerLink="../access-term">치료자 등록하기</button>
       </div>

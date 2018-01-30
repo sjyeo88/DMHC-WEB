@@ -108,9 +108,10 @@ export class ManageAllComponent implements OnInit {
 
   public addFormGroup(obj) {
     obj.assigns = new FormGroup({
-        assign: (obj.idSBJT_CONF_ALL === 1) && (obj.idEXPERT_USER !== 1)
-        ? new FormControl('')
-        : new FormControl(obj.idSBJT_CONF_ALL),
+        assign: new FormControl(obj.idSBJT_CONF_ALL),
+        // (obj.idSBJT_CONF_ALL === 1) && (obj.idEXPERT_USER !== 1)
+        // ? new FormControl('')
+        // : new FormControl(obj.idSBJT_CONF_ALL),
     })
     obj.lastAssign = obj.idSBJT_CONF_ALL;
     obj.assigns.get('assign').valueChanges
