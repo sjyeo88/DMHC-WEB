@@ -294,6 +294,12 @@ export class HashComponent implements OnInit {
     let id = this.tableModel.model.indexOf(tgtRow)
     tgtRow.parent.number -= tgtRow.number;
     this.tableModel.model.splice(id, 1)
+    if(tgtRow.sub) {
+      this.getChildRow(tgtRow.parent).forEach(obj => {
+        this.checkAllValid(obj)
+      })
+      this.checkAllValid(tgtRow.parent);
+    };
     if(tgtRow.isSaved) {
       if(!tgtRow.sub) {
         this.hashServ.deleteHash(tgtRow.rawId)
@@ -348,6 +354,7 @@ export class HashComponent implements OnInit {
     data.append('name', tgtRow.name);
     this.hashServ.postHash(data)
     .then(result =>{
+      tgtRow.isSaved = true;
       if(result.insertId !== 0) {
         tgtRow.rawId = result.insertId;
       }
@@ -381,7 +388,16 @@ export class HashComponent implements OnInit {
 
   onWordSave(tgtRow) {
     this.isSaving = true;
-    // console.log(tgtRow.name);
+    if(!tgtRow.parent.isSaved) {
+      // tgtRow.parent.isSavable = true;
+      this.msgs = [];
+      this.msgs.push(
+        {severity: 'error',
+         summary:'입력에러 입니다.',
+         detail: '부모 태그를 먼저 저장해주세요.'}
+      )
+      return null;
+    }
     let data = new FormData();
     // data.append('children', tgtRow.number);
     data.append('text', tgtRow.name);
@@ -436,6 +452,7 @@ export class HashComponent implements OnInit {
           if(tgtRow.sub) {
             this.checkValue(this.addBro(tgtRow, obj));
           } else {
+            // tgtRow.isSavable = true;
             this.checkValue(this.addChild(tgtRow, obj));
           }
         }
@@ -490,14 +507,18 @@ export class HashComponent implements OnInit {
           .then(()=>{
             setTimeout(()=>{
               this.checkAllValid(tgtRow);
-            }, 10)
+            }, 100)
           })
         // }
       })
     } else {
+        // this.getChildRow(tgtRow.parent).splice(this.getChildRow(tgtRow.parent).indexOf(tgtRow)).forEach(obj => {
+        //   this.checkAllValid(obj)
+        // })
         setTimeout(()=>{
+          // this.checkAllValid(tgtRow.parent);
           this.checkAllValid(tgtRow);
-        }, 10)
+        }, 100)
     }
 
   }
@@ -529,17 +550,30 @@ export class HashComponent implements OnInit {
            summary:'입력에러 입니다.',
            detail: '중복된 해쉬태그 혹은 단어가 있습니다.'}
         )
-    } else if(!tgtRow.parent.isSaved) {
-        // this.msgs = [];
-        // this.msgs.push(
-        //   {severity: 'error',
-        //    summary:'입력에러 입니다.',
-        //    detail: '부모 태그를 먼저 저장해주세요.'}
-        // )
-        tgtRow.parent.isSavable = true;
-    } else {
-      tgtRow.isSavable = true;
-      tgtRow.parent.isSavable = true;
+    }
+    // else if(!tgtRow.parent.isSaved) {
+    //     tgtRow.parent.isSavable = true;
+    //     this.msgs = [];
+    //     this.msgs.push(
+    //       {severity: 'error',
+    //        summary:'입력에러 입니다.',
+    //        detail: '부모 태그를 먼저 저장해주세요.'}
+    //     )
+    // }
+    else {
+      if(!tgtRow.sub) {
+        let children = this.getChildRow(tgtRow)
+        if(children.some(obj=> obj.isSavable === false)){
+          tgtRow.isSavable = false
+        } else {
+          tgtRow.isSavable = true
+        }
+      } else {
+        tgtRow.isSavable = true;
+      }
+      // if(!tgtRow.sub && tgtRow ) {
+      // tgtRow.isSavable = true;
+      // tgtRow.parent.isSavable = true;
     }
   }
 

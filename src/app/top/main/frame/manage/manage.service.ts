@@ -1,5 +1,5 @@
 import {Injectable } from '@angular/core'
-import { Req2 } from '../../../../service/get-public-data.service';
+import { Req2 } from './../../../../ysjmodule/Req2';
 
 
 @Injectable()
@@ -28,9 +28,9 @@ export class ManageService {
       })
     }
 
-    getSurveyResult(idPATIENT_USER, idSURVEY, year):Promise<any> {
+    getSurveyResult(idPATIENT_USER, year):Promise<any> {
       return new Promise((resolve, reject)=>{
-        let url = '/data/survey/result/' + idPATIENT_USER + '/' + idSURVEY + '/' + year;
+        let url = '/data/survey/result/' + idPATIENT_USER + '/' + year;
         let http =  new Req2('get', url);
         http.send();
         http.Complete = ()=> {
@@ -83,6 +83,19 @@ export class ManageService {
     getPatientByAssign(assign):Promise<any> {
       return new Promise((resolve, reject)=>{
         let url = '/data/patients/list/assign/' + assign;
+        let http =  new Req2('get', url);
+        http.send();
+        http.Complete = ()=> {
+          resolve(JSON.parse(http.response));
+        }
+        http.ServErr = () =>{ reject(http.smsgs)}
+        http.ConErr = () =>{ reject(http.cmsgs)}
+      })
+    }
+
+    getAssigns(idPATIENT_USER, year,  month):Promise<any> {
+      return new Promise((resolve, reject)=>{
+        let url = '/data/subjects/' + idPATIENT_USER + '/' + year + '/' + month;
         let http =  new Req2('get', url);
         http.send();
         http.Complete = ()=> {

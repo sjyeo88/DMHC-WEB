@@ -11,6 +11,7 @@ export class ManageDetailForm {
     this.form= this.fb.group({
       patient: [null],
       assign: [null],
+      assignCtrl: 0,
       survey: [null],
     })
   }

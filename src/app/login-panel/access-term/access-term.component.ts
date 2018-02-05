@@ -13,8 +13,7 @@ import { AbstractControl, FormGroup, FormControl, Validators } from '@angular/fo
 import { Router, ActivatedRoute } from '@angular/router'
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
-import { TermAgree } from  '../../service/get-data';
-import { RegistData } from  '../../service/auth-data';
+import { TermAgree } from  '../../service/app.models';
 
 @Component({
   selector: 'app-access-term',
@@ -34,7 +33,6 @@ export class AccessTermComponent implements OnInit {
     private router: Router,
     public route: ActivatedRoute,
     public TA: TermAgree,
-    public rf: RegistData,
   ) { }
 
   ngOnInit() {

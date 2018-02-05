@@ -11,7 +11,9 @@
 
 import { Component, OnInit, HostListener, ViewChild, QueryList,ElementRef, Renderer2 } from '@angular/core';
 import { Layout } from './../../../../layout.service';
-import { UserService } from './../../../../user.service'
+import { UserService } from './user.service'
+import { AppServices } from './../../../../../service/app.services';
+import { AppModels } from './../../../../../service/app.models';
 import { UserForm } from './user.form'
 import { Message } from 'primeng/components/common/api';
 
@@ -19,7 +21,7 @@ import { Message } from 'primeng/components/common/api';
   selector: 'app-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
-  providers: [UserForm]
+  providers: [UserForm, UserService]
 })
 export class UserComponent implements OnInit {
   @ViewChild('inputObj') pwObj: ElementRef;
@@ -29,9 +31,11 @@ export class UserComponent implements OnInit {
   public msgs:Message[];
   constructor(
     public lay:Layout,
-    public user:UserService,
     public fm:UserForm,
     public rd:Renderer2,
+    public serv:AppServices,
+    public model:AppModels,
+    public us:UserService,
   ) { }
 
   ngOnInit() {
@@ -41,44 +45,36 @@ export class UserComponent implements OnInit {
     this.lay.cuTitle.page =  this.lay.submenus.mypage.menus[0];
     this.lay.currentMenu =  this.lay.submenus.mypage;
 
-    this.user.getUser()
-    .then(data=>{
-      this.userData = data;
-      return data;
-    })
-    .then(data=>{
-      this.getJobs();
-      this.getDepts();
-      return data;
-    })
-    .then(data=>{
-      this.fm.form.get('email').patchValue(data.email);
-      this.fm.form.get('phone').patchValue(data.phone);
-    })
+    this.getUser();
+    this.getJobs();
+    this.getDepts();
+
+    this.fm.form.get('email').patchValue(this.model.user.email);
+    this.fm.form.get('phone').patchValue(this.model.user.phone);
   }
 
 
   getJobs() {
-    this.user.getJobs()
+    this.serv.getJobList()
     .then(data=>{
       data.forEach(obj=>{
         this.fm.jobOpt.push({label: obj.name , value: obj.idJOBS})
       })
     })
     .then(()=>{
-      this.fm.form.get('job').patchValue(this.userData.idJOBS);
+      this.fm.form.get('job').patchValue(this.model.user.idJOBS);
     })
   }
 
   getDepts() {
-    this.user.getDepts()
+    this.serv.getDeptList()
     .then(data=>{
       data.forEach(obj=>{
         this.fm.deptOpt.push({label: obj.name , value: obj.idDEPT})
       })
     })
     .then(()=>{
-      this.fm.form.get('dept').patchValue(this.userData.idDEPT);
+      this.fm.form.get('dept').patchValue(this.model.user.idDEPT);
     })
   }
 
@@ -141,13 +137,14 @@ export class UserComponent implements OnInit {
     let form = new FormData();
     form.append('email', this.email.value)
     form.append('password', this.password.value)
-    this.user.putEmail(form)
+    this.us.putEmail(form)
     .then(()=>{
       this.msgs = [];
       this.msgs.push({
         severity:'success',
         summary:'이메일 변경 완료',
         detail:'치료자의 이메일 정보가 변경되었습니다.'})
+      this.getUser();
     })
     .catch(msg=>{
       this.msgs = [];
@@ -161,13 +158,14 @@ export class UserComponent implements OnInit {
     let form = new FormData();
     form.append('phone', this.phone.value)
     form.append('password', this.password.value)
-    this.user.putPhone(form)
+    this.us.putPhone(form)
     .then(()=>{
       this.msgs = [];
       this.msgs.push({
         severity:'success',
         summary:'전화번호 변경 완료',
         detail:'치료자의 전화번호 정보가 변경되었습니다.'})
+      this.getUser();
     })
     .catch(msg=>{
       this.msgs = [];
@@ -181,13 +179,14 @@ export class UserComponent implements OnInit {
     let form = new FormData();
     form.append('dept', this.dept.value)
     form.append('password', this.password.value)
-    this.user.putDept(form)
+    this.us.putDept(form)
     .then(()=>{
       this.msgs = [];
       this.msgs.push({
         severity:'success',
         summary:'소속기관 변경 완료',
         detail:'치료자의 소속기관 정보가 변경되었습니다.'})
+      this.getUser();
     })
     .catch(msg=>{
       this.msgs = [];
@@ -203,7 +202,7 @@ export class UserComponent implements OnInit {
     form.append('jobName', this.fm.jobOpt.filter(obj=>{return obj.value === this.job.value})[0].label)
     form.append('license', this.license.value)
     form.append('password', this.password.value)
-    this.user.putJob(form)
+    this.us.putJob(form)
     .then(()=>{
       this.msgs = [];
       this.msgs.push({
@@ -211,6 +210,7 @@ export class UserComponent implements OnInit {
         summary:'직종 변경 신청 완료',
         detail:'치료자의 직종정보가 변경 신청되었습니다. 관리자 검토 후 변경적용이 됩니다.'
       });
+      this.getUser();
     })
     .catch(msg=>{
       this.msgs = [];
@@ -221,6 +221,28 @@ export class UserComponent implements OnInit {
   }
   onUpload(event) {
     this.license.patchValue(event.files[0]);
+  }
+
+  public getUser() {
+    this.serv.getUser()
+    .then(data=>{
+      let userInfo = data[0]
+      this.model.user.idEXPERT_USER = userInfo.idEXPERT_USER;
+      this.model.user.name = userInfo.name;
+      this.model.user.email= userInfo.email;
+      this.model.user.deptName = userInfo.deptName;
+      this.model.user.idDEPT = userInfo.idDEPT;
+      this.model.user.jobName = userInfo.jobName;
+      this.model.user.idJOBS = userInfo.idJOBS;
+      this.model.user.birth = userInfo.birth;
+      this.model.user.phone= userInfo.phone;
+      this.model.user.loginDate = new Date(userInfo.last_login_date);
+      return this.model.user;
+    })
+    .then(data=>{
+      this.dept.patchValue(data.idDEPT);
+      this.dept.patchValue(data.idJOBS);
+    })
   }
 
   get email() {

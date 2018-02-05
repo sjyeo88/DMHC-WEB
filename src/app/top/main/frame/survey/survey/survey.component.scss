@@ -33,9 +33,7 @@
 .line1 {
   grid-column:2;
   background-color: $gray_bright;
-  padding-left: 15px;
-  padding-top : 25px;
-  padding-bottom: 25px;
+  padding: 15px 25px;
 
   .title {
     width: 300px;
@@ -54,7 +52,6 @@
   .all-del-button {
     width: 195px;
     margin-top: 30px;
-    margin-left: 573px;
   }
 
   .measure-text {
@@ -76,7 +73,7 @@
       margin-right: 15px;
     }
     input {
-      width: 358px;
+      width: 298px;
       margin-right: 20px;
     }
     .button-div {
@@ -105,7 +102,7 @@
   }
   .submit {
     margin-top: 50px;
-    margin-left: 367px;
+    float: right;
     .isNew-button {
       width: 400px;
     }

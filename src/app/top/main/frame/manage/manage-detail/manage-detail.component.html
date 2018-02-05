@@ -61,26 +61,92 @@
       </div>
       <div class="survey-ctrl">
         <div class="ui-g-10 survey">
-          <span class="year">{{year}} 년</span>
+          <span class="year" *ngIf="viewMode===2">{{cuDate.getFullYear()}}년</span>
+          <span class="year" *ngIf="viewMode!==2">{{cuDate.getFullYear()}}년 {{cuDate.getMonth()+1}} 월</span>
           <div class="survey-detail">
             <li>
+              <!-- getSurveyResult($event)" -->
               <p-dropdown
               [style]="{'width':'300px'}"
-              [options]="allSurveyList"
-              (onChange)="getSurveyResult($event)"
-              placeholder="설문을 선택해 주세요."
-              formControlName="survey"
+              [options]="assignCtrlOpt"
+              (onChange)="onChangMode($event)"
+              formControlName="assignCtrl"
               ></p-dropdown>
             </li>
-            <li [style.margin-top.px]="10">총과제 : 0개 | 수행 : 0개 | 수행률 : 0%</li>
+            <li [style.margin-top.px]="10" *ngIf="viewMode!==2">
+              총과제 : {{result.assignNum }}개 | 수행 : {{result.finished }}개 | 수행률 : {{result.percentage}}%
+            </li>
           </div>
         </div>
-        <div class="ui-g-1 year-move" (click)="yearUp()">▲</div>
-        <div class="ui-g-1 year-move" (click)="yearDown()">▼</div>
+        <div class="ui-g-1 year-move" *ngIf="viewMode===2" (click)="yearUp()">▲</div>
+        <div class="ui-g-1 year-move" *ngIf="viewMode===2" (click)="yearDown()">▼</div>
+        <div class="ui-g-1 year-move" *ngIf="viewMode!==2" (click)="monthUp()">▲</div>
+        <div class="ui-g-1 year-move" *ngIf="viewMode!==2" (click)="monthDown()">▼</div>
       </div>
-      <div class="">
-        <!-- <p-chart id="myChart" type="line" [data]="surveyResult" [options]="chartOpt"></p-chart> -->
-        <canvas id="myChart"></canvas>
+      <div>
+        <!-- <canvas id="myChart" *ngIf="viewMode===ViewModeOpt.Survey"></canvas> -->
+        <!-- <canvas id="myChart"></canvas> -->
+        <canvas id="myChart" [style.display]="viewMode==ViewModeOpt.Survey ? 'block' : 'none'"></canvas>
+        <div class="scheduler" *ngIf="viewMode==ViewModeOpt.Calender">
+          <table>
+            <th>일</th>
+            <th>월</th>
+            <th>화</th>
+            <th>수</th>
+            <th>목</th>
+            <th>금</th>
+            <th>토</th>
+            <tr *ngFor="let week of calender;">
+              <td *ngFor="let day of week" [ngClass]="day?.valid ? '' : 'blur'">
+                {{ day?.date.getDate() }} <br>
+                <div class="objs-container">
+                  <div *ngFor="let assign of day?.assigns;">
+                    <div class="obj-container">
+                      <span [ngClass]="assign.result == 1 ? 'obj-finished' : 'obj-ing'"></span>
+                      <!-- <p [ngClass]="day?.date.getDay() > 3 ? 'detail-right' : 'detail-left'"> -->
+                      <p class="detail">
+
+                           <li><strong>과제 그룹 이름 : </strong> {{assign?.groupName}}</li>
+                           <li><strong>과제 이름 :</strong> {{assign?.title}}</li>
+                           <li><strong>지시문 : </strong> {{assign?.command}}</li>
+                           <li><strong>결과 : </strong> {{assign?.result == 1 ? '완료' : '진행 중' }}</li>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+
+        <div class="list" *ngIf="viewMode==ViewModeOpt.List">
+          <table>
+            <th>과제 제시날짜</th>
+            <th>과제 그룹</th>
+            <th>과제명</th>
+            <th>지시문</th>
+            <th>수행결과</th>
+
+            <tr *ngFor="let item of isExpand ? list : list.slice(0, 10)">
+              <td align="center" class="time"> {{ item.PUSH_TIME | date: 'yyyy-MM-dd hh시 mm분' }} </td>
+              <td> {{ item.groupName }} </td>
+              <td> {{ item.title }} </td>
+              <td> {{ item.command }} </td>
+              <td class="result" align="center" *ngIf="item.result == 1">
+                <i class="fa fa-check-circle fa-lg finished"></i>
+              </td>
+              <td class="result" align="center" *ngIf="item.result == 0">
+                <i class="fa fa-times-circle fa-lg pending"></i>
+              </td>
+            </tr>
+            <tr>
+              <td class="expand" colspan="5" align="center" (click)="listExpand()">
+                <span *ngIf="!isExpand">더 보기 ▼</span>
+                <span *ngIf="isExpand">접기 ▲</span>
+              </td>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
   </div>

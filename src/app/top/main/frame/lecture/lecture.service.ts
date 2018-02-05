@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Req2 } from './../../../../service/get-public-data.service'
+import { Req2 } from './../../../../ysjmodule/Req2';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
 import { LectureTable, NewLectureData, Lecture} from  './new-lecture-data';

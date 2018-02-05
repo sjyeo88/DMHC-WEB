@@ -24,8 +24,8 @@
   </div>
   <div class="ui-g-10 detail">
     <li><input type="text" formControlName="email"> <button type="button" (click)="onChangeInfo(0)">변경</button> </li>
-    <li>{{user.userServ.name}}</li>
-    <li>{{user.userServ.birth | date:'yyyy-MM-dd'}}</li>
+    <li>{{model.user.name}}</li>
+    <li>{{model.user.birth | date:'yyyy-MM-dd'}}</li>
     <li><input type="text"  formControlName="phone"> <button type="button" (click)="onChangeInfo(1)">변경</button></li>
   </div>
   <div class="ui-g-2 label">

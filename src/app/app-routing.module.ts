@@ -79,8 +79,8 @@ const routes: Routes = [
       {path: 'access-term', component: AccessTermComponent},
       {path: 'register', component: RegisterComponent},
       {path: 'welcome', component: WelcomeComponent},
-      {path: 'confirm/:userId', component: ConfirmComponent },
-      {path: 'confirm/job/:userId', component: ConfirmJobComponent },
+      {path: 'confirm', component: ConfirmComponent },
+      {path: 'confirm/job', component: ConfirmJobComponent },
     ]
   },
   {path: 'expire', component: ExpireComponent},

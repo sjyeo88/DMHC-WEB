@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { FormBuilder, FormGroup, Validators } from '@angular/forms'
-import { RegexValidators } from './../../../../../login-panel/register/register.validator'
+import { RegexValidators } from './../../../../../login-panel/register/register.form';
 
 @Injectable()
 export class UserForm {

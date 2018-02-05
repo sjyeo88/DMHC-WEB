@@ -13,20 +13,20 @@
 
 .aside-hide {
   float: left;
-  height: 642px;
+  height: 532px;
   transform: translate(-120%);
   opacity: 0;
-  width: 287px;
+  width: 255px;
   margin: 14px;
   overflow: hidden;
   font-family: "NanumBarunGothicOTF";
 
   .sub-title {
     background-color: $main_color01;
-    height: 75px;
+    height: 67px;
     color: white;
 
-    font-size: 36px;
+    font-size: 32px;
     font-weight: bold;
     padding-top: 17px;
     padding-bottom: 17px;
@@ -72,6 +72,49 @@
       }
     }
 
+  }
+  .aside-button-container {
+    margin-top: 100px;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    @mixin aside-button($background-color) {
+      display: inline-block;
+      background-color: $background-color;
+      width: 100%;
+      color: white;
+      font-size:22px;
+      font-weight: bold;
+      padding: 10px;
+      margin-bottom: 3px;
+      .middle {
+        vertical-align: middle;
+      }
+      span {
+        margin-left: 10px;
+      }
+      img {
+        vertical-align: middle;
+        width: 32px;
+      }
+      p {
+        margin-top: 20px;
+        font-weight: normal;
+        font-size: 14px;
+      }
+      a {
+        display: inline-block;
+      }
+    }
+    .notice {
+      @include aside-button(#684E80);
+    }
+    .process {
+      @include aside-button(#9B8C48);
+    }
+    .service {
+      @include aside-button(#6D6D6D);
+    }
   }
 }
 

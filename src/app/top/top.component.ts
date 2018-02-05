@@ -11,12 +11,12 @@
 // ################################################################## //
 
 import { Component, OnInit, ViewChild} from '@angular/core';
-import { Req2 } from '../service/get-public-data.service';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
 import { HeaderComponent } from './header/header.component';
 import { Layout } from './layout.service';
-import { UserService } from './user.service';
+import { AppModels } from './../service/app.models';
+import { AppServices } from './../service/app.services';
 import { Router, ActivatedRoute } from '@angular/router'
 
 
@@ -33,10 +33,11 @@ export class TopComponent implements OnInit {
   public msgs: Message[] = [];
   constructor(
     public msgSrv: MessageService,
-    public us:UserService,
     public lay:Layout,
     private router: Router,
     public route: ActivatedRoute,
+    public model: AppModels,
+    public serv: AppServices,
   ) {}
 
   ngOnInit() {
@@ -45,35 +46,20 @@ export class TopComponent implements OnInit {
 
 
   public getUser() {
-    this.us.getUser()
+    this.serv.getUser()
     .then(data=>{
-      this.us.userServ.idEXPERT_USER = data.idEXPERT_USER;
-      this.us.userServ.name = data.name;
-      this.us.userServ.email= data.email;
-      this.us.userServ.dept = data.idDEPT;
-      this.us.userServ.idDEPT = data.idDEPT;
-      this.us.userServ.job = data.idJOBS;
-      this.us.userServ.idJOBS = data.idJOBS;
-      this.us.userServ.birth = data.birth;
-      this.us.userServ.phone= data.phone;
-      this.us.userServ.loginDate = new Date(data.last_login_date);
-      return this.us.userServ;
-      // console.log(data);
-    })
-    .then(user=>{
-      this.us.getDeptName(user.dept)
-      .then(dept =>{
-       user.dept = dept[0].name
-      })
-
-      this.us.getJobName(user.job)
-      .then(job=>{
-       user.job= job[0].name
-      })
-      return user
+      let userInfo = data[0]
+      this.model.user.idEXPERT_USER = userInfo.idEXPERT_USER;
+      this.model.user.name = userInfo.name;
+      this.model.user.email= userInfo.email;
+      this.model.user.deptName = userInfo.deptName;
+      this.model.user.idDEPT = userInfo.idDEPT;
+      this.model.user.jobName = userInfo.jobName;
+      this.model.user.idJOBS = userInfo.idJOBS;
+      this.model.user.birth = userInfo.birth;
+      this.model.user.phone= userInfo.phone;
+      this.model.user.loginDate = new Date(userInfo.last_login_date);
+      return this.model.user;
     })
   }
-
-
-
 }

@@ -9,9 +9,8 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
-import { RegistData, LoginData } from '../service/auth-data';
-import { TermAgree } from  '../service/get-data';
-import { RegexValidators } from "./register/register.validator";
+import { Router } from '@angular/router';
+import { TermAgree } from  '../service/app.models';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
 
@@ -19,14 +18,13 @@ import { Message } from 'primeng/components/common/api';
   selector: 'app-login-panel',
   templateUrl: './login-panel.component.html',
   styleUrls: ['./login-panel.component.scss',],
-  providers: [LoginData, TermAgree, RegistData, RegexValidators ]
+  providers: [ TermAgree ]
 })
 export class LoginPanelComponent implements OnInit {
-  constructor() { }
+  constructor() {
+
+  }
 
   ngOnInit() {
   }
-
-
-
 }

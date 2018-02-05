@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core'
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
 import { Hash, HashSub } from './hash.model';
-import { Req2 } from '../../../../service/get-public-data.service';
+import { Req2 } from './../../../../ysjmodule/Req2';
 
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/pairwise';

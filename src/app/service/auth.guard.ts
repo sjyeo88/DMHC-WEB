@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivateChild } from '@angular/router';
-import { Req2 } from './get-public-data.service';
-import { UserService } from './../top/user.service'
+import { AppServices } from './app.services';
 
 @Injectable()
 export class AuthGuard implements CanActivateChild {
   constructor(
     private router: Router,
-    public us: UserService,
+    public serv: AppServices,
   ) { }
 
   canActivateChild() {
-    return this.us.chkSession()
+    return this.serv.chkSession()
     .then(data=>{
       return true;
     })

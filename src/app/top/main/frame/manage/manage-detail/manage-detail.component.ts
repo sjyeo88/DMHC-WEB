@@ -22,6 +22,12 @@ import { ConfirmationService } from 'primeng/primeng'
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/pairwise';
 
+enum ViewMode {
+  Calender,
+  List,
+  Survey,
+}
+
 @Component({
   selector: 'app-manage-detail',
   templateUrl: './manage-detail.component.html',
@@ -31,18 +37,25 @@ import 'rxjs/add/operator/pairwise';
 export class ManageDetailComponent implements AfterViewChecked{
 
   public tgtPatientId= this.route.snapshot.paramMap.get('idPATIENT_USER')
-
   public allAssignList:IDropdown[] = [];
   public allPatientList:IDropdown[] = [];
   public allSurveyList:IDropdown[] = [];
   public allPatientData = [];
+  public isSurveyLoaded = false;
   public lastSelectedAssign:number;
   public msgs: Message[] = [];
   public year = new Date().getFullYear();
   public chart:Chart
+  public ViewModeOpt: typeof ViewMode = ViewMode;
+  public viewMode:number = 0;
+  public assignCtrlOpt: IDropdown[] = [
+    {label:'캘린더', value:this.ViewModeOpt.Calender},
+    {label:'리스트', value:this.ViewModeOpt.List},
+    {label:'설문 결과', value:this.ViewModeOpt.Survey},
+  ];
 
   public tgtPatient={
-      idPATIENT_USER:'',
+      idPATIENT_USER:0,
       idSBJT_CONF_ALL:'',
       email:'',
       name:'',
@@ -57,15 +70,9 @@ export class ManageDetailComponent implements AfterViewChecked{
   };
   public surveyResult:any = {
     labels: [],
-    datasets: [
-    {
-      label: '',
-      data: [],
-      fill: false,
-      borderColor: '#009E73',
-    },
-    ]
+    datasets: []
   }
+  public cuDate = new Date();
   public chartOpt = {
     responsive: true,
     maintainAspectRatio: true,
@@ -80,8 +87,8 @@ export class ManageDetailComponent implements AfterViewChecked{
       xAxes: [{
         type: 'time',
         time: {
-          min: new Date(this.year, 0),
-          max: new Date(this.year, 12),
+          min: new Date(this.cuDate.getFullYear(), 0),
+          max: new Date(this.cuDate.getFullYear(), 12),
           displayFormats: {
             month: 'MMM'
           },
@@ -96,6 +103,25 @@ export class ManageDetailComponent implements AfterViewChecked{
       }
     },
   }
+
+  public calender=[
+    new Array(6),
+    new Array(6),
+    new Array(6),
+    new Array(6),
+    new Array(6),
+  ];
+
+  public list=[];
+  public isExpand=false;
+
+  public result = {
+    assignNum: 0,
+    finished: 0,
+    percentage: '',
+  }
+
+
 
   constructor(
       public lay:Layout,
@@ -115,14 +141,7 @@ export class ManageDetailComponent implements AfterViewChecked{
     this.lay.currentPage = this.lay.cuTitle.page;
     this.getAssignList();
     this.getPatients();
-    let ctx = document.getElementById('myChart')
-    this.chart = new Chart(ctx, {
-      type: 'line',
-      data: this.surveyResult,
-      options: this.chartOpt
-    })
-    console.log(this.tgtPatientId);
-
+    this.getAssignResult(this.cuDate);
     this.fm.form.get('assign').valueChanges
       .pairwise()
       .subscribe(pair => {
@@ -130,39 +149,107 @@ export class ManageDetailComponent implements AfterViewChecked{
     })
   }
 
-  getSurveyResult(event) {
-    this.serv.getSurveyResult(this.tgtPatient.idPATIENT_USER, event.value, this.year)
+  getAssignResult2(tgtDate:Date) {
+    let year = tgtDate.getFullYear();
+    let month = tgtDate.getMonth();
+    this.serv.getAssigns(this.tgtPatient.idPATIENT_USER, year, month+1 )
+    .then(data=>{
+      this.list = data;
+    })
+    .then(obj=>{
+      console.log(this.calender);
+    })
+  }
+
+  getAssignResult(tgtDate:Date) {
+    let year = tgtDate.getFullYear();
+    let month = tgtDate.getMonth();
+    this.serv.getAssigns(this.tgtPatient.idPATIENT_USER, year, month+1 )
+    .then(data=>{
+      let firstDate = new Date(year, month, 0)
+      let lastDate = new Date(year, month+1, 0)
+      let headDate = -1*(firstDate.getDay()-1)
+      this.result.assignNum = data.length
+      this.result.finished = data.filter(obj=> { return obj.result === '1'} ).length;
+      this.result.percentage = (this.result.assignNum !== 0) ?
+      (100*this.result.finished/this.result.assignNum).toFixed(2)  : '0';
+      for(let i=0; i < 5; i++){
+        for(let j=0; j < 7; j++) {
+          let date = new Date(year, month, headDate);
+          let assigns = data.filter((obj, idx)=>{
+            return new Date(obj.PUSH_TIME).getDate() === date.getDate() &&
+            new Date(obj.PUSH_TIME).getMonth() === date.getMonth()
+          })
+          this.calender[i][j] = {
+            date: date,
+            valid: headDate < 1 || headDate > lastDate.getDate() ? false : true,
+            assigns: assigns
+          }
+          headDate++;
+        }
+      }
+      return this.calender;
+    })
+    .then(obj=>{
+      console.log(this.calender);
+    })
+  }
+
+  getSurveyResult() {
+    this.isSurveyLoaded = false;
+    this.serv.getSurveyResult(1, this.cuDate.getFullYear())
     .then(data=>{
       let result = []
       if(data.length !== 0) {
-        this.surveyResult.datasets[0].label = data[0].title
-        return data.map((obj, idx)=> {
-          // this.surveyResult.datasets[idx].label = data[idx].title;
-          return {
-            t:new Date(obj.PUSH_TIME),
-            y:obj.POINT,
-          }
-        })
+        let ids = data.reduce((last, cu) =>{
+          if(!last.some(obj=>{ return obj === cu.idSURVEY })) {
+             last.push(cu.idSURVEY);
+           }
+          return last
+        }, [])
+        return {ids, data};
       } else {
         throw null;
       }
     })
-    .then(result=>{
-      console.log(result);
-      this.surveyResult.datasets[0].data = result;
+    .then(result => {
+      //Data Splits
+      let ids = result.ids;
+      let data = result.data;
+       return ids.map(key => {
+        return data.filter(obj=> { return obj.idSURVEY === key })
+      });
+    })
+    .then(result => {
+      //Data Mapping for chart
+      this.surveyResult.datasets = result.map((objs, idx) => {
+        let colorPool = ['#197e42', '#9600ff', '#3615c1', '#c9410f', '#1d5086']
+        return {
+          label: objs[0].title,
+          data: objs.map(obj => { return { t: new Date(obj.PUSH_TIME), y: obj.POINT }}),
+          fill: false,
+          borderColor: colorPool[idx%colorPool.length],
+          backgroundColor: colorPool[idx%colorPool.length],
+        }
+
+      });
     })
     .then(()=>{
       this.msgs=[];
-      let ctx = document.getElementById('myChart')
-      this.chart = new Chart(ctx, {
-        type: 'line',
-        data: this.surveyResult,
-        options: this.chartOpt
-      })
+      if(!this.chart) {
+        let ctx = document.getElementById('myChart')
+        this.chart = new Chart(ctx, {
+          type: 'line',
+          data: this.surveyResult,
+          options: this.chartOpt
+        })
+      }
       this.chart.update();
+      this.isSurveyLoaded = true;
     })
     .catch(()=>{
-      this.surveyResult.datasets[0].data = [];
+      this.isSurveyLoaded = true;
+      this.surveyResult.datasets = [];
       this.chart.update();
 
       this.msgs=[];
@@ -174,18 +261,41 @@ export class ManageDetailComponent implements AfterViewChecked{
     })
   }
 
+  monthUp(){
+    let year = this.cuDate.getFullYear()
+    let month = this.cuDate.getMonth()
+    this.cuDate = new Date(year, month, 0);
+    this.changeView(this.viewMode);
+  }
+
+  monthDown(){
+    let year = this.cuDate.getFullYear()
+    let month = this.cuDate.getMonth()
+    this.cuDate = new Date(year, month+2, new Date(year, month, 1).getDate()-1)
+    this.changeView(this.viewMode);
+  }
+
   yearUp(){
-    this.year++;
-    if(this.survey.value) {
-      this.getSurveyResult(this.survey);
-    }
+    let year = this.cuDate.getFullYear()
+    let month = this.cuDate.getMonth()
+    this.cuDate = new Date(year-1, month, this.cuDate.getDate())
+    this.changeView(2);
   }
 
   yearDown(){
-    this.year--;
-    if(this.survey.value) {
-      this.getSurveyResult(this.survey);
-    }
+    let year = this.cuDate.getFullYear()
+    let month = this.cuDate.getMonth()
+    this.cuDate = new Date(year+1, month, this.cuDate.getDate())
+    this.changeView(2);
+  }
+
+  dateInit() {
+    this.cuDate = new Date();
+  }
+
+  onChangMode(event){
+    this.dateInit();
+    this.changeView(event.value);
   }
 
   updateChart(event){
@@ -212,7 +322,10 @@ export class ManageDetailComponent implements AfterViewChecked{
       let user = (patient as any)
       user.age = this.serv.getAge(user.birth)
       this.assign.patchValue(user.idSBJT_CONF_ALL);
-      this.getSurveyList(user.idPATIENT_USER);
+    })
+    .then(()=>{
+      this.dateInit();
+      this.changeView(0);
     })
     .catch(()=>{
       this.msgs = [];
@@ -301,6 +414,27 @@ export class ManageDetailComponent implements AfterViewChecked{
          this.assign.patchValue(this.lastSelectedAssign);
        }
      })
+  }
+  changeView(value) {
+    switch(value) {
+      case this.ViewModeOpt.Calender:
+        this.viewMode = this.ViewModeOpt.Calender;
+        this.getAssignResult(this.cuDate);
+      break;
+      case this.ViewModeOpt.List:
+        this.viewMode = this.ViewModeOpt.List;
+        this.getAssignResult2(this.cuDate);
+      break;
+      case this.ViewModeOpt.Survey:
+        this.viewMode = this.ViewModeOpt.Survey;
+        this.getSurveyResult()
+      break;
+    }
+  }
+
+  listExpand() {
+    this.isExpand = this.isExpand ? false : true;
+    console.log(this.isExpand);
   }
 
   ngAfterViewChecked(): void {

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core'
-import { Req2 } from '../../../../service/get-public-data.service';
+import { Req2 } from './../../../../ysjmodule/Req2'
 
 @Injectable()
 export class QnaService {

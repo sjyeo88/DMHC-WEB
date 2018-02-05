@@ -408,7 +408,9 @@ export class AssignForm {
     let colLen=col.length;
     let addCol = this.fb.array([]);
     for(let i=0; i < colLen; i++) {
-        addCol.insert(addCol.length, this.fb.group({data:[i===0 ? value : '',[Validators.required]]}));
+        addCol.insert(addCol.length, this.fb.group({data:[i===0 ? value : '',
+        i===0 ? [ Validators.required, Validators.maxLength(this.valider.tableMax)] : [],
+      ]}));
     }
     tableData.insert(idx+1, cloneDeep(addCol))
   }

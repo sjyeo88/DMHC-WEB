@@ -11,7 +11,6 @@
 
 import { Component, OnInit, ViewChild, ViewChildren, QueryList, ElementRef} from '@angular/core';
 import { FormArray, FormGroup } from '@angular/forms';
-import { Req2 } from './../../../../../service/get-public-data.service';
 import { Layout } from './../../../../layout.service';
 import { AssignForm } from './assign.form';
 import { AssignService } from '../assign.service';
@@ -264,6 +263,7 @@ export class AssignComponent implements OnInit {
         this.msgs.push(msg);
       })
     } else {
+      console.log(this.fm.assignForm);
       this.msgs = [];
       this.msgs.push({severity: 'error', summary: '전송 실패', detail: '미작성된 부분이 있습니다.'})
     }

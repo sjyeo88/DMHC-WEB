@@ -9,13 +9,8 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { ChangeDetectorRef, Component, OnInit, OnChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Layout } from '../../layout.service';
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-
-import 'rxjs/add/observable/from';
-import 'rxjs/add/observable/fromEvent';
 
 
 @Component({
@@ -23,24 +18,15 @@ import 'rxjs/add/observable/fromEvent';
   templateUrl: './frame.component.html',
   styleUrls: ['./frame.component.scss']
 })
-export class FrameComponent implements OnInit, OnChanges {
+export class FrameComponent implements OnInit{
 
   public title: any;
   public page: string;
 
   constructor(
     public lay: Layout,
-    public ref: ChangeDetectorRef,
   ) {}
 
 
   ngOnInit() {}
-
-  ngOnChanges() {
-    console.log('?')
-  }
-  // ngAfterViewInit() {
-  //   this.ref.detectChanges();
-  //   // this.
-  // }
 }

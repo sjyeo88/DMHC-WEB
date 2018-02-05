@@ -37,6 +37,7 @@ export class AssignAllComponent implements OnInit {
   msgs: Message[] = [];
   lectures = [];
   rowPerPage = 15;
+  cuPage:number = 0;
 
   constructor(
     public as: AssignService,
@@ -66,7 +67,6 @@ export class AssignAllComponent implements OnInit {
 
   ngOnInit() {
     this.getLecture();
-    this.getAssignList();
   }
 
 
@@ -130,7 +130,10 @@ export class AssignAllComponent implements OnInit {
     this.as.delAssign(idSBJT_CONF_ALL)
     .then(()=>{
       this.allAssignBoard.splice(idx, 2);
-      console.log(this.allAssignBoard);
+      // console.log(this.allAssignBoard);
+    })
+    .then(()=>{
+      this.onPageMove(this.cuPage);
     })
   }
 
@@ -189,6 +192,9 @@ export class AssignAllComponent implements OnInit {
       })
       return this.lectures;
     })
+    .then(obj=>{
+      this.getAssignList();
+    })
     .catch(msg=>{
       this.msgs=[];
       this.msgs.push(msg);
@@ -206,6 +212,7 @@ export class AssignAllComponent implements OnInit {
      })
   }
   onPageMove(page) {
+    this.cuPage = page;
     let beginNum = 2*this.rowPerPage*page;
     let endNum = 2*this.rowPerPage*(page+1);
     this.assignBoardByPage = this.allAssignBoard.slice(beginNum, endNum);

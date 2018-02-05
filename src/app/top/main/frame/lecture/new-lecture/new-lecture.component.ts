@@ -16,7 +16,7 @@ import { Layout } from './../../../../layout.service';
 import { LectureModelHTML, LectureModelPDF } from '../lecture.model'
 import { NewLectureData, Lecture} from  '../new-lecture-data';
 import * as Quill from 'quill/dist/quill'
-import { Req2 } from './../../../../../service/get-public-data.service';
+import { Req2 } from './../../../../../ysjmodule/Req2';
 import { ConfirmationService } from 'primeng/primeng'
 import { LectureValidMsgs, LectureRegexValidators } from './../new-lecture.validator'
 import { Observable } from 'rxjs/Observable';

@@ -18,15 +18,38 @@
       <li
         *ngFor="let menu of lay.currentMenu.menus; let i=index;">
           <a [routerLink]="'./main/frame' + lay.currentMenu.urls[i]">
-            <div >
             {{ menu }}
             <span *ngIf="lay.currentPage === menu"
               class="arrow-red">></span>
             <span *ngIf="lay.currentPage !== menu"
               class="arrow">></span>
-            </div>
           </a>
       </li>
     </ol>
   </div>
+  <div class="aside-button-container">
+    <div class="notice">
+      <a  routerLink="/top/main/frame/guest/notice">
+        <img src="./../../../assets/img/icons/ic-textsms-48px.png" alt="">
+        <span>공지사항</span>
+      </a>
+    </div>
+
+    <div class="process">
+      <a routerLink="/top/main/frame/dmhc/process">
+        <img src="./../../../../assets/img/icons/ic-help-outline-24px.png" alt="">
+        <span>이용절차</span>
+      </a>
+    </div>
+    <div class="service">
+      <a  routerLink="/top/main/frame/guest/qna">
+        <img src="./../../../../assets/img/icons/ic-call-48px.png" alt="">
+        <span>서비스 이용문의</span>
+        <p>
+          02. 3290. 1676 <br>
+          전화문의 : 평일 오전 10:00 ~ 18:00 <br>
+          메일 : kumh@korea.ac.kr
+        </p>
+      </a>
+    </div>
 </div>

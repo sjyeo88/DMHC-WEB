@@ -32,16 +32,13 @@
   padding: 20px;
   width: 100%;
   display: inline-block;
-  height: 231px;
   .icon {
     display: inline-block;
     float: left;
-    padding: 10px;
   }
   .info {
     display: inline-block;
     margin-left: 54px;
-    margin-bottom: 27px;
 
     li {
       text-align: left;
@@ -51,9 +48,8 @@
     }
   }
   .title {
-      font-size: 30px;
+      font-size: 23px;
       font-weight: bold;
-      margin-bottom: 20px;
   }
 }
 
@@ -64,33 +60,35 @@
 #user-info {
   background-color: #BB2E33;
   img {
-    width: 100px;
-    height: 100px;
+    width: 80px;
+    height: 85px;
     padding: 10px;
     border: 3px solid white;
   }
   .info {
     margin-left: 30px;
-    margin-bottom: 27px;
+    height: 141px;
   }
-  overflow: hidden;
+  ul {
+    float: right;
+    font-size: 14px;
+  }
 }
 
 #patient-regist {
   /* autoprefixer: off */
   background-color: #954B4C;
-  height: 231px;
 
   .title {
     margin-left:100px;
+    text-align: right;
   }
   img {
-    width: 110px;
-    height: 110px;
+    width: 100px;
+    height: 100px;
   }
   .info {
     margin-left: 34px;
-    margin-bottom: 27px;
     margin-top: 44px;
     font-size: 24px;
     .infoNum {
@@ -103,19 +101,17 @@
 #current-regist {
   /* autoprefixer: off */
   background-color: #DD661C;
-  height: 231px;
 
   .title {
     margin-left:90px;
   }
   img {
     margin-top: 10px;
-    width: 110px;
-    height: 80px;
+    width: 100px;
+    height: 70px;
   }
   .info {
     margin-left: 34px;
-    margin-bottom: 27px;
     margin-top: 44px;
     font-size: 24px;
     .infoNum {
@@ -127,10 +123,14 @@
 #process {
   /* autoprefixer: off */
   background-color: #9B8C48;
-  height: 128px;
   // grid-row: 2;
   // grid-column: 1;
+  img {
+    width: 60px;
+    height: 60px;
+  }
   .title {
+    font-size: 24px;
     margin-left: 5.0em;
     margin-top: 1.0em;
   }
@@ -139,7 +139,7 @@
 #notice {
   /* autoprefixer: off */
   cursor: default;
-  height: 262px;
+  height: 227px;
   background-color: white;
   border: 1px solid $gray_light;
   // grid-column: 1;
@@ -147,18 +147,17 @@
   padding: 0;
   .notice-title {
     background-color: #684E80;
+    padding: 10px;
     height: 60px;
     .title {
       font-size: 24px;
-      padding-top: 15px;
+      padding-top: 8px;
       margin-left: 80px;
     }
   }
-  .icon {
-    margin-left: 10px;
-  }
 
   ul {
+    font-size: 13px;
     padding: 5px;
     margin-left: 30px;
     margin-right: 10px;
@@ -178,46 +177,45 @@
 #lectureMan {
   /* autoprefixer: off */
   background-color: #225D92;
-  height: 128px;
   // grid-column: 2;
   // grid-row: 2;
   .title {
-    font-size: 24px;
-    margin-left: 6.0em;
-    margin-top: .7em;
+    font-size: 21px;
+    margin-left: 5.0em;
+    margin-top: .5em;
   }
 }
 
 #assignMan {
   /* autoprefixer: off */
   background-color: #1A6C67;
-  height: 128px;
-  // grid-column: 2;
-  // grid-row: 3;
-  .title {
-    font-size: 24px;
-    margin-left: 6.0em;
-    margin-top: .7em;
+  img {
+    height: 70px;
   }
+  // grid-column: 2;
+  .title {
+    font-size: 21px;
+    margin-left: 5.0em;
+    margin-top: .5em;
+  }// grid-row: 3;
 }
 
 #manageMan {
   /* autoprefixer: off */
   background-color: #003447;
-  height: 128px;
   // grid-column: 2;
   // grid-row: 4;
   .title {
-    font-size: 24px;
-    margin-left: 6.0em;
-    margin-top: .7em;
+    font-size: 21px;
+    margin-left: 5.0em;
+    margin-top: .5em;
   }
 }
 
 #service {
   /* autoprefixer: off */
   cursor:default;
-  height: 396px;
+  height: 338px;
   background-color: #6D6D6D;
   .phone {
     font-size: 30px;
@@ -228,7 +226,8 @@
     font-size: 18px;
   }
     img {
-      margin-top: 70px;
-      margin-left: 145px;
+      width: 95px;
+      margin-top: 29px;
+      margin-left: 157px;
     }
 }

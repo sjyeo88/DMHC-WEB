@@ -9,31 +9,27 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
 import { Layout } from '../../layout.service';
-import { ShortcutService } from './shortcut.service'
-import { UserService } from '../../user.service'
+import { AppServices } from './../../../service/app.services';
+import { AppModels } from './../../../service/app.models';
 
 @Component({
   selector: 'app-shortcut',
   templateUrl: './shortcut.component.html',
   styleUrls: ['./shortcut.component.scss'],
-  providers: [ ShortcutService ]
+  providers: [],
 })
-export class ShortcutComponent implements OnInit {
-  public userServ = {
-      name: '',
-      dept: '',
-      job: '',
-      loginDate:new Date(),
-  }
+export class ShortcutComponent implements OnInit, AfterViewInit  {
   public notices = []
   public urNPatient:number = 0;
   public NPatient:number = 0;
   constructor(
     public lay: Layout,
-    public serv: ShortcutService,
-    public us: UserService,
+    // public serv: ShortcutService,
+    public ref: ChangeDetectorRef,
+    public serv: AppServices,
+    public model: AppModels,
   ) {
     this.getNotice();
     this.getUnregistedPatient();
@@ -41,11 +37,14 @@ export class ShortcutComponent implements OnInit {
   }
 
   ngOnInit() {
+    console.log(this.model.user)
     this.lay.asideHide();
     this.lay.currentPage = '';
   }
 
-
+  ngAfterViewInit() {
+    this.ref.detectChanges();
+  }
 
   public getNotice() {
     this.serv.getNotices()

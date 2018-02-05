@@ -24,11 +24,11 @@
         치료자 정보
       </div>
       <ul>
-        <li>이름 :  {{ us.userServ.name }}</li>
-        <li>소속 :  {{ us.userServ.dept }}</li>
-        <li>직책 :  {{ us.userServ.job }}</li>
-        <li>접속일: {{ us.userServ.loginDate | date: 'yyyy/MM/dd' }}</li>
-        <li>접속시간 : {{ us.userServ.loginDate | date: 'HH:mm:ss' }}</li>
+        <li>이름 :  {{ model.user.name }}</li>
+        <li>소속 :  {{ model.user.deptName }}</li>
+        <li>직책 :  {{ model.user.jobName }}</li>
+        <li>접속일: {{ model.user.loginDate | date: 'yyyy/MM/dd' }}</li>
+        <li>접속시간 : {{ model.user.loginDate | date: 'HH:mm:ss' }}</li>
       </ul>
     </div>
   </a>

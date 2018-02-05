@@ -10,10 +10,9 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { Req2 } from '../../service/get-public-data.service';
 
 
 @Component({
@@ -21,38 +20,14 @@ import { Req2 } from '../../service/get-public-data.service';
   templateUrl: './confirm-job.component.html',
   styleUrls: ['./confirm-job.component.scss']
 })
-export class ConfirmJobComponent implements OnInit, OnDestroy {
+export class ConfirmJobComponent implements OnInit {
 
-  userId:number;
-  userName:string;
-  isDataLoaded:boolean;
-  msgs:any[];
-  private sub: any;
   constructor(private route: ActivatedRoute, private location: Location) { }
 
-  ngOnInit() {
-      this.sub = this.route.params.subscribe(params => {
-          this.userId = +params['userId'];
-          // console.log(this.userId)
-          let http = new Req2('get', ('/data/users/' + this.userId.toString()))
-          http.send();
-          http.Complete = ()=> {
-            // console.log(typeof http.response)
-            // console.log(http.response)
-            this.userName = JSON.parse(http.response)[0].name;
-            this.isDataLoaded= true;
-          }
-          http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-          http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
-      })
-  }
+  ngOnInit() {}
 
   goBack() {
     this.location.back();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }

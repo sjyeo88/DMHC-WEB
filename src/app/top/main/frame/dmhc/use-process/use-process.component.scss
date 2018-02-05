@@ -14,7 +14,7 @@
   position: relative;
   font-family: "NanumBarunGothicOTF";
   float: left;
-  width: 185px;
+  width: 158px;
   height: 248px;
   color: white;
   background-color: $background-color;
@@ -22,13 +22,13 @@
   padding: 14px 14px;
   text-align: center;
   .title {
-    font-size: 24px;
+    font-size: 22px;
     padding: 8px;
     border-bottom: 2px solid white;
   }
   .detail {
     text-align: left;
-    width: 140px;
+    // width: 140px;
     margin-top: 30px;
     font-size: 14px;
   }
@@ -36,7 +36,7 @@
     display: inline-block;
     text-align: left;
     margin-top: 50px;
-    font-size: 14px;
+    font-size: 12px;
   }
 }
 @mixin procObjArrow($background-color) {
@@ -52,7 +52,7 @@
   border-bottom: 22px solid transparent;
 }
 
-.step0 { @include procObj(#94282C); }; 
+.step0 { @include procObj(#94282C); };
 .step0::after{ @include procObjArrow(#94282C); }
 .step1 { @include procObj(#945228); }
 .step1::after{ @include procObjArrow(#945228); }

@@ -9,10 +9,10 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
-import { Admin  } from '../service/get-data'
-import { Req2 } from '../service/get-public-data.service'
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
+import { AppServices } from './../service/app.services';
+import { AppModels } from  './../service/app.models';
 
 @Component({
   selector: 'app-footer',
@@ -22,32 +22,22 @@ import { MessageService } from 'primeng/components/common/messageservice';
 
 })
 export class FooterComponent implements OnInit {
-  public admin: Admin;
-  // public isDataLoaded:boolean = false;
-  public isAdminLoaded:boolean;
   public msgs: Message[] = [];
   constructor(
     private msgSrv: MessageService,
+    public serv: AppServices,
+    public model: AppModels,
   ){}
 
   ngOnInit() {
-    let http = new Req2('get', '/data/admin')
-    http.send();
-    http.Complete = ()=> {
-      // console.log(typeof http.response)
-      this.admin = JSON.parse(http.response)[0];
-      this.isAdminLoaded= true
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
-
-    // this.dataService.getAdmin()
-    // .subscribe(admin => {
-    //   this.admin = admin[0];
-    //   console.log(admin);
-    //   this.isDataLoaded = true;
-    //   // console.log(this.admin)
-    // });
+    this.serv.getAdmin()
+    .then(data=> {
+      this.model.admin = data[0];
+    })
+    .catch(msg=> {
+      this.msgs=[];
+      this.msgs.push(msg)
+    })
   }
 
 }

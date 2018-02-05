@@ -9,29 +9,13 @@
 <!-- #  End day  : 2017-01-31                                         #  -->
 <!-- ##################################################################  -->
 
- <!-- Need for Message Service of PrimeNG -->
-<p-growl [value]="msgs"></p-growl>
 
- <!-- Predefiend Loading Template -->
-<ng-template #loading>
-  <div class="loading">
-    <svg class="spinner"  viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
-     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
-    </svg>
-    <div style="left: 10px">
-      Loading...
-    </div>
-  </div>
-</ng-template>
-
-<!-- Code start  ---------------------------------------------------------->
-
-<div class="confirm" *ngIf="isDataLoaded">
+<div class="confirm">
   <div class="confirm-message">
-    <h2>{{userName}}님의 가입이 완료되었습니다.</h2>
+    <h2>승인한 치료자님의 가입이 완료되었습니다.</h2>
     <br>
     <p>
-      {{ userName}} 님에게 가입완료 메일이 전송되었습니다.
+      해당 치료자님에게 가입완료 메일이 전송되었습니다.
       <br>
     </p>
   </div>

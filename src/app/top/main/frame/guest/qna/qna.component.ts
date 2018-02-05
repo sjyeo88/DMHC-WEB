@@ -69,7 +69,15 @@ export class QnaComponent implements OnInit {
     data.append('title', this.title.value);
     data.append('text', this.editor.value);
 
-    this.serv.postDetail(data);
+    this.serv.postDetail(data)
+    .then(()=>{
+      this.msgs = [];
+      this.msgs.push({
+        severity: 'success',
+        summary: '이용 문의 사항이 전달되었습니다.',
+        detail:'소중한 의견 감사드립니다.'
+      })
+    })
   }
 
   get title() {

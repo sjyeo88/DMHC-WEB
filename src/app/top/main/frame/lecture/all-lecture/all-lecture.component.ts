@@ -15,7 +15,7 @@ import { ConfirmationService } from 'primeng/primeng'
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Message } from 'primeng/components/common/api';
 import { AllLectureModel } from './all-lecture.model';
-import { Req2 } from './../../../../../service/get-public-data.service';
+import { Req2 } from './../../../../../ysjmodule/Req2';
 import { NewLectureData, Lecture} from  '../new-lecture-data';
 import { AbstractControl, FormGroup, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'

@@ -53,7 +53,7 @@
           placeholder="과제그룹이 선택되지 않았습니다."
           formControlName="assign"
           [options]="assignList"
-          [style]="{'width':'300px'}"
+          [style]="{'width':'200px'}"
           (onChange)="confirmAssign($event, i)"
           ></p-dropdown>
         </td>
@@ -68,7 +68,7 @@
   </div>
 
   <div  [style.margin-top.px]="10">
-    <p-paginator 
+    <p-paginator
     [rows]="rowPerPage"
     [first]="0"
     [style]="{'border':'none'}"

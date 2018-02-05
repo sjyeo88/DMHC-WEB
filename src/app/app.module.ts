@@ -28,13 +28,14 @@ import { OverlayPanelModule } from 'primeng/primeng';
 import { PaginatorModule } from 'primeng/primeng';
 import { RadioButtonModule } from 'primeng/primeng';
 import { SpinnerModule } from 'primeng/primeng';
-import { ChartModule } from 'primeng/primeng';
+import { ScheduleModule } from 'primeng/primeng';
 
 import { QuillModule } from 'ngx-quill'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
 
 import { AppRoutingModule } from './app-routing.module';
-import { UserService } from './top/user.service'
+import { AppServices } from './service/app.services';
+import { AppModels } from './service/app.models';
 import { Layout } from './top/layout.service'
 
 import { PhonePipe, GenderPipe } from './pipes/phone';
@@ -127,11 +128,12 @@ import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
     PaginatorModule,
     RadioButtonModule,
     SpinnerModule,
-    ChartModule,
+    ScheduleModule,
   ],
   providers: [
     Title,
-    UserService,
+    AppServices,
+    AppModels,
     ConfirmationService,
     { provide: COMPOSITION_BUFFER_MODE, // 한글 입력시 반영 타이밍 문제
       useValue: false,

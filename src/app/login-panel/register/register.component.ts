@@ -13,11 +13,11 @@ import { KoDate } from "../../date-ko";
 import { Message } from 'primeng/components/common/api';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { Router, ActivatedRoute } from '@angular/router'
-import { ValidMsgs } from './register.validator'
-import { Req2 } from '../../service/get-public-data.service';
-import { TermAgree } from  '../../service/get-data';
-import { RegistData } from  '../../service/auth-data';
-import { Job, Dept, User } from  '../../service/get-data';
+import { ValidMsgs } from  './register.form';
+import { RegisterForm } from  './register.form';
+import { TermAgree } from  '../../service/app.models';
+import { DropDownOpt } from  './../../interfaces/shared.interface';
+import { AppServices } from './../../service/app.services';
 
 
 
@@ -26,10 +26,7 @@ import { Job, Dept, User } from  '../../service/get-data';
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
-  providers: [
-    KoDate,
-    ValidMsgs,
-  ],
+  providers: [ KoDate, ValidMsgs, RegisterForm],
 })
 
 export class RegisterComponent implements OnInit {
@@ -39,15 +36,12 @@ export class RegisterComponent implements OnInit {
   ko: any;
   license_imgs: any[] = [];
   license_img: any[] = [];
-  public jobs: Job[];
-  public depts: Dept[];
-  public users: User[];
+  public jobs: DropDownOpt[] = [];
+  public depts: DropDownOpt[] = [];
   fileSelected: boolean = false;
   public msgs: Message[] = [];
-  public isJobLoaded:boolean
-  public isDeptLoaded:boolean
-  public isUserLoaded:boolean
   public isMail:boolean
+  public vmsg: ValidMsgs;
 
   constructor(
     private msgSrv: MessageService,
@@ -55,8 +49,8 @@ export class RegisterComponent implements OnInit {
     public TA: TermAgree,
     private router: Router,
     public route: ActivatedRoute,
-    public rf: RegistData,
-    public vmsg:ValidMsgs,
+    public rf:RegisterForm,
+    public serv:AppServices,
     // public rq: Req,
   ) {
     this.ko = this.koClass.ko;
@@ -67,19 +61,41 @@ export class RegisterComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.getJobs();
-    this.getDepts();
-    this.getUsers();
+    this.vmsg = new ValidMsgs(),
+    this.serv.getJobList()
+    .then(data=>{
+      this.jobs = data.map(obj=>{ return {label: obj.name, value: obj.idJOBS} })
+    })
+    .catch(msg=>{
+      this.msgs = [];
+      this.msgs.push(msg);
+    })
 
+    this.serv.getDeptList()
+    .then(data=>{
+      this.depts = data.map(obj=>{ return {label: obj.name, value: obj.idDEPT} })
+      // this.depts.push({label = data.name;
+      // this.depts.value = data.idDEPT;
+    })
+    .catch(msg=>{
+      this.msgs = [];
+      this.msgs.push(msg);
+    })
 
-  }
-
-
-  public onEmailBlur(value){
-    this.isMail = false;
-    this.users.map((arg)=>{
-      // console.log(arg.email);
-      if(arg.email === value) this.isMail = true;
+    this.email.valueChanges
+    .debounceTime(500)
+    .subscribe(email=>{
+      this.isMail = false;
+      this.serv.getUserList()
+      .then(data=>{
+        if(data.some(obj=>{ return obj.email === email})) {
+          this.isMail = true;
+        }
+      })
+      .catch(msg=>{
+        this.msgs = [];
+        this.msgs.push(msg);
+      })
     })
   }
 
@@ -93,8 +109,8 @@ export class RegisterComponent implements OnInit {
   get password() {
     return this.rf.registForm.get('passwordGroup.password');
   }
-  get password_check() {
-    return this.rf.registForm.get('passwordGroup.password_check');
+  get passwordCheck() {
+    return this.rf.registForm.get('passwordGroup.passwordCheck');
   }
   get passwordGroup() {
     return this.rf.registForm.get('passwordGroup');
@@ -102,8 +118,8 @@ export class RegisterComponent implements OnInit {
   get birthday() {
     return this.rf.registForm.get('birthday');
   }
-  get phone_num() {
-    return this.rf.registForm.get('phone_num');
+  get phoneNum() {
+    return this.rf.registForm.get('phoneNum');
   }
   get job() {
     return this.rf.registForm.get('job');
@@ -111,113 +127,59 @@ export class RegisterComponent implements OnInit {
   get dept() {
     return this.rf.registForm.get('dept');
   }
-
-  getJobs():void {
-    let http = new Req2('get', '/data/jobs')
-    http.send();
-    http.Complete = ()=> {
-      // console.log(typeof http.response)
-      this.jobs = JSON.parse(http.response);
-      console.log(this.jobs);
-      this.isJobLoaded = true
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
-  }
-
-  getDepts():void {
-    let http = new Req2('get', '/data/depts')
-    http.send();
-    http.Complete = ()=> {
-      // console.log(typeof http.response)
-      this.depts= JSON.parse(http.response);
-      this.isDeptLoaded = true
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
-  }
-
-  getUsers():void {
-    let http = new Req2('get', '/data/users')
-    http.send();
-    http.Complete = ()=> {
-      // console.log(typeof http.response)
-      this.users= JSON.parse(http.response);
-      this.isUserLoaded = true
-    }
-    http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-    http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
+  get license() {
+    return this.rf.registForm.get('license');
   }
 
   onUpload(event) {
-      this.fileSelected = true;
-      for(let file of event.files) {
-          this.license_imgs.push(file);
-      }
-      this.license_imgs = event.files; //To uploading file data.
-      // sessionStorage.setItem('license', event.files[0])
-
-      this.msgs = [];
-      this.msgs.push({severity: 'success', summary: '파일 선택 완료', detail: ''});
-  }
-
-  onRemoved(event) {
-    this.license_imgs.splice(this.license_imgs.indexOf(event.file), 1);
+    this.license.patchValue(event.files[0]);
   }
 
   public onSubmit() {
 
-    if (!this.isMail && this.rf.registForm.valid && (this.license_imgs.length !==0)) {
-      const url:string = '/auth/local/register';
-      const formData = new FormData();
-      this.msgs = [];
+    if (!this.isMail && this.rf.registForm.valid) {
+      let formData = new FormData();
+      formData.append('username', this.username.value)
+      formData.append('email', this.email.value)
+      formData.append('password', this.password.value)
+      formData.append('birthday', this.birthday.value)
+      formData.append('job', this.job.value)
+      formData.append('dept', this.dept.value)
+      formData.append('jobName', this.jobs.filter(obj=>{ return obj.value === this.job.value})[0].label)
+      formData.append('deptName', this.depts.filter(obj=>{ return obj.value === this.dept.value})[0].label)
+      formData.append('phone', this.phoneNum.value)
+      formData.append('license', this.rf.registForm.value.license);
 
-      formData.append('username', this.rf.registForm.value.username)
-      formData.append('email', this.rf.registForm.value.email)
-      formData.append('password', this.rf.registForm.value.passwordGroup.password)
-      formData.append('password', this.rf.registForm.value.passwordGroup.password)
-      formData.append('birthday', this.rf.registForm.value.birthday)
-      formData.append('job', this.rf.registForm.value.job.idJOBS)
-      formData.append('dept', this.rf.registForm.value.dept.idDEPT)
-      formData.append('phone', this.rf.registForm.value.phone_num)
-      formData.append('license_file', this.license_imgs[0], this.license_imgs[0].name);
-
-
-      let http = new Req2('post', url, formData)
-      http.send(formData)
-      http.Complete = () =>{
-
+      this.serv.register(formData)
+      .then(data=>{
         this.rf.registForm.reset();
         this.router.navigate(['../welcome'], {relativeTo: this.route})
-      }
-      http.ServErr = () =>{ this.msgs.push(http.smsgs) }
-      http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
-
+      })
+      .catch(msg=>{
+        this.msgs=[];
+        this.msgs.push(msg);
+      })
     } else {
       this.msgs = [];
       this.msgs.push({severity: 'error', summary: '입력이 모두 완료되지 않았습니다!', detail: ''});
     }
   }
 
-  ngOnDestroy() {
-          this.rf.registForm.value.job = null;
-          this.rf.registForm.value.dept = null;
-  }
-
-  resetPassword(){
-     this.rf.registForm.controls.passwordGroup.reset();
-     this.rf.registForm.controls.passwordGroup.reset();
-  }
+  // ngOnDestroy() {
+  //         this.rf.registForm.value.job = null;
+  //         this.rf.registForm.value.dept = null;
+  // }
 
 
   // Page Refresh Check
-  // @HostListener('window:beforeunload', ['$event'])
-  //  chkReload($event) {
-  //    $event.returnValue='Your data will be lost!';
-  // }
+  @HostListener('window:beforeunload', ['$event'])
+   chkReload($event) {
+     $event.returnValue='Your data will be lost!';
+  }
+
   @HostListener('window:popstate', ['$event'])
   chkBack($event) {
-     this.resetPassword();
+     this.rf.registForm.controls.passwordGroup.reset();
   }
 
 }
