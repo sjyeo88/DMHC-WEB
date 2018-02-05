@@ -10,7 +10,9 @@
 // ################################################################## //
 
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Layout } from '../../layout.service';
+import { AppServices } from './../../../service/app.services';
 
 
 @Component({
@@ -25,8 +27,10 @@ export class FrameComponent implements OnInit{
 
   constructor(
     public lay: Layout,
-  ) {}
-
+    private router: Router,
+    private serv: AppServices,
+  ) {
+  }
 
   ngOnInit() {}
 }

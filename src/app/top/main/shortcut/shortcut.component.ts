@@ -10,6 +10,7 @@
 // ################################################################## //
 
 import { ChangeDetectorRef, Component, OnInit, AfterViewInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Layout } from '../../layout.service';
 import { AppServices } from './../../../service/app.services';
 import { AppModels } from './../../../service/app.models';
@@ -30,6 +31,7 @@ export class ShortcutComponent implements OnInit, AfterViewInit  {
     public ref: ChangeDetectorRef,
     public serv: AppServices,
     public model: AppModels,
+    private router: Router,
   ) {
     this.getNotice();
     this.getUnregistedPatient();
@@ -37,7 +39,6 @@ export class ShortcutComponent implements OnInit, AfterViewInit  {
   }
 
   ngOnInit() {
-    console.log(this.model.user)
     this.lay.asideHide();
     this.lay.currentPage = '';
   }

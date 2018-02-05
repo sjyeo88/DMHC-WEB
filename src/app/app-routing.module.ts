@@ -39,7 +39,7 @@ const routes: Routes = [
   // {path: '', redirectTo: '/login-panel', pathMatch: 'full'},
   {path: '', redirectTo: 'login-panel', pathMatch: 'full'},
   { path: 'top', component: TopComponent,
-    canActivateChild: [ AuthGuard ],
+    canActivate: [ AuthGuard ],
     children: [
         {path: '', redirectTo: 'main', pathMatch:'full'},
         {path: 'main', component: MainComponent,
