@@ -35,6 +35,9 @@ export class RegisterForm {
             ]],
           }, {validator: PasswordValid.match}),
 
+          password_q: ['', [Validators.required]],
+          password_a: ['', [Validators.required]],
+
           birthday: ['', [
               Validators.required,
           ]],
@@ -111,6 +114,8 @@ export class ValidMsgs {
   jobLabel: ValidatorMSG;
   deptLabel: ValidatorMSG;
   fileLabel: ValidatorMSG;
+  password_q: ValidatorMSG;
+  password_a: ValidatorMSG;
 
   constructor() {
     this.valider= new RegexValidators();
@@ -123,6 +128,8 @@ export class ValidMsgs {
     this.jobLabel =   new ValidatorMSG();
     this.deptLabel =  new  ValidatorMSG();
     this.fileLabel = new ValidatorMSG();
+    this.password_q = new ValidatorMSG();
+    this.password_a = new ValidatorMSG();
 
     this.usernameLabel.value = '치료자님의 이름을 입력해주세요.';
     this.usernameLabel.invalidMin = "길이가 너무 짧습니다! (" + this.valider.usernameMin + "자 이상)";
@@ -149,8 +156,10 @@ export class ValidMsgs {
     this.phoneNumLabel.invalidMin = "길이가 너무 짧습니다! (" + this.valider.phoneNumMin + "자 이상)";
     this.phoneNumLabel.invalidMax = "길이가 너무 깁니다! (" + this.valider.phoneNumMax + "자 이하)";
 
-    this.jobLabel.value = '치료자님께서 현재 종사하고 있는 직종을 입력하세요';
+    this.password_q.value = '비밀번호 변경 시 사용할 질문을 선택해 주세요';
+    this.password_a.value = '비밀번호 변경 시 사용할 답변을 선택해 주세요';
 
+    this.jobLabel.value = '치료자님께서 현재 종사하고 있는 직종을 입력하세요';
     this.deptLabel.value = '치료자님께서 현재 소속되어 있는 소속기관을 입력하세요';
 
     this.fileLabel.value = '치료자님의 전문가 자격증 사본(jpeg, jpg, png, gif)을 업로드 해주세요.';

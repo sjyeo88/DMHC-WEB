@@ -19,14 +19,31 @@
   <div class="ui-g-2 label">
     <li>치료자 Mail</li>
     <li>치료자 성명</li>
+    <li>비밀번호 변경</li>
     <li>생년월일</li>
     <li>전화번호</li>
   </div>
   <div class="ui-g-10 detail">
     <li><input type="text" formControlName="email"> <button type="button" (click)="onChangeInfo(0)">변경</button> </li>
     <li>{{model.user.name}}</li>
+
+    <li formGroupName="passwordGroup">
+      <input type="password"
+      formControlName="newPassword"
+      class=".ui-inputtext password"
+      placeholder="비밀번호">
+
+      <input type="password"
+      formControlName="newPasswordCheck"
+      class=".ui-inputtext password"
+      placeholder="비밀번호 확인">
+      <button type="button" (click)="onChangeInfo(4)">변경</button>
+    </li>
     <li>{{model.user.birth | date:'yyyy-MM-dd'}}</li>
-    <li><input type="text"  formControlName="phone"> <button type="button" (click)="onChangeInfo(1)">변경</button></li>
+    <li>
+      <input type="text"  formControlName="phone">
+      <button type="button" (click)="onChangeInfo(1)">변경</button>
+    </li>
   </div>
   <div class="ui-g-2 label">
     <li>소속기관</li>

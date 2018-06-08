@@ -32,6 +32,7 @@ import { ScheduleModule } from 'primeng/primeng';
 
 import { QuillModule } from 'ngx-quill'
 import { PdfViewerModule } from 'ng2-pdf-viewer'
+//Need to modify dependency of pdfjs-dist(version up ^2.0.244) for ng2-pdf-viewer module
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppServices } from './service/app.services';
@@ -47,6 +48,7 @@ import { MainComponent } from './top/main/main.component';
 import { ShortcutComponent } from './top/main/shortcut/shortcut.component';
 import { ExpireComponent } from './expire/expire.component';
 import { FrameComponent } from './top/main/frame/frame.component';
+import { LectureComponent } from './top/main/frame/lecture/lecture/lecture.component';
 import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component';
 import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-lecture.component';
 import { HashComponent } from './top/main/frame/assign/hash/hash.component';
@@ -66,6 +68,15 @@ import { ManageDetailComponent } from './top/main/frame/manage/manage-detail/man
 import { SitemapComponent } from './top/main/frame/sitemap/sitemap.component';
 import { UseProcessComponent } from './top/main/frame/dmhc/use-process/use-process.component';
 import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
+import { IntroComponent } from './top/main/frame/dmhc/intro/intro.component';
+import { AccesstermComponent } from './top/main/frame/dmhc/accessterm/accessterm.component';
+import { ManageManualComponent } from './top/main/frame/manage/manage-manual/manage-manual.component';
+import { LectureManualComponent } from './top/main/frame/lecture/lecture-manual/lecture-manual.component';
+import { AssignManualComponent } from './top/main/frame/assign/assign-manual/assign-manual.component';
+import { SurveyManualComponent } from './top/main/frame/survey/survey-manual/survey-manual.component';
+import { EditLectureComponent } from './top/main/frame/lecture/edit-lecture/edit-lecture.component';
+import { FindEmailComponent } from './login-panel/find-email/find-email.component';
+import { FindPasswordComponent } from './login-panel/find-password/find-password.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +98,7 @@ import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
     MainComponent,
     ShortcutComponent,
     ExpireComponent,
+    LectureComponent,
     NewLectureComponent,
     FrameComponent,
     AllLectureComponent,
@@ -107,6 +119,15 @@ import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
     SitemapComponent,
     UseProcessComponent,
     QnaComponent,
+    IntroComponent,
+    AccesstermComponent,
+    ManageManualComponent,
+    LectureManualComponent,
+    AssignManualComponent,
+    SurveyManualComponent,
+    EditLectureComponent,
+    FindEmailComponent,
+    FindPasswordComponent,
   ],
   imports: [
     BrowserModule,

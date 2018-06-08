@@ -23,7 +23,7 @@ import { ActivatedRoute } from '@angular/router'
   selector: 'app-assign-edit',
   templateUrl: '../assign/assign.component.html',
   styleUrls: ['../assign/assign.component.scss'],
-  providers: [AssignService, Options],
+  providers: [AssignEditForm, AssignService, Options],
 })
 
 export class AssignEditComponent extends AssignComponent {
@@ -50,17 +50,17 @@ export class AssignEditComponent extends AssignComponent {
     this.lay.currentPage = this.lay.cuTitle.page;
 
     this.getLecture();
+    this.getAssignList()
+    .then(obj=>{
+      if(this.route.snapshot.paramMap.get('isParam')) {
+          let title = this.route.snapshot.paramMap.get('idSBJT_CONF_ALL')
+          this.title.patchValue(title);
+          this.loadAssign(title);
+      }
+    })
     this.getAssignFinished();
-    this.getAssignList();
     this.getSurvey();
 
-    if(this.route.snapshot.paramMap.get('isParam')) {
-        let title = this.route.snapshot.paramMap.get('idSBJT_CONF_ALL')
-        setTimeout(()=>{
-          this.title.patchValue(title)
-          this.loadAssign(title);
-        }, 500);
-    }
   }
 
 
@@ -74,12 +74,13 @@ export class AssignEditComponent extends AssignComponent {
           if(addNum < 0) {
             this.assigns.removeAt(this.assigns.length-1);
           } else if(addNum) {
-            this.fm.addAssign();
+            this.addAssign();
           }
         }
         resolve(this.assigns);
       })
       .then(assigns=>{
+        // console.log(this.assigns);
         data.forEach((obj, idx)=>{
           let item = this.assigns.controls[idx];
           this.assigns.controls[idx].patchValue({
@@ -108,10 +109,11 @@ export class AssignEditComponent extends AssignComponent {
             'time': obj.conf_input_03,
             'survey': obj.conf_input_05,
           })
+          this.assigns.controls[idx].get('input').get('photo').patchValue(true);
           this.fm.setTableData(item, JSON.parse(obj.conf_input_04));
           this.assigns.controls[idx].get('push').get('times').patchValue({
-            'fromTime': new Date(obj.conf_push_time_01),
-            'toTime': new Date(obj.conf_push_time_02),
+            'fromTime': new Date(new Date(obj.conf_push_time_01).getTime() + 1000*3600*9),
+            'toTime': new Date(new Date(obj.conf_push_time_02).getTime() + 1000*3600*9),
           })
 
           this.assigns.controls[idx].get('push').patchValue({

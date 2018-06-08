@@ -13,7 +13,7 @@
 
 .aside-hide {
   float: left;
-  height: 532px;
+  height: 580px;
   transform: translate(-120%);
   opacity: 0;
   width: 255px;
@@ -102,9 +102,6 @@
         font-weight: normal;
         font-size: 14px;
       }
-      a {
-        display: inline-block;
-      }
     }
     .notice {
       @include aside-button(#684E80);
@@ -116,6 +113,11 @@
       @include aside-button(#6D6D6D);
     }
   }
+}
+
+a {
+  display: inline-block;
+  width: 100%;
 }
 
 .aside-view {

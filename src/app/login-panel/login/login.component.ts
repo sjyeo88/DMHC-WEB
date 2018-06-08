@@ -62,34 +62,6 @@ public onSubmit() {
         this.msgs.push(msg);
       });
 
-
-
-      // let http = new Req2('post', url, formData)
-      // http.send(formData)
-      // http.Complete = () =>{
-      //   this.lf.loginForm.reset();
-      //   this.us.isLogedIn = true;
-      //   this.router.navigate(['../../top'], {relativeTo: this.route})
-      // }
-      // http.ServErr = () =>{
-      //   this.msgs.push(http.smsgs)
-      // }
-      // http.AuthErr = () =>{
-      //     if(http.status == 401) {
-      //         this.msgs.push({
-      //           severity: 'error',
-      //           summary: '로그인 실패',
-      //           detail: '로그인에 실패했습니다. 이메일 및 패스워드를 확인해 주세요.'
-      //         })
-      //     } else if(http.status == 402){
-      //         this.msgs.push({
-      //           severity: 'info',
-      //           summary: '담당자 승인 중',
-      //           detail: '담당자 승인 중 입니다. 승인 후 로그인 하실 수 있습니다.'
-      //         })
-      //     }
-      // }
-      // http.ConErr = () =>{ this.msgs.push(http.cmsgs) }
     } else {
       console.log(this.lf.loginForm)
       this.msgs = [];

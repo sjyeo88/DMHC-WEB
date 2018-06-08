@@ -21,7 +21,7 @@ import { Options } from '../assign.model';
   selector: 'app-assign-edit',
   templateUrl: '../assign/assign.component.html',
   styleUrls: ['../assign/assign.component.scss'],
-  providers: [AssignService, Options],
+  providers: [AssignNewForm, AssignService, Options],
 })
 export class AssignNewComponent extends AssignComponent {
 

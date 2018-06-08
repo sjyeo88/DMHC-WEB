@@ -100,6 +100,9 @@
                 <label class="valid-error" *ngIf="item.get('command').errors?.maxlength&&item.get('command').dirty">
                   {{fm.valider.commandMaxLengthMsg}}
                 </label>
+                <label class="valid-error" *ngIf="item.get('command').errors?.noHash&&item.get('command').dirty">
+                  "{{ item.get('command').errors?.noHash }}" 태그를 찾을 수 없습니다.
+                </label>
                 <span class="accordion" (click)="expandAssign(item, i)">
                   <i class="fa fa-caret-down fa-lg" [ngClass]="item.get('expand').value ? 'i-down' : 'i-up'"></i>
                   <span [style.margin-left.px]="10">세부설정</span>
@@ -198,7 +201,14 @@
                 </p-dropdown></p>
                 <ul>
                   <li [ngClass]="item.get('input').get('photo').disabled ? 'disabled': ''">
-                    <span><p-checkbox formControlName="photo" label="사진 입력 받기"></p-checkbox></span>
+                    <span>
+                      <p-checkbox
+                      [formControl]="item.get('input').get('photo')"
+                      binary="true"
+                      label="사진 입력 받기"
+                      (onChange)="checkPhoto(item.get('input').get('photo'))"
+                      ></p-checkbox>
+                    </span>
                   </li>
                   <li [ngClass]="item.get('input').get('num').disabled ? 'disabled': ''">
                     <span>입력 횟수:
@@ -237,7 +247,8 @@
                             (keydown)="onEnter(row, $event, item)"
                             >
                             <input *ngIf="c!=0 && r==0" formControlName="data" type="text" placeholder="열 입력">
-                            <input *ngIf="c!=0 && r!=0" class="disabled" type="text" disabled="true" placeholder="내답자 입력란">
+                            <!-- <input *ngIf="c!=0 && r!=0" class="disabled" type="text" disabled="true" placeholder="내답자 입력란"> -->
+                            <p-dropdown *ngIf="c!=0 && r!=0" [style]="{'width':'150px'}" formControlName="data" [options]="opt.tableInputOpt" value="0"></p-dropdown>
                           </td>
                         </tr>
                       </div>
@@ -344,7 +355,7 @@
                   <li>
                     <span>
                       <p-radioButton name="{{i}}_stop_type" [value]=2  (click)="fm.stopFormControl(item)" formControlName="stop_type"></p-radioButton>
-                      내담자의 수행 과제 수가
+                      내담자의 해당 과제 수행 과제 수가
                       <p-spinner size="1"
                       (onChange)="fm.spinnerMinMax(1, 100, item.get('stop').get('byNum'))"
                       formControlName="byNum"></p-spinner>
@@ -359,7 +370,7 @@
 
     <div class="control-panel">
     <div class="button-bundle">
-      <button type="button" (click)="fm.addAssign()">
+      <button type="button" (click)="addAssign()">
         <i class="fa fa-plus"></i>
         이 그룹에 과제추가
       </button>

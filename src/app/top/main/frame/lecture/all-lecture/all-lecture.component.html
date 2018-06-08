@@ -43,10 +43,10 @@
       </th>
       <th >타입</th>
       <th>Page</th>
-      <th class="clickable-tr" (click)="onSortList(1)">
+      <!-- <th class="clickable-tr" (click)="onSortList(1)">
         상태
         <span  *ngIf="statusSortStatus!==0" [style.margin-left.px]="10">{{statusSortChar}} </span>
-      </th>
+      </th> -->
       <th class="clickable-tr" (click)="onSortList(2)">작성일
         <span *ngIf="dateSortStatus!==0" [style.margin-left.px]="10">{{dateSortChar}} </span>
       </th>
@@ -60,8 +60,8 @@
       <td [style.width.%]="10" *ngIf="item.type===0">HTML</td>
       <td [style.width.%]="10" *ngIf="item.type===1">PDF</td>
       <td [style.width.%]="5">{{item.page_no}}</td>
-      <td [style.width.%]="10" *ngIf="item.status===1" class=lecture-edit>작성중</td>
-      <td [style.width.%]="10" *ngIf="item.status===0" class=lecture-finish>완료</td>
+      <!-- <td [style.width.%]="10" *ngIf="item.status===1" class=lecture-edit>작성중</td> -->
+      <!-- <td [style.width.%]="10" *ngIf="item.status===0" class=lecture-finish>완료</td> -->
       <td [style.width.%]="15">{{item.UPDATE_TIME | date:'yyyy-MM-dd'}}</td>
       <td class="clickable-td" (click)="onEditMove(item.title, item.type)" [style.width.%]="5">
         <i class="fa fa-pencil"></i>
@@ -71,16 +71,4 @@
       </td>
     </tr>
   </table>
-
-  <div  [style.margin-top.px]="10">
-    <p-paginator *ngIf="allLecturesLoaded && !isSearch"
-    [rows]="pagPerView"
-    [first]="pagFirstIndex"
-    [style]="{'border':'none'}"
-    [style]="{'background-color':'white'}"
-    (onPageChange)="onPageMove($event)"
-    [totalRecords]="allLectures.length">
-    </p-paginator>
-    <!-- <p-paginator rows="15" totalRecords="gth"></p-paginator> -->
-  </div>
 </div>

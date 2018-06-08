@@ -181,4 +181,18 @@ export class AssignService {
       http.ConErr = () =>{ reject(http.cmsgs)}
     })
   }
+
+  getHashList(hash):Promise<any> {
+    return new Promise((resolve, reject)=>{
+      let url = '/data/hash/name/' + hash;
+      console.log(url)
+      let http =  new Req2('get', url);
+      http.send();
+      http.Complete = ()=> {
+        resolve(JSON.parse(http.response));
+      }
+      http.ServErr = () =>{ reject(http.smsgs)}
+      http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
 }

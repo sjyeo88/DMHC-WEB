@@ -9,7 +9,7 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
-import { Component, OnInit, ElementRef } from '@angular/core';
+import { Component, OnInit, QueryList, ElementRef, ViewChildren } from '@angular/core';
 import { NgModel } from '@angular/forms';
 import { Layout } from './../../../../layout.service';
 import { HashService } from '../hash.service';
@@ -26,25 +26,28 @@ import { ConfirmationService } from 'primeng/primeng'
   providers: [HashService, Table, NewHashData]
 })
 export class HashComponent implements OnInit {
-  public hashTables:any[] = [];
+  @ViewChildren('rowLabel') objInput: QueryList<ElementRef>
+
   public msgs:Message[] = [];
-  public hashes:{}[][] = [];
-  public RowStyle:string= "body"
-  public childNum:number = 0;
   public inputTable = [];
-  public isSaving: boolean;
-  public allHashLoaded: boolean;
-  public allHashes: Hash[];
-  public  pagFirstIndex:number = 0;
-  public  pagPerView :number = 10;
+  public  hashTree;
+  public  hashStruct;
+  public inputDetect:boolean = false;
+  public debounceObj:any;
+  public hashSub = [];
+  public rootNode = {
+    origin:{
+
+    }
+  }
 
 
   constructor(
     public lay: Layout,
     public hashServ: HashService,
     public newHash: NewHashData,
-    public tableModel: Table,
     public el: ElementRef,
+    public tableModel: Table,
     public confirm:ConfirmationService,
   ) { }
 
@@ -54,578 +57,644 @@ export class HashComponent implements OnInit {
     this.lay.cuTitle.page =  this.lay.submenus.assign.menus[3];
     this.lay.currentMenu =  this.lay.submenus.assign;
     this.lay.currentPage = this.lay.cuTitle.page;
-    // console.log(this.hashTables);
 
-    this.hashServ.getHashes()
-    .then(data => {
-      let idx = 0
-      data.map((obj)=>{
-        this.tableModel.model.push({
-          index: idx,
-          tableId: idx,
-          rawId: obj.idHASH,
-          subId: 0,
-          inputId: this.getInputId(),
-          name: obj.name,
-          number: obj.children,
-          ADD_TIME: obj.ADD_TIME,
-          expand: false,
-          sub: false,
-          depth: 0,
-          parent:{},
+    this.makehashTree()
+
+  }
+
+  makehashTree() {
+    let tree = [];
+    Promise.all([this.hashServ.getHashSubs(), this.hashServ.getHashStruct(), []])
+    .then(data=>{
+      this.hashSub = (data[0] as object[]);
+      this.hashStruct =  data[1];
+      this.makeTree(data)
+      return data;
+    })
+    .then(data=>{
+      this.hashTree = data[2];
+      this.setTreeToTable(this.hashTree);
+      return data;
+    })
+    .then(data =>{
+      // console.log(data);
+    })
+    // .then(data=>{
+    //   this.searchTreeByModel(38, data[1])
+    //   return data;
+    // })
+    .catch(msg=>{
+      this.msgs = [];
+      this.msgs.push(msg);
+      console.log(msg);
+    })
+  }
+
+  makeTree(data) {
+    return new Promise(resolve=>{
+      for(let i =0; i <= 2; i++) {
+        this.getNodeFromModel(data[2], data[1], i);
+      }
+      resolve(data);
+    })
+  }
+
+  getNodeFromModel(result, model, proc) {
+    model.forEach((cu, idx )=>{
+      let tgtNode = {
+        key:cu.dece,
+        name:cu.name,
+        number:cu.count,
+        time:cu.ADD_TIME,
+        children: [],
+        ADD_TIME: new Date()
+      }
+      tgtNode.children = this.getWords(tgtNode);
+      if(cu.level === 0 && proc === 0) {
+        result.push(tgtNode);
+      } else if(cu.level === 1 && proc === 1){
+        let dece = result.filter(obj=>{ return cu.dece === obj.key })[0];
+        let ance = result.filter(obj=>{ return cu.ance === obj.key })[0];
+        // dece.parent = ance;
+        ance.children.splice(0, 0, dece);
+      }
+    }, [])
+  }
+
+  setTreeToTable(tree) {
+    let table = this.tableModel.models;
+    tree.forEach(obj=>{
+      table.splice(table.length, 0, {
+        origin:obj,
+        view:{
+          viewId:this.getNewViewId(),
+          addNumber:0,
+          parent:undefined,
+          ances:[],
+          errors:[],
+          expand:false,
           isSaved:true,
-          isSaving:false,
-          isSavable: true,
-          isNesting: false,
-          isDuplicate: false,
-        })
-        idx++;
+          level:0,
+          isSavable:true,
+        }
       })
     })
-    .then(()=>{
-      this.getChildrenNumAll()
-      this.allHashLoaded = true;
-    })
   }
 
-  onRefreshHash(tgtRow) {
-    this.hashServ.getHash(tgtRow.rawId)
-    .then(data => {
-      tgtRow.number = data[0].children;
-      tgtRow.ADD_TIME= data[0].ADD_TIME;
-    })
-  }
-
-  onExpand(tgtRow, callback?) {
-    let idx = this.tableModel.model.indexOf(tgtRow)
-    let parentRow
-    if(tgtRow.parent !== {}) {
-      parentRow = tgtRow.parent;
+  getNewViewId() {
+    let model = this.tableModel.models
+    for(let i=0; i < model.length; i++) {
+      if(model.every(obj => { return obj.view.viewId !== i })) {
+        return i;
+      }
     }
+  }
 
-    if(tgtRow.expand==false) {
-      tgtRow.expand=true;
-      this.hashServ.getHashSub(tgtRow.rawId)
-      .then((data:Array<{}>) => {
-          let id=0;
-          data.map((obj:any) => {
-            if(!/^#/.test(obj.text))  {
-              //IF Just word.
-              this.tableModel.model.splice(idx+1, 0, {
-                index: -1,
-                tableId: id,
-                rawId: -1,
-                subId: obj.idHASH_SUB,
-                inputId:this.getInputId(),
-                number: 1,
-                name: obj.text,
-                ADD_TIME: obj.ADD_TIME,
-                expand: false,
-                sub: true,
-                parent: tgtRow,
-                depth: tgtRow.depth+1,
-                isSaved:true,
-                isSaving:false,
-                isSavable: true,
-                isNesting: false,
-                isDuplicate: false,
-              })
-            } else {
-              //IF Sub Hash.
-              let rawId
-              this.hashServ.getHash(obj.idHASH_raw)
-              .then(data=>{
-                  let hashRow = {
-                    index: -1,
-                    tableId: id,
-                    rawId: obj.idHASH_raw,
-                    subId: obj.idHASH_SUB,
-                    inputId:this.getInputId(),
-                    number: 1,
-                    name: obj.text,
-                    ADD_TIME: obj.ADD_TIME,
-                    expand: false,
-                    sub: true,
-                    parent: tgtRow,
-                    depth: tgtRow.depth+1,
-                    isSaved:true,
-                    isSaving:false,
-                    isSavable: true,
-                    isNesting: false,
-                    isDuplicate: false,
-                  }
-                  this.getChildrenNum(hashRow);
-                  this.tableModel.model.splice(idx+1, 0, hashRow);
-              })
-            }
-          id++;
-          })
+  onExpand(item, idx, callback?) {
+    let model = this.tableModel.models
+    if(!item.view.expand) {
+      item.view.expand = true;
+      item.origin.children.sort((a, b)=>{
+        return a.name > b.name ? -1 : a.name === b.name ? 0 : 1
+      });
+      item.origin.children.forEach(obj=>{
+        let viewId = this.getNewViewId()
+        model.splice(idx+1, 0,
+          {
+            origin:obj,
+            view:{
+              viewId: obj.key ? viewId : -1,
+              parent:item,
+              pattern:"[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}",
+              ances:[item].concat(item.view.ances),
+              addNumber:0,
+              isSavable:true,
+              expand:false, isSaved:true, level:item.view.level+1},
+          });
       })
-      .then(()=>{
-        this.reNumbering(this.tableModel.model)
-        this.pagPerView += this.tableModel.model.filter((row)=>{
-          return row.sub
-        }).length
-        if(callback) callback()
-      })
-    } else {
-      tgtRow.expand=false;
-      this.pagPerView -= this.tableModel.model.filter((row)=>{
-        return row.sub
-      }).length
-      this.hashServ.getHashSub(tgtRow.rawId)
-      .then((data:Array<{}>) => {
-        this.deleteChilderen(tgtRow);
-      })
-      .then(()=>{
-        this.reNumbering(this.tableModel.model)
-        if(callback) callback()
-      })
-    }
-  }
-
-  deleteChilderen(tgtRow){
-    let childRow = this.tableModel.model.filter((row)=>{
-        return row.parent === tgtRow
-    })
-    tgtRow.isSaved =  true
-    if(childRow !== []) {
-      childRow.map((obj)=>{
-        this.deleteChilderen(obj);
-        let delIdx = this.tableModel.model.indexOf(obj)
-        this.tableModel.model.splice(delIdx, 1);
-      })
-    }
-  }
-
-
-  addTag() {
-    let lastIdx = this.tableModel.model.length;
-    // console.log(lastIdx);
-    let row = {
-      index: lastIdx,
-      tableId:lastIdx,
-      subId: 0,
-      rawId:-1,
-      inputId: this.getInputId(),
-      name:"",
-      number: 0,
-      ADD_TIME: '',
-      expand: false,
-      sub: false,
-      parent: {},
-      depth: 0,
-      isSaved:false,
-      isSaving:false,
-      isSavable: false,
-      isNesting: false,
-      isDuplicate: false,
-    }
-    this.tableModel.model.push(row)
-  }
-
-
-  addChild(tgtRow, name?) {
-    let id = tgtRow.tableId;
-    // tgtRow.isSaved=true;
-    tgtRow.isSavable = false;
-    tgtRow.number += 1;
-    let childRow = {
-          index: -1,
-          tableId: id+1,
-          rawId: -1,
-          subId: -1,
-          inputId: this.getInputId(),
-          number: 1,
-          name: name ? name : "",
-          ADD_TIME: "",
-          expand: false,
-          sub: true,
-          parent: tgtRow,
-          depth: tgtRow.depth+1,
-          isSaved: false,
-          isSaving:false,
-          isSavable: false,
-          isNesting: false,
-          isDuplicate: false,
-    }
-    if(!tgtRow.expand) {
-      this.onExpand(tgtRow, ()=>{ this.tableModel.model.splice(id+1, 0, childRow)});
-    } else {
-      this.tableModel.model.splice(id+1, 0, childRow);
-    }
-    return childRow;
-  }
-
-  addBro(tgtRow, name?) {
-    let id = tgtRow.tableId;
-    tgtRow.parent.isSaved=false;
-    tgtRow.parent.isSavable = false;
-    tgtRow.parent.number += 1;
-    let broRow = {
-      index: -1,
-      tableId: id+1,
-      rawId: -1,
-      number: 1,
-      subId: -1,
-      inputId: this.getInputId(),
-      name: name ? name : "",
-      ADD_TIME: "",
-      expand: false,
-      sub: true,
-      parent: tgtRow.parent,
-      depth: tgtRow.depth,
-      isSaved: false,
-      isSaving:false,
-      isSavable: false,
-      isNesting: false,
-      isDuplicate: false,
-    }
-    this.tableModel.model.splice(id+1, 0, broRow)
-    // this.reNumbering(this.tableModel.model);
-    return broRow;
-  }
-
-  getLastTableId(temp):number {
-    return temp[temp.length-1].tableId;
-  }
-
-  removeRow(tgtRow) {
-    let id = this.tableModel.model.indexOf(tgtRow)
-    tgtRow.parent.number -= tgtRow.number;
-    this.tableModel.model.splice(id, 1)
-    if(tgtRow.sub) {
-      this.getChildRow(tgtRow.parent).forEach(obj => {
-        this.checkAllValid(obj)
-      })
-      this.checkAllValid(tgtRow.parent);
-    };
-    if(tgtRow.isSaved) {
-      if(!tgtRow.sub) {
-        this.hashServ.deleteHash(tgtRow.rawId)
-        .then(()=>{
-          this.msgs = [];
-          this.msgs.push({severity: 'success', summary:'태그 삭제 완료', detail: tgtRow.name +' 태그가 삭제되었습니다.'})
-        })
-        .catch(msg =>{
-          this.msgs = [];
-          this.msgs.push(msg);
-        })
+  } else {
+      if(this.getChilds(item).some(obj=>{return !obj.view.isSaved})) {
+        this.msgs = [];
+        let msg = {
+          severity:'error',
+          summary:'저장되지 않은 항목이 있습니다.',
+        }
+        this.msgs.push(msg);
       } else {
-        this.hashServ.deleteWord(tgtRow.parent.rawId, tgtRow.subId)
-        .then(()=>{
-          this.msgs = [];
-          if(/^#/.test(tgtRow.name)) {
-            this.msgs.push({severity: 'success', summary:'태그 삭제 완료', detail: tgtRow.name +' 태그가 삭제되었습니다.'})
-          } else {
-            this.msgs.push({severity: 'success', summary:'단어 삭제 완료', detail: tgtRow.name +' 단어가 삭제되었습니다.'})
-          }
-        })
-        .catch(msg =>{
-          this.msgs = [];
-          this.msgs.push(msg);
+        item.view.expand = false;
+        model.filter(obj=>{
+          return obj.view.ances.some(idx=>{ return idx === item })
+        }).forEach(obj=>{
+          model.splice(model.indexOf(obj), 1);
         })
       }
     }
-    this.deleteChilderen(tgtRow);
-    // this.reNumbering(this.tableModel.model);
+    if(callback) callback();
   }
 
-  onHashUpdate(tgtRow, number) {
-    this.isSaving = true;
-    let data = new FormData();
-    // data.append('children', tgtRow.number);
-    data.append('name', tgtRow.name);
-    this.hashServ.postHash(data)
-  }
-
-  onHashSave(tgtRow) {
-    tgtRow.isSaving = true;
-    let data = new FormData();
-
-    let remChildRows = this.getChildRow(tgtRow).filter((obj)=>{ return !obj.isSaved && obj.name === "" })
-    remChildRows.map((obj)=>{
-      this.removeRow(obj);
-    })
-
-    data.append('children', tgtRow.number);
-    let childRows = this.getChildRow(tgtRow).filter((obj)=>{ return !obj.isSaved && (obj.name !== "")})
-
-    data.append('name', tgtRow.name);
-    this.hashServ.postHash(data)
-    .then(result =>{
-      tgtRow.isSaved = true;
-      if(result.insertId !== 0) {
-        tgtRow.rawId = result.insertId;
-      }
-    })
-    .then(() =>{
-      if(childRows.length !== 0) {
-        childRows.map((obj)=>{
-          this.onWordSave(obj);
-        })
-      } else {
-        this.getChildrenNumAll();
-        tgtRow.isSaving = false;
-        tgtRow.isSaved = true;
-      }
-    })
-    .then(()=>{
-      this.msgs = [];
-      if(/^#/.test(tgtRow.name)) {
-          this.msgs.push({severity: 'success', summary:'태그 추가 완료', detail: tgtRow.name +' 태그가 추가되었습니다.'})
-      } else {
-        this.msgs.push({severity: 'success', summary:'단어 추가 완료', detail: tgtRow.name +' 단어가 추가되었습니다.'})
-      }
-
-      this.onExpand(tgtRow);
-    })
-    .catch(msg =>{
-      this.msgs = [];
-      this.msgs.push(msg);
-    })
-  }
-
-  onWordSave(tgtRow) {
-    this.isSaving = true;
-    if(!tgtRow.parent.isSaved) {
-      // tgtRow.parent.isSavable = true;
-      this.msgs = [];
-      this.msgs.push(
-        {severity: 'error',
-         summary:'입력에러 입니다.',
-         detail: '부모 태그를 먼저 저장해주세요.'}
-      )
-      return null;
-    }
-    let data = new FormData();
-    // data.append('children', tgtRow.number);
-    data.append('text', tgtRow.name);
-    data.append('idHASH', tgtRow.parent.rawId.toString());
-    // console.log(tgtRow.parent);
-    if(tgtRow.rawId !== -1) data.append('idHASH_raw', tgtRow.rawId.toString());
-    this.hashServ.postWord(data)
-    .then(()=>{
-      tgtRow.isSaved = true;
-      this.msgs = [];
-      this.msgs.push({severity: 'success', summary:'태그 추가 완료', detail: tgtRow.name +' 태그가 추가되었습니다.'})
-      let broRows = this.getChildRow(tgtRow.parent).filter((obj)=>{ return !obj.isSaved })
-      if(broRows.length === 0) {
-        this.getChildrenNumAll();
-        tgtRow.parent.isSaved = true;
-        tgtRow.parent.isSaving = false;
-      }
-      tgtRow.isSaved = true;
-    })
-    .catch(msg =>{
-      this.msgs = [];
-      this.msgs.push(msg);
-    })
-  }
-
-  getChildRow(tgtRow) {
-    let childRow = this.tableModel.model.filter((obj)=>{
-      return obj.parent == tgtRow;
-    })
-    return childRow;
-  }
-
-  reNumbering(data) {
-    let idx = 0;
-    // console.log(data);
-    data.forEach((obj)=>{
-      obj.tableId = idx;
-      idx++;
-    })
-  }
-
-  hashPaste(tgtRow, event) {
-    let clipboardData = event.clipboardData.getData('Text');
-    let wordList = clipboardData.split('\r\n')
-    // wordList = wordList.splice(wordList.length, 1)
-    let firstWord = wordList[0];
-    // console.log(firstWord);
-    tgtRow.name = "";
-    wordList = wordList.sort()
-    wordList.map((obj)=>{
-        if(obj !==""&&obj !== firstWord) {
-          if(tgtRow.sub) {
-            this.checkValue(this.addBro(tgtRow, obj));
-          } else {
-            // tgtRow.isSavable = true;
-            this.checkValue(this.addChild(tgtRow, obj));
-          }
+  getWords(parentNode) {
+    return this.hashSub.filter(obj=>{
+      return obj.idHASH === parentNode.key
+    }).map(word =>{
+        return {
+          // parent:parentNode,
+          key:undefined,
+          name:word.text,
+          number:1,
+          ADD_TIME:word.ADD_TIME,
         }
     })
-    setTimeout(()=>{
-      tgtRow.name = firstWord;
-      this.reNumbering(this.tableModel.model)
-    }, 50)
   }
 
-  openRow(tgtRow, event) {
+  addCount(item) {
+    item.origin.number++;
+  }
+
+  addTag() {
+    let row =  {
+      origin: {
+        key:-2,
+        name:'',
+        number:0,
+        children:[],
+        ADD_TIME: new Date(),
+      },
+      view:{
+        viewId: this.getNewViewId(),
+        inputId: this.getInputId(),
+        ances:[],
+        errors:[],
+        pattern:"[#][a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}",
+        expand: false,
+        isSaved: false,
+        isSavable: false,
+        isSaving: false,
+        level: 0,
+        addNumber:0,
+      }
+    }
+    this.tableModel.models.push(row)
+    setTimeout(()=>{ this.objInput.last.nativeElement.focus(); }, 10)
+  }
+
+  addChild(parentRow, idx, name?) {
+    let childRow = {
+      origin: {
+        key:undefined,
+        name: name ? name : '',
+        number:1,
+        ADD_TIME: new Date(),
+        children:[],
+      },
+      view:{
+        // viewId: this.getNewViewId(),
+        inputId: this.getInputId(),
+        viewId: -1,
+        ances:[parentRow].concat(parentRow.view.ances),
+        errors:[],
+        expand: false,
+        pattern:"[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}",
+        isSaved: false,
+        isSavable: false,
+        isSaving: false,
+        level: parentRow.view.level + 1,
+        addNumber:0,
+      }
+    }
+    if(!parentRow.view.expand) {
+      this.onExpand(parentRow, idx, ()=>{
+        this.tableModel.models.splice(idx+1, 0, childRow)
+      })
+    } else {
+      this.tableModel.models.splice(idx+1, 0, childRow);
+    }
+    parentRow.view.addNumber++;
+    parentRow.view.isSavable = false;
+    setTimeout(()=>{
+      let tgtInput = document.getElementById(childRow.view.inputId) as HTMLInputElement;
+      tgtInput.focus();
+    }, 10)
+    return childRow;
+  }
+
+  addBro(broRow, idx, name?) {
+    let newRow = {
+      origin: {
+        key:undefined,
+        name: name ? name : '',
+        number:1,
+        ADD_TIME:new Date,
+        children:[],
+      },
+      view:{
+        viewId: -1,
+        inputId: this.getInputId(),
+        ances:broRow.view.ances,
+        expand: false,
+        errors:[],
+        pattern:"[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}",
+        isSaved: false,
+        isSavable: false,
+        isSaving: false,
+        level: broRow.view.level,
+        addNumber:0,
+      }
+    }
+    this.tableModel.models.splice(idx+1, 0, newRow);
+    setTimeout(()=>{
+      let tgtInput = document.getElementById(newRow.view.inputId) as HTMLInputElement;
+      tgtInput.focus();
+    }, 10)
+    return newRow;
+  }
+
+  checkValue(item, event?):Promise<boolean> {
+    if(/^#/.test(item.origin.name)) {
+      let hashOrigin;
+      item.view.pattern = "[#][a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}";
+      if(hashOrigin = this.checkOriginHash(item.origin.name)) {
+        // console.log(hashOrigin);
+        item.origin.children = hashOrigin.children;
+        item.origin.number = hashOrigin.number;
+        item.origin.key = hashOrigin.key;
+        let parent = this.getParent(item);
+        if(parent) {
+          this.getParent(item).view.addNumber =
+          this.getBros(item)
+          .filter((obj)=>{ return !obj.view.isSaved })
+          .reduce((prv, cu)=>{ return prv += cu.origin.number },  0)
+        }
+      } else {
+        item.origin.key = -1;
+        item.origin.children = [];
+        item.origin.number = 0;
+        let parent = this.getParent(item);
+        if(parent) {
+          this.getParent(item).view.addNumber =
+          this.getBros(item)
+          .filter((obj)=>{ return !obj.view.isSaved })
+          .reduce((prv, cu)=>{ return prv += cu.origin.number },  0)
+        }
+      }
+      return Promise.all([
+        this.checkDuplicate(item),
+        this.checkPattern(item),
+        this.checkNested(item),
+        this.checkChilds(item),
+        this.checkExist(item),
+      ])
+      .then(values =>{
+        item.view.errors = values
+        if(!values[0] || !values[1] || !values[2] || !values[3] || !values[4]) {
+          item.view.isSavable = false;
+          return false
+        } else {
+          item.view.isSavable = true;
+          return true
+        }
+      })
+    } else {
+      if(item.origin.key !== -2) {
+        item.origin.key=undefined;
+        item.origin.number=1;
+        item.view.pattern = "[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}";
+      }
+      return Promise.all([this.checkDuplicate(item), this.checkPattern(item)])
+      .then(values =>{
+        // return values;
+        item.view.errors = values
+        if(!values[0] || !values[1]) {
+          item.view.isSavable = false;
+          return false;
+        } else {
+          item.view.isSavable = true;
+          return true;
+        }
+      })
+    }
+
+    // if(event) { item.view.isSavable = event.srcElement.validity.valid; }
+
+  }
+
+  errorMsg(item) {
+    let msg = [];
+    let msgDup = { severity: 'error', summary: '저장불가', detail: '중복된 단어가 있습니다.' }
+    let msgNesting = { severity: 'error', summary: '저장불가', detail: '올바른 포함관계가 아닙니다.' }
+    let msgPattern1 = { severity: 'error', summary: '저장불가', detail: '입력이 잘못되었습니다. (1자-10자, #으로 시작해야합니다)' }
+    let msgPattern2 = { severity: 'error', summary: '저장불가', detail: '입력이 잘못되었습니다. (1자-10자)'}
+    if(!item.view.errors[0]) {
+      msg.push(msgDup);
+    }
+
+    let msgChild = { severity: 'error', summary: '저장불가', detail: '하위 요소 저장에 오류가 있습니다.' }
+    let msgExist = { severity: 'error', summary: '저장불가', detail: '해당 해시가 존재하지 않습니다.' }
+
+    if(item.origin.key) {
+      if(!item.view.errors[1]) {
+        msg.push(msgPattern1) ;
+      }
+      if(!item.view.errors[2]) {
+        msg.push(msgNesting) ;
+      }
+      if(!item.view.errors[3]) {
+        msg.push(msgChild) ;
+      }
+      if(!item.view.errors[4]) {
+        msg.push(msgExist) ;
+      }
+    } else {
+      if(!item.view.errors[1]) {
+        msg.push(msgPattern2) ;
+      }
+    }
+
+    this.msgs = msg;
+  }
+
+  checkAll(item) {
+    Promise.all(
+      this.getBros(item)
+      .filter(obj=>{ return obj && !obj.view.isSaved })
+      .map(obj=>{
+        return this.checkValue(obj)
+      })
+    )
+    .then(values=>{
+      let parent = this.getParent(item)
+      if(parent && !parent.view.isSaved) {
+          this.checkValue(this.getParent(item));
+      }
+      // console.log(values);
+    })
+  }
+
+  checkAllWithDebounceTime(item) {
+    if(!this.inputDetect) {
+      this.inputDetect = true;
+      this.debounceObj = setTimeout(()=>{
+        this.checkAll(item);
+        this.inputDetect = false;
+      }, 300)
+    } else {
+      clearTimeout(this.debounceObj);
+      this.debounceObj = setTimeout(()=>{
+        this.checkAll(item);
+        this.inputDetect = false;
+      }, 300)
+    }
+  }
+
+  checkDuplicate(item) {
+    let table = this.tableModel.models
+    return new Promise(resolve =>{
+      let bros = this.getBros(item);
+      if(bros.filter(obj=>{return  item.origin.name === obj.origin.name}).length > 1) {
+        // console.log('Duplication error')
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    })
+  }
+
+  checkNested(item) {
+    return new Promise(resolve =>{
+      let parent = this.getParent(item);
+      resolve(this.hashServ.getHashStruct()
+      .then(data=>{
+        if(item.view.ances.length === 0) {
+          return true
+        } else {
+          if(data.filter(obj=>{ return (obj.ance === item.origin.key) })
+          .some(obj=> { return obj.dece === parent.origin.key })) {
+            // console.log('Nested error')
+            return false;
+          } else {
+            if(item.origin.name === parent.origin.name) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+        }
+      }))
+    })
+  }
+
+  checkPattern(item) {
+    return new Promise(resolve =>{
+      setTimeout(()=>{
+        let tgtInput = document.getElementById(item.view.inputId) as HTMLInputElement;
+        // if(!tgtInput.validity.valid) {console.log(tgtInput.validity)}
+        resolve(tgtInput.validity.valid) }
+        , 10)
+    })
+  }
+
+  checkParent(item) {
+    let parent = this.getParent(item)
+    if(parent && !parent.view.isSaved) {
+      if(this.getChilds(parent)
+      // .filter(obj=>{ return !obj.view.isSaved })
+      .some(obj=>{
+        return !obj.view.isSavable && !obj.view.isSaved
+      })) {
+        // console.log('false');
+        parent.view.isSavable = false
+      } else {
+        parent.view.isSavable = true;
+      }
+    }
+  }
+
+  checkChilds(item) {
+    return new Promise(resolve=>{
+      let childs = this.getChilds(item)
+      if(childs.some(obj =>{
+        return !obj.view.isSavable
+      })) {
+        resolve(false);
+      } else {
+        resolve(true);
+      }
+    })
+  }
+
+  checkExist(item) {
+    return new Promise(resolve=>{
+      if(this.checkOriginHash(item.origin.name) || item.view.level === 0) {
+        resolve(true);
+      } else {
+        resolve(false);
+      }
+    })
+  }
+
+  getBros(item) {
+    let table = this.tableModel.models
+    return table.filter(obj=>{
+      return obj.view.ances[0] === item.view.ances[0];
+    })
+  }
+
+  getChilds(item) {
+    let table = this.tableModel.models
+    return table.filter(obj=>{
+      return obj.view.ances[0] === item;
+    })
+  }
+
+  getParent(item) {
+    return item.view.ances[0]
+  }
+
+  openRow(item, idx, event) {
     //Enter Key In
     if(event.keyCode == 13) {
       let inputId:string
-      if(tgtRow.sub) {
-        let broRow = this.addBro(tgtRow);
-        inputId = broRow.inputId;
+      if(item.origin.key && item.view.level === 0) {
+        let childRow = this.addChild(item, idx);
       } else {
-        let childRow = this.addChild(tgtRow);
-        inputId = childRow.inputId;
+        let broRow = this.addBro(item, idx);
       }
-
-      setTimeout(()=> {
-        // console.log(document.getElementById(inputId));
-        document.getElementById(inputId).focus();
-      }, 100)
     }
   }
 
 
-  checkValue(tgtRow) {
-    if(/^#/.test(tgtRow.name)) {
-      this.hashServ.getHashes()
-      .then(data =>{
-        let tgtData = data.filter((row)=>{ return row.name === tgtRow.name});
-        // console.log(tgtData);
-          if(tgtData[0]) {
-              if(tgtRow.sub) tgtRow.rawId = tgtData[0].idHASH;
-              tgtRow.ADD_TIME = tgtData[0].ADD_TIME;
-          } else {
-              tgtRow.number = 1;
-              tgtRow.rawId = -1;
-              tgtRow.ADD_TIME = "";
-          }
-      })
-      .then(()=>{
-        if(tgtRow.sub) this.chkChildrenNum(tgtRow);
-      })
-      .then(()=>{
-        // if(tgtRow.sub) {
-          this.getCheckNesting(tgtRow)
-          .then(()=>{
-            setTimeout(()=>{
-              this.checkAllValid(tgtRow);
-            }, 100)
+  checkOriginHash(name) {
+    return this.hashTree.filter(obj=>{ return obj.name === name })[0]
+  }
+
+  removeRow(item, idx) {
+    let parent = this.getParent(item) ;
+    let model = this.tableModel.models;
+    if(parent) {
+      if(item.view.isSaved) {
+        if(item.origin.key) {
+          //하위 요소, 저장됨, 해시
+          this.delEqualHashWithSameParent(item)
+
+          parent.origin.children.forEach((obj, idx, self) => {
+            if(obj.key === item.origin.key) {
+              self.splice(idx, 1);
+            }
           })
-        // }
-      })
-    } else {
-        // this.getChildRow(tgtRow.parent).splice(this.getChildRow(tgtRow.parent).indexOf(tgtRow)).forEach(obj => {
-        //   this.checkAllValid(obj)
-        // })
-        setTimeout(()=>{
-          // this.checkAllValid(tgtRow.parent);
-          this.checkAllValid(tgtRow);
-        }, 100)
-    }
 
-  }
-
-
-  checkAllValid(tgtRow) {
-    this.getCheckDuplicate(tgtRow);
-    let tgtInput = document.getElementById(tgtRow.inputId) as HTMLInputElement;
-    tgtRow.isSavable = false;
-    tgtRow.parent.isSavable = false;
-    if (tgtInput.validity.patternMismatch) {
-      this.msgs=[];
-      if(tgtRow.sub) this.msgs.push({severity:'error', summary: tgtInput.validationMessage , detail:'공백 및 특수문자(#제외)를 제외한 2자-10자 사이의 단어를 입력해주세요.'})
-      else this.msgs.push({severity:'error', summary: tgtInput.validationMessage , detail:' 공백 및 특수문자(#제외)를 제외한 #으로 시작하는 2자-10자 사이의 단어를 입력해주세요.'})
-    } else if (tgtInput.validity.valueMissing) {
-      this.msgs=[];
-      this.msgs.push({severity:'error', summary:tgtInput.validationMessage, detail:''})
-    } else if (tgtRow.isNesting) {
-        this.msgs = [];
-        this.msgs.push(
-          {severity: 'error',
-           summary:'입력에러 입니다.',
-           detail: '부모 해쉬인 ' + tgtRow.name + '는' + tgtRow.parent.name + '의 자식해쉬가 될 수 없습니다.'}
-        )
-    } else if (tgtRow.isDuplicate) {
-        this.msgs = [];
-        this.msgs.push(
-          {severity: 'error',
-           summary:'입력에러 입니다.',
-           detail: '중복된 해쉬태그 혹은 단어가 있습니다.'}
-        )
-    }
-    // else if(!tgtRow.parent.isSaved) {
-    //     tgtRow.parent.isSavable = true;
-    //     this.msgs = [];
-    //     this.msgs.push(
-    //       {severity: 'error',
-    //        summary:'입력에러 입니다.',
-    //        detail: '부모 태그를 먼저 저장해주세요.'}
-    //     )
-    // }
-    else {
-      if(!tgtRow.sub) {
-        let children = this.getChildRow(tgtRow)
-        if(children.some(obj=> obj.isSavable === false)){
-          tgtRow.isSavable = false
+          this.hashServ.deleteHashDecend(item.origin.key, parent.origin.key)
+          .then(obj => {
+            this.msgs = []
+            this.msgs.push({severity:'success', summary: item.origin.name + ' 태그가 삭제되었습니다.'})
+          })
+          .catch(msg => {
+            this.msgs = [];
+            this.msgs.push(msg);
+          })
         } else {
-          tgtRow.isSavable = true
+          //하위 요소, 저장됨, 단어
+          this.delEqualWordWithSameParent(item);
+
+          parent.origin.children.forEach((obj, idx, self) => {
+            if(obj.name === item.origin.name) {
+              self.splice(idx, 1);
+            }
+          })
+
+          this.hashServ.deleteWord(parent.origin.key, item.origin.name)
+          .then(obj => {
+            this.msgs = []
+            this.msgs.push({severity:'success', summary: item.origin.name + ' 단어가 삭제되었습니다.'})
+          })
+          .catch(msg => {
+            this.msgs = [];
+            this.msgs.push(msg);
+          })
         }
       } else {
-        tgtRow.isSavable = true;
-      }
-      // if(!tgtRow.sub && tgtRow ) {
-      // tgtRow.isSavable = true;
-      // tgtRow.parent.isSavable = true;
-    }
-  }
-
-  getCheckNesting(tgtRow) {
-    return new Promise((resolve, reject)=>{
-      this.hashServ.getHashSub(tgtRow.rawId)
-      .then(data =>{
-        let nestingRow = data.filter((row)=>{
-          return (row.text == tgtRow.parent.name);
-        })
-        if(nestingRow.length !== 0 || tgtRow.name == tgtRow.parent.name) {
-          tgtRow.isNesting = true;
-          resolve(true);
-        } else {
-          tgtRow.isNesting = false;
-          resolve(true);
-        }
-      })
-    })
-  }
-
-  getCheckDuplicate(tgtRow) {
-    if(tgtRow.sub) {
-      let dupleRow= this.getChildRow(tgtRow.parent).filter((row)=>{
-        return tgtRow.name === row.name
-      })
-      if(dupleRow.length > 1) {
-        tgtRow.isDuplicate = true;
-      } else {
-        tgtRow.isDuplicate = false;
+        //하위 요소, 저장안됨, 단어
+        model.splice(idx, 1);
+        parent.view.addNumber -= item.origin.number;
       }
     } else {
-      let dupleRow= this.getTopRows().filter((row)=>{
-        return tgtRow.name === row.name
-      })
-      console.log(dupleRow)
-      if(dupleRow.length > 1) {
-        tgtRow.isDuplicate = true;
+      if(item.view.isSaved) {
+        if(item.origin.key) {
+          //상위 요소, 저장됨, 해시
+          this.delEqualHash(item)
+
+          this.hashTree.forEach((obj, idx, self) => {
+            // console.log(obj);
+            if(obj.key === item.origin.key) { self.splice(idx, 1) }
+            else {
+              obj.children.forEach((oobj, iidx, sself) => {
+                if(oobj.key === item.origin.key) {  sself.splice(iidx, 1) }
+              })
+            }
+          })
+
+          this.hashServ.deleteHash(item.origin.key)
+          .then(obj => {
+            this.msgs = []
+            this.msgs.push({severity:'success', summary: item.origin.name + ' 태그가 삭제되었습니다.'})
+          })
+          .catch(msg => {
+            this.msgs = [];
+            this.msgs.push(msg);
+          })
+
+        }
       } else {
-          tgtRow.isDuplicate = false;
+        if(item.origin.key) {
+          //상위 요소, 저장안됨, 해시
+          this.removeHashChildRow(item)
+          model.splice(idx, 1);
+        }
       }
     }
+
+    this.checkAll(item);
+    this.setHashCount();
   }
 
-  getUpdateBros(tgtRow):number {
-    let broNums = this.getChildRow(tgtRow).map((obj)=>{
-      return obj.number
+  removeHashChildRow(item) {
+    item.view.expand = false;
+    let model = this.tableModel.models;
+    model.filter(obj=>{ return obj.view.ances.some(idx=>{ return idx === item }) })
+      .forEach(obj=>{ model.splice(model.indexOf(obj), 1); })
+  }
+
+  delEqualHash(item) {
+    let model = this.tableModel.models;
+    return model.forEach((obj, idx ,self) =>{
+      if(obj.origin.key === item.origin.key) {
+        this.removeHashChildRow(obj);
+        self.splice(idx, 1)
+      }
     })
-    let broNum = broNums.reduce((prev, cu)=>{
-      return prev + cu;
+  }
+
+  delEqualHashWithSameParent(item) {
+    let model = this.tableModel.models;
+    let parent = this.getParent(item) ;
+    return model.forEach((obj, idx ,self) =>{
+      if(this.getParent(obj) &&
+        obj.origin.key === item.origin.key &&
+        this.getParent(obj).origin.key === this.getParent(item).origin.key) {
+        this.removeHashChildRow(obj);
+        self.splice(idx, 1)
+      }
     })
-    return broNum;
+  }
+
+  delEqualWordWithSameParent(item) {
+    let model = this.tableModel.models;
+    let parent = this.getParent(item) ;
+    return model.forEach((obj, idx ,self) =>{
+      if(this.getParent(obj) &&
+        obj.origin.name === item.origin.name &&
+        this.getParent(obj).origin.key === this.getParent(item).origin.key) {
+        self.splice(idx, 1)
+      }
+    })
   }
 
   getInputId() {
@@ -641,102 +710,221 @@ export class HashComponent implements OnInit {
     }
   }
 
-  getChildrenNumAll() {
-      this.tableModel.model.map((obj)=>{
-        if(!obj.sub) {
-          this.hashServ.getHashNum(obj.rawId)
-          .then(data=>{
-            obj.number = data[0]['count(idHASH)'];
-          })
-        }
+  onHashUpdate(item) {
+
+    this.hashTree.push(item.origin);
+
+    let data = new FormData();
+    data.append('name', item.origin.name);
+    data.append('ADD_TIME', item.origin.ADD_TIME.toISOString().slice(0, 19).replace('T', ' '));
+
+    this.hashServ.postHash(data)
+    .then(data=>{
+      item.origin.key = data.insertId;
+      this.hashTree.push(item.origin)
+      this.hashStruct.push({
+        ance:item.origin.key,
+        dece:item.origin.key,
+        level:0,
       })
+      item.view.isSaved = true;
+      return null;
+    })
+    .then(()=>{
+      let childs = this.getChilds(item)
+      let words = childs.filter(obj=>{ return !obj.origin.key })
+      let hashes = childs.filter(obj=>{ return obj.origin.key })
+
+      words.length > 0 ? this.onWordsUpdate(words) : null;
+      hashes.length > 0 ? this.onHashesUpdate(hashes) : null;
+    })
+    .then(result=>{
+      item.view.isSaved = true;
+      item.view.isSaving = false;
+    })
+    .catch(msg =>{
+        this.msgs = [];
+        this.msgs.push(msg);
+        console.log(msg);
+    })
   }
 
-  chkChildrenNum(tgtRow) {
-      this.hashServ.getHashNum(tgtRow.rawId)
-      .then(data=>{
-        tgtRow.number = data[0]['count(idHASH)'];
-        return tgtRow.number
+  onWordsUpdate(words) {
+    let data = new FormData();
+    let parent = this.getParent(words[0])
+    let item = words[0];
+
+    if(!parent.view.isSaved) {
+      // tgtRow.parent.isSavable = true;
+      this.msgs = [];
+      this.msgs.push(
+        {severity: 'error',
+         summary:'입력에러 입니다.',
+         detail: '부모 태그를 먼저 저장해주세요.'}
+      )
+      return null;
+    }
+
+    words.forEach(obj => { this.addItemWithSameParent(obj) })
+    let children=  words.map(obj=>{ return obj.origin })
+
+    let body =  words.map(obj =>{
+      parent.origin.children.push(obj.origin);
+      return {
+        text: obj.origin.name,
+        ADD_TIME:obj.origin.ADD_TIME.toISOString().slice(0, 19).replace('T', ' '),
+        idHASH: parent.origin.key
+      }
+    })
+
+    data.append('words', JSON.stringify(body));
+
+    return Promise.resolve(this.hashServ.postWords(data)
+    .then(()=>{
+      words.forEach(obj=>{obj.view.isSaved = true});
+      this.msgs = [];
+      this.msgs.push({severity: 'success', summary:'단어 추가 완료', detail: words.length +' 개의 단어가 추가되었습니다.'})
+
+      parent.view.addNumber-= words.length;
+      this.setHashCount()
+      return true;
+    })
+    .catch(msg =>{
+      this.msgs = [];
+      this.msgs.push(msg);
+      console.log(msg);
+    }))
+
+  }
+
+  onHashesUpdate(hashes) {
+    let item = hashes[0]
+    let parent = this.getParent(item)
+    if(!parent.view.isSaved) {
+      // tgtRow.parent.isSavable = true;
+      this.msgs.push(
+        {severity: 'error',
+         summary:'입력에러 입니다.',
+         detail: '부모 태그를 먼저 저장해주세요.'}
+      )
+      return null;
+    }
+
+
+    hashes.forEach(obj => {
+      this.addItemWithSameParent(obj)
+      parent.origin.children.push(obj.origin)
+
+      parent.view.addNumber -= obj.origin.number;
+
+      let data = new FormData();
+      data.append('dece', obj.origin.key);
+      data.append('ance', parent.origin.key);
+      data.append('ADD_TIME', obj.origin.ADD_TIME.toISOString().slice(0, 10).replace('T', ' '));
+      this.hashServ.pushHash(data)
+      .then(()=>{
+        obj.view.isSaved = true;
+        this.msgs.push({severity: 'success', summary:'태그 추가 완료', detail: item.origin.name +' 태그가 추가되었습니다.'})
       })
       .then(()=>{
-        setTimeout(()=>{
-          tgtRow.parent.number = this.getUpdateBros(tgtRow.parent);
-        },100)
-      })
-  }
+        obj.view.isSavable = true;
+        obj.view.isSaving = false;
 
-  getChildrenNum(tgtRow) {
-    if(tgtRow.rawId !== -1) {
-      this.hashServ.getHashNum(tgtRow.rawId)
-      .then(data=>{
-        tgtRow.number = data[0]['count(idHASH)'];
-        return tgtRow.number
+        this.setHashCount();
       })
-    }
-  }
-
-  getTopRows() {
-    let topRows = this.tableModel.model.filter((row)=>{
-      return !row.sub
+      .catch(msg =>{
+        this.msgs = [];
+        this.msgs.push(msg);
+        console.log(msg);
+      })
     })
-    return topRows;
   }
 
-  confirmDel(tgtRow) {
-    let msg = ''
-    if(/^#/.test(tgtRow.name)) {
-      msg = tgtRow.name + ' 해시 태그를 정말 삭제하시겠습니까?'
-    } else {
-      msg = tgtRow.name + ' 단어를 정말 삭제하시겠습니까?'
-    }
-     this.confirm.confirm({
-       message: msg,
-       header: '삭제 확인',
-       accept: () => {
-         this.removeRow(tgtRow);
-       },
-     })
-   }
 
-  // onPageMove(event) {
-  //   this.onSetPage(event.page + 1)
-  // }
+  addItemWithSameParent(item) {
+    let model = this.tableModel.models;
+    let parent = this.getParent(item) ;
+    return model.forEach((obj, idx ,self) =>{
+      if(obj.origin.key === parent.origin.key && obj.view.expand && obj !== parent) {
+        self.splice(idx+1, 0,
+          { origin:item.origin,
+            view:{
+              viewId: item.origin.key ?  this.getNewViewId() : -1,
+              pattern:"[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}",
+              ances: [obj].concat(obj.view.ances),
+              addNumber:0,
+              isSavable:true,
+              expand:false,
+              isSaved:true,
+              level: obj.view.level+1
+            },
+        })
+      }
+    })
+  }
 
-  // onPageMove(event) {
-  //   this.tableModel.model = [];
-  //   this.hashServ.getHashes(event.page + 1)
-  //   .then(data => {
-  //     let idx = 0
-  //     data.map((obj)=>{
-  //       this.tableModel.model.push({
-  //         index: idx,
-  //         tableId: idx,
-  //         rawId: obj.idHASH,
-  //         subId: 0,
-  //         inputId:-1,
-  //         name: obj.name,
-  //         number: obj.children,
-  //         ADD_TIME: obj.ADD_TIME,
-  //         expand: false,
-  //         sub: false,
-  //         depth: 0,
-  //         parent:{},
-  //         isSaved:true,
-  //         isSaving:false,
-  //         isSavable: true,
-  //       })
-  //       idx++;
-  //     })
-  //   })
-  //   .then(()=>{
-  //     this.getChildrenNumAll()
-  //     this.allHashLoaded = true;
-  //   })
-  //   // this.hashServ.getHashes(event.page+1)
-  //   // .then((data)=>{
-  //   //   this.tableModel.model = data
-  //   // })
-  //   // this.pagFirstIndex = (event.page)*10;
-  //   // this.pagPerView =  (event.page*10)+10;
-  // }
+  hashPaste(item, idx,event) {
+    let clipboardData = event.clipboardData.getData('Text');
+    let wordList = clipboardData.split('\r\n')
+    wordList = wordList.filter(obj=>{return obj !=="" })
+    let firstWord = wordList[0];
+    wordList.splice(0, 1);
+    // wordList.sort();
+    wordList.reverse();
+    wordList.map((obj)=>{
+      if(!item.origin.key) {
+        // this.checkValue(this.addBro(item, idx,obj));
+        this.addBro(item, idx,obj);
+      } else {
+        // tgtRow.isSavable = true;
+        this.addChild(item, idx,obj);
+      }
+    })
+    setTimeout(()=>{
+      item.origin.name = firstWord;
+      this.getChilds(item).forEach(obj=>{
+        this.checkValue(obj);
+      });
+    }, 50)
+    setTimeout(()=>{
+      this.checkValue(item);
+    }, 1000)
+  }
+
+
+
+  getHashCount(item) {
+    let tgtObj = item.origin ? item.origin : item;
+    if(!tgtObj.children) {console.log(item)};
+    return tgtObj.children.reduce((prev, cu)=>{
+      prev += cu.number;
+      return prev;
+    }, 0)
+  }
+
+  getAncesterHashes(item) {
+    let key = item.origin.key;
+    return Promise.resolve(
+      this.hashServ.getHashStruct()
+      .then(struct=>{
+        let anceStruct = struct.filter(obj=>{ return obj.dece === key && obj.dece !== obj.ance })
+        return anceStruct.reduce((prev, cu)=>{
+          return prev.concat( this.hashTree.filter(origin=> { return origin.key === cu.ance })
+        );
+        }, [])
+      })
+    )
+  }
+
+  setHashCount() {
+    // item.origin.number = this.getHashCount(item);
+    let model = this.tableModel.models
+    model.filter(obj=>{ return obj.origin.key })
+    .forEach(obj=>{ obj.origin.number = this.getHashCount(obj); })
+  }
+
+  test(item) {
+    console.log(item);
+  }
+
 }

@@ -19,6 +19,7 @@ import { Req2 } from './../../../../../ysjmodule/Req2';
 import { NewLectureData, Lecture} from  '../new-lecture-data';
 import { AbstractControl, FormGroup, FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router'
+import { LectureValidMsgs, LectureRegexValidators } from './../new-lecture.validator'
 
 import 'rxjs/add/operator/debounceTime';
 
@@ -26,7 +27,7 @@ import 'rxjs/add/operator/debounceTime';
   selector: 'app-all-lecture',
   templateUrl: './all-lecture.component.html',
   styleUrls: ['./all-lecture.component.scss'],
-  providers: [AllLectureModel]
+  providers: [ AllLectureModel, NewLectureData, LectureRegexValidators ]
 })
 
 export class AllLectureComponent implements OnInit {
@@ -57,7 +58,7 @@ export class AllLectureComponent implements OnInit {
     public route: ActivatedRoute,
   ) {
     this.getLecture(1);
-    this.getLecture(null);
+    // this.getLecture(null);
     this.searchForm= this.fb.group({
           name: ['', [ ]],
     })
@@ -69,7 +70,7 @@ export class AllLectureComponent implements OnInit {
         this.isSearch = true;
       } else {
         this.getLecture(1);
-        this.getLecture();
+        // this.getLecture();
         this.isSearch = false;
       }
       console.log(data);
@@ -93,7 +94,6 @@ export class AllLectureComponent implements OnInit {
     http.Complete = ()=> {
       if(page) {
         this.lectures= JSON.parse(http.response);
-        console.log(this.lectures);
         this.lecturesLoaded = true;
       }
       else {
@@ -156,7 +156,7 @@ export class AllLectureComponent implements OnInit {
 
   onEditMove(title, type) {
     // this.ltr.lectureForm.patchValue({title: title})
-    this.router.navigate(['../new', {isParam: true, title: title}], {relativeTo: this.route});
+    this.router.navigate(['../edit', {isParam: true, title: title}], {relativeTo: this.route});
   }
 
   onSortList(method) {

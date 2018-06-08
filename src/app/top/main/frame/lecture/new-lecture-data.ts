@@ -6,9 +6,9 @@ import { LectureValidMsgs, LectureRegexValidators } from "./new-lecture.validato
 export class NewLectureData {
     lectureForm: FormGroup
     defaultPageNum:number = 1;
+    public valider = new LectureRegexValidators()
     constructor(
       private fb: FormBuilder,
-      private valider: LectureRegexValidators,
     ) {
           this.lectureForm= this.fb.group({
           title: ['', [

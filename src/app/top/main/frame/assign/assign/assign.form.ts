@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core'
 import { FormArray, AbstractControl, FormControl,FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { DropDownOpt } from '../assign.model'
+import { AssignService } from '../assign.service'
 import * as cloneDeep from 'lodash.cloneDeep';
 
-import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
-
-class ValidConfig {
+export class ValidConfig {
   requireMsg = "입력 란을 작성하세요.";
   titleMax:number = 30;
   titleMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.titleMax+ ' 자 이하]'
   titleDuplicateMsg:string = '기존 과제 중 중복된 설문이 있습니다.'
   subTitleMax:number = 30;
   subTitleMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.subTitleMax+ ' 자 이하]'
-  commandMax:number = 30;
+  commandMax:number = 80;
   commandMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.commandMax+ ' 자 이하]'
   tableMax:number = 10;
   tableMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.tableMax+ ' 자 이하]'
@@ -26,7 +24,6 @@ export class AssignForm {
   public assignForm:FormGroup
   public assignGroup:FormGroup
   public surveyGroup:FormGroup
-
   constructor(
     private fb: FormBuilder,
   ) {
@@ -148,16 +145,21 @@ export class AssignForm {
           Validators.required,
         ]],
         assigns: this.fb.array([
-          cloneDeep(this.assignGroup)
+          // cloneDeep(this.assignGroup)
         ]),
     })
   }
 
 
-  addAssign() {
+  addAssign():AbstractControl {
     let assigns = (this.assignForm.get('assigns') as FormArray);
-    assigns.insert(assigns.length, cloneDeep(this.assignGroup));
+    let newAssign = cloneDeep(this.assignGroup)
+    // console.log(newAssign.get('command'));
+
+    assigns.insert(assigns.length, newAssign);
+    return newAssign;
   }
+
 
   delAssign(item, idx) {
     let assigns = item.parent;
@@ -313,7 +315,7 @@ export class AssignForm {
                 Validators.maxLength(this.valider.tableMax),
               ]]}));
             } else {
-              obj.insert(obj.length, this.fb.group({data:'',}));
+              obj.insert(obj.length, this.fb.group({data:0,}));
             }
           }
         })
@@ -340,7 +342,7 @@ export class AssignForm {
     }
     if(setRow < 121) {
     for(let i=0; i < colLen; i++) {
-      if(i!==0) addCol.insert(addCol.length, this.fb.group({data:''}));
+      if(i!==0) addCol.insert(addCol.length, this.fb.group({data:0}));
       else {
         addCol.insert(addCol.length, this.fb.group({data:[i!==0 && idx&& value ? value : '',[
           Validators.required,
@@ -450,23 +452,23 @@ export class AssignForm {
     for(let i=0; i < rowNum; i++) {
       for(let j=0; j < colNum; j++) {
         tgtInput.get('tableData').controls[i].controls[j].get('data').setValue(data[i][j]);
-        // console.log(data[i][j]);
       }
     }
-
-
-    // let tgtInput =  item.get('input').get('table').get('tableData');
-    // let table = [];
-    // let tableRow = [];
-    // for(let i = 0; i < tgtInput.length; i++) {
-    //   for(let j = 0; j < tgtInput.controls.length; j++) {
-    //     tableRow.push(tgtInput.controls[i].controls[j].get('data').value);
-    //   }
-    //   table[i] = tableRow;
-    //   tableRow = [];
-    //   // console.log(table);
-    // }
-    // return JSON.stringify(table);
   }
 
+  commandValidator() {
+
+  }
 }
+
+// export class PasswordValid {
+//     static match(form: AbstractControl) {
+//       const password = form.get('password').value;
+//       const passwordCheck = form.get('passwordCheck').value;
+//       if(password !== passwordCheck) {
+//         return {match: {password, passwordCheck}};
+//       } else {
+//         return null;
+//       }
+//     }
+// }

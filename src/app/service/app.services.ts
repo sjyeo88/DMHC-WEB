@@ -131,4 +131,19 @@ export class AppServices {
     })
   }
 
+  getEmail(data):Promise<any>{
+    return new Promise((resolve, reject)=>{
+      this.request('post', '/auth/email', data)
+      .then(data=>{ resolve(JSON.parse(data)); })
+      .catch(msg=>{ reject(msg); });
+    })
+  }
+
+  initPassword(data):Promise<any>{
+    return new Promise((resolve, reject)=>{
+      this.request('post', '/auth/password', data)
+      .then(data=>{ resolve(JSON.parse(data)); })
+      .catch(msg=>{ reject(msg); });
+    })
+  }
 }

@@ -116,6 +116,7 @@ export class AssignAllComponent implements OnInit {
   }
 
   timePipe(time:Date) {
+    time = new Date(time.getTime() + 1000*9*3600)
     let AMPM = time.getHours() < 12 ? 'AM' : 'PM';
     let hour = AMPM==='PM' ? time.getHours()-12 : time.getHours();
     let min = (time.getMinutes() < 10) ? '0' + time.getMinutes() : time.getMinutes()

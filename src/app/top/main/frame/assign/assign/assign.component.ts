@@ -46,7 +46,7 @@ export class AssignComponent implements OnInit {
     idLECTURE:0,
     idEXPERT_USER:0,
     title: '',
-    status:0,
+    status:1,
     assigns: this.assignConf,
   };
 
@@ -161,7 +161,7 @@ export class AssignComponent implements OnInit {
       idLECTURE:0,
       idEXPERT_USER:0,
       title: '',
-      status:0,
+      status:1,
       assigns: this.assignConf,
     };
 
@@ -179,6 +179,31 @@ export class AssignComponent implements OnInit {
     }
     // this.objInput.last.
   }
+
+  public addAssign() {
+    let newAssign = this.fm.addAssign()
+    // newAssign.setValidators(()=>{
+    let commandControl = newAssign.get('command');
+    commandControl.valueChanges
+    .debounceTime(1000)
+    .subscribe(command => {
+      let hashes = command.split(' ').filter(obj=> { return /^#/.test(obj) })
+      let errors = [];
+      hashes.forEach(obj=>{
+        let word = obj.slice(1, command.length)
+        if(word.length !== 0) {
+          this.as.getHashList(word)
+          .then(result =>{
+            if(result[0].COUNT === 0) {
+              commandControl.setErrors({noHash: obj})
+            }
+          })
+        }
+      })
+    });
+  }
+
+  // public commandValidator() {
 
 
   public expandAssign(item, i) {
@@ -210,9 +235,10 @@ export class AssignComponent implements OnInit {
     if(this.fm.assignForm.valid && (this.assigns.length !==0)) {
       let assigns =  this.fm.assignForm.get('assigns') as FormArray;
       let title = this.fm.assignForm.get('title').value;
+      // console.log(title);
       this.assignConfAll.title=  this.isNew ? title : titleAs? titleAs : this.getTitle(title);
       this.assignConfAll.idLECTURE =  this.fm.assignForm.get('lecture').value;
-      this.assignConfAll.status = 0;
+      this.assignConfAll.status = 1;
       let data= new FormData();
       assigns.controls.forEach((obj, idx) => {
         this.assignConfAll.assigns.push({
@@ -292,30 +318,31 @@ export class AssignComponent implements OnInit {
     this.assignList = [];
     this.as.getAssignList()
     .then(data=>{
-      data.map(obj=>{
-        this.assignList.push({label: obj.title, value: obj.idSBJT_CONF_ALL});
-        if (msg) {
-        this.msgs = []
-        this.msgs.push({severity:'success', summary:'새로고침 완료'})
-        }
+      this.assignList = data.map(obj=>{
+        // this.assignList.push({label: obj.title, value: obj.idSBJT_CONF_ALL});
+
+        return {label: obj.title, value: obj.idSBJT_CONF_ALL};
       })
       return this.assignList;
     })
     .then(assignList=>{
       if(value) {
-        this.title.setValue(assignList.filter((obj)=>{ return obj.label === value})[0].value);
+        this.title.patchValue(assignList.filter((obj)=>{ return obj.label === value})[0].value);
+      }
+      if (msg) {
+        this.msgs = []
+        this.msgs.push({severity:'success', summary:'새로고침 완료'})
       }
     })
     .catch(msg=>{
       this.msgs=[];
       this.msgs.push(msg);
     })
+    return Promise.resolve(true);
   }
 
   public getTitle(idx) {
-    let result = this.assignList.filter((row)=>{
-      return row.value === idx;
-    })
+    let result = this.assignList.filter((row)=>{ return row.value == idx; })
     return result[0].label;
   }
 
@@ -333,6 +360,10 @@ export class AssignComponent implements OnInit {
         this.saveAssignData()
      },
    })
+ }
+
+ public checkPhoto(formControl) {
+   console.log(formControl);
  }
 
   get assigns() {

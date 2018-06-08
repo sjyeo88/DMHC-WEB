@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { YHttp } from  './yhttp.module';
 import { environment } from './../../environments/environment';
+import { globals } from './../../environments/global';
 // import {CookieService} from 'angular2-cookie/core';
 
 export class Req2 extends YHttp {
@@ -24,6 +25,8 @@ export class Req2 extends YHttp {
   // constructor(method, url) {
   constructor(method, url, formData?:FormData) {
     super(method, url);
+    // let globe:Globals;
     this.url = this.apiUrl + url
+    console.log(environment);
   }
 }

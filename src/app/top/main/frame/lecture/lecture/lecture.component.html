@@ -105,24 +105,12 @@
             id="title"
             placeholder="심리교육 이름을 선택해주세요" filter="true"
             formControlName="loadedTitle"
-            (onFocus)="focusTitle()"
             (onChange)="confirmLoad($event)"
             [style]="{'width': '320px'}"
         ></p-dropdown>
         </span>
+            <!-- (onFocus)="focusTitle()" -->
 
-        <span [style.margin-left.px]="10">
-        <p-selectButton
-          [options]='docWay'
-          [ngModelOptions]="{standalone: true}"
-          (onChange)="onDocWayChange($event)"
-          [(ngModel)]="isNew">
-          </p-selectButton>
-        </span>
-
-        <!-- <span class="valid-error" *ngIf="title.dirty && isTitle">
-          {{vmsg.titleLabel.invalid}}
-        </span> -->
         <span class="valid-error" *ngIf="title.dirty && title.errors?.minlength">
           {{vmsg.titleLabel.invalidMin}}
         </span>
@@ -202,14 +190,19 @@
         </li>
         <li [style.margin-left.px]="210" [style.margin-top.px]="10">
           <span>
-            <button type="button" name="button" [style.width.px]="250" (click)="confirmSaveAs()">다른 이름으로 저장하기</button>
-            <button type="button" (click)="confirmSave()">저장하기</button>
+            <button name="button" [style.width.px]="250" (click)="confirmSaveAs()">
+              <i class="fa fa-floppy-o fa-lg"></i>&nbsp;&nbsp;다른 이름으로 저장하기
+            </button>
+            <button type="button" (click)="confirmSave()">
+              <i class="fa fa-check fa-lg"></i>&nbsp;&nbsp;작성완료</button>
           </span>
         </li>
         <li  [style.margin-left.px]="210">
           <span>
-            <button type="button" name="button" [style.width.px]="250" (click)="viewPreViewer(true)">미리보기</button>
-            <button type="button" name="button" (click)=finishLecture()>작성 완료</button>
+            <button type="button" name="button" [style.width.px]="378" (click)="viewPreViewer(true)">
+              <i class="fa fa-eye fa-lg"></i>&nbsp;&nbsp;
+              미리보기
+            </button>
           </span>
         </li>
     </form>

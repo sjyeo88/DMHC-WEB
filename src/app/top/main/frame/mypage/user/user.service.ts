@@ -70,4 +70,21 @@ export class UserService {
     http.ConErr = () =>{ reject(http.cmsgs)}
     })
   }
+
+  putPassword(data:FormData):Promise<any>{
+    return new Promise((resolve, reject)=>{
+    let http = new Req2('put', '/auth/user/password', data)
+    http.send(data);
+    http.Complete = ()=> {
+      resolve();
+    }
+    http.AuthErr = () =>{ reject({
+      severity: 'error',
+      summary: '비밀번호가 잘못되었습니다.',
+      detail:'치료자의 정보변경에 실패했습니다.'
+    })}
+    http.ServErr = () =>{ reject(http.smsgs)}
+    http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
 }

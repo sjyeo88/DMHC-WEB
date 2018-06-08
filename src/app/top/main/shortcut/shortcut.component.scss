@@ -53,6 +53,10 @@
   }
 }
 
+.shortcut:hover {
+
+}
+
 // .shortcut:hover {
 //   border: 2px solid $light_blue;
 // }
@@ -89,7 +93,7 @@
   }
   .info {
     margin-left: 34px;
-    margin-top: 44px;
+    margin-top: 45px;
     font-size: 24px;
     .infoNum {
       font-size: 60px;
@@ -112,7 +116,7 @@
   }
   .info {
     margin-left: 34px;
-    margin-top: 44px;
+    margin-top: 45px;
     font-size: 24px;
     .infoNum {
       font-size: 60px;
@@ -126,20 +130,19 @@
   // grid-row: 2;
   // grid-column: 1;
   img {
-    width: 60px;
-    height: 60px;
+    height: 48px;
   }
   .title {
-    font-size: 24px;
-    margin-left: 5.0em;
-    margin-top: 1.0em;
+    font-size: 27px;
+    margin-left: 4.5em;
+    margin-top: .5em;
   }
 }
 
 #notice {
   /* autoprefixer: off */
   cursor: default;
-  height: 227px;
+  height: 287px;
   background-color: white;
   border: 1px solid $gray_light;
   // grid-column: 1;
@@ -173,54 +176,54 @@
     // color: $gray-darken;
   // }
 }
+@mixin manual($background) {
+  background-color: $background;
+  vertical-align: middle;
+  // grid-column: 2;
+  // grid-row: 4;
+  img {
+    height: 48px;
+  }
+  .title {
+    font-size: 21px;
+    margin-left: 5.5em;
+    // margin-top: 0.3em;
+  }
+}
 
 #lectureMan {
   /* autoprefixer: off */
-  background-color: #225D92;
-  // grid-column: 2;
-  // grid-row: 2;
-  .title {
-    font-size: 21px;
-    margin-left: 5.0em;
-    margin-top: .5em;
-  }
+  @include manual(#336b9f);
+  // @include manual(#185b70);
+}
+
+#surveyMan {
+  /* autoprefixer: off */
+  @include manual(#227493);
 }
 
 #assignMan {
   /* autoprefixer: off */
-  background-color: #1A6C67;
-  img {
-    height: 70px;
-  }
-  // grid-column: 2;
-  .title {
-    font-size: 21px;
-    margin-left: 5.0em;
-    margin-top: .5em;
-  }// grid-row: 3;
+  @include manual(#1A6C67);
+  height: 88px;
 }
+
+
 
 #manageMan {
   /* autoprefixer: off */
-  background-color: #003447;
-  // grid-column: 2;
-  // grid-row: 4;
-  .title {
-    font-size: 21px;
-    margin-left: 5.0em;
-    margin-top: .5em;
-  }
+  @include manual(#003447);
 }
 
 #service {
   /* autoprefixer: off */
-  cursor:default;
-  height: 338px;
+  cursor:pointer;
+  height: 386px;
   background-color: #6D6D6D;
   .phone {
     font-size: 30px;
     font-weight: bold;
-    margin-top: 56px;
+    margin-top: 76px;
   }
   .sub {
     font-size: 18px;

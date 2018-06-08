@@ -34,12 +34,11 @@ export class LectureRegexValidators {
 };
 
 
-@Injectable()
 export class LectureValidMsgs {
 
   titleLabel: ValidatorMSG;
-
-  constructor(private valider: LectureRegexValidators)
+  public valider = new LectureRegexValidators();
+  constructor()
   {
     this.titleLabel = new ValidatorMSG();
 

@@ -20,53 +20,35 @@ export class HashService {
 
   }
 
-  getHashes(page?:number):Promise<any[]> {
+  getHashStruct():Promise<any[]> {
     return new Promise((resolve, reject)=>{
-    let http = page ?
-      new Req2('get', '/data/hash/all/' + page) :
-      new Req2('get', '/data/hash/')
+      let http =  new Req2('get', '/data/hash/struct');
       http.send();
       http.Complete = ()=> {
-        this.hashes= JSON.parse(http.response);
-        // console.log(this.hashes);
-        resolve(this.hashes);
+        resolve(JSON.parse(http.response));
       }
       http.ServErr = () =>{ this.msgs.push(http.smsgs)}
       http.ConErr = () =>{ this.msgs.push(http.cmsgs)}
     })
   }
 
-  getHash(idHASH):Promise<Hash> {
-    return new Promise((resolve, reject)=>{
-      let http =  new Req2('get', '/data/hash/' + idHASH);
-      http.send();
-      http.Complete = ()=> {
-        this.hash = JSON.parse(http.response);
-        // console.log(this.hash);
-        resolve(this.hash);
-      }
-      http.ServErr = () =>{ this.msgs.push(http.smsgs)}
-      http.ConErr = () =>{ this.msgs.push(http.cmsgs)}
-    })
-  }
-
-  getHashNum(idHASH):Promise<Hash> {
-    return new Promise((resolve, reject)=>{
-      let http =  new Req2('get', '/data/hash/number/' + idHASH);
-      http.send();
-      http.Complete = ()=> {
-        this.hash = JSON.parse(http.response);
-        // console.log(this.hash);
-        resolve(this.hash);
-      }
-      http.ServErr = () =>{ this.msgs.push(http.smsgs)}
-      http.ConErr = () =>{ this.msgs.push(http.cmsgs)}
-    })
-  }
-
-  postHash(data:FormData):Promise<any> {
+ postHash(data:FormData):Promise<any> {
     return new Promise((resolve, reject)=>{
       let http =  new Req2('post', '/data/hash/all', data);
+      http.send(data);
+      http.Complete = ()=> {
+        // console.log(data);
+        this.hashes= JSON.parse(http.response);
+        resolve(this.hashes);
+      }
+      http.ServErr = () =>{ reject(http.smsgs)}
+      http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
+
+  pushHash(data:FormData):Promise<any> {
+    return new Promise((resolve, reject)=>{
+      let http =  new Req2('post', '/data/hash/decend', data);
       http.send(data);
       http.Complete = ()=> {
         // console.log(data);
@@ -91,9 +73,9 @@ export class HashService {
     })
   }
 
-  deleteWord(parentId, subId):Promise<any[]> {
+  deleteHashDecend(id, parentId):Promise<any[]> {
     return new Promise((resolve, reject)=>{
-      let http =  new Req2('delete', '/data/hash/sub/' + parentId + '/' + subId);
+      let http =  new Req2('delete', '/data/hash/decend/' + id + '/' + parentId);
       http.send();
       http.Complete = ()=> {
         this.hashes= JSON.parse(http.response);
@@ -104,9 +86,22 @@ export class HashService {
     })
   }
 
-  postWord(data:FormData):Promise<any[]> {
+  deleteWord(parentId, name):Promise<any[]> {
     return new Promise((resolve, reject)=>{
-      let http =  new Req2('post', '/data/hash/sub', data);
+      let http =  new Req2('delete', '/data/hash/sub/' + parentId + '/' + name);
+      http.send();
+      http.Complete = ()=> {
+        this.hashes= JSON.parse(http.response);
+        resolve(this.hashes);
+      }
+      http.ServErr = () =>{ reject(http.smsgs)}
+      http.ConErr = () =>{ reject(http.cmsgs)}
+    })
+  }
+
+  postWords(data:FormData):Promise<any[]> {
+    return new Promise((resolve, reject)=>{
+      let http =  new Req2('post', '/data/hash/sub/all', data);
       http.send(data);
       http.Complete = ()=> {
         this.hashes= JSON.parse(http.response);
@@ -117,9 +112,9 @@ export class HashService {
     })
   }
 
-  getHashSub(idHASH):Promise<HashSub[]> {
+  getHashSubs() {
     return new Promise((resolve, reject)=>{
-      let http =  new Req2('get', '/data/hash/sub/' + idHASH);
+      let http =  new Req2('get', '/data/hash/sub/all');
       http.send();
       http.ServErr = () =>{ this.msgs.push(http.smsgs) }
       http.ConErr = () =>{ this.msgs.push(http.cmsgs) }

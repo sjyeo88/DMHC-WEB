@@ -42,6 +42,8 @@ export class RegisterComponent implements OnInit {
   public msgs: Message[] = [];
   public isMail:boolean
   public vmsg: ValidMsgs;
+  public questions:DropDownOpt[] = []
+
 
   constructor(
     private msgSrv: MessageService,
@@ -97,6 +99,13 @@ export class RegisterComponent implements OnInit {
         this.msgs.push(msg);
       })
     })
+
+    this.questions = [
+      {value:0, label:'나의 출신 초등학교는?'},
+      {value:1, label:'아버지 성함은?'},
+      {value:2, label:'어머니 성함은?'},
+      {value:3, label:'나의 가장 친한 친구는?'}
+    ]
   }
 
   get username() {
@@ -130,6 +139,12 @@ export class RegisterComponent implements OnInit {
   get license() {
     return this.rf.registForm.get('license');
   }
+  get password_q() {
+    return this.rf.registForm.get('password_q');
+  }
+  get password_a() {
+    return this.rf.registForm.get('password_a');
+  }
 
   onUpload(event) {
     this.license.patchValue(event.files[0]);
@@ -143,6 +158,8 @@ export class RegisterComponent implements OnInit {
       formData.append('email', this.email.value)
       formData.append('password', this.password.value)
       formData.append('birthday', this.birthday.value)
+      formData.append('password_q', this.password_q.value)
+      formData.append('password_a', this.password_a.value)
       formData.append('job', this.job.value)
       formData.append('dept', this.dept.value)
       formData.append('jobName', this.jobs.filter(obj=>{ return obj.value === this.job.value})[0].label)

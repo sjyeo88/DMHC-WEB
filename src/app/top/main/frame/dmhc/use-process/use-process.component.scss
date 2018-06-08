@@ -9,20 +9,24 @@
 // #  End day  : 2017-01-31                                         # //
 // ################################################################## //
 
+@import './../../../../../../scss-variable.scss';
 
 @mixin procObj($background-color) {
   position: relative;
+  display: inline-block;
   font-family: "NanumBarunGothicOTF";
   float: left;
-  width: 158px;
+  // width: 158px;
   height: 248px;
+  width: 17.5%;
+  height: 25vh;
   color: white;
   background-color: $background-color;
   margin: 0 9px;
-  padding: 14px 14px;
+  padding: 10px 10px;
   text-align: center;
   .title {
-    font-size: 22px;
+    font-size: 1.3em;
     padding: 8px;
     border-bottom: 2px solid white;
   }
@@ -30,15 +34,16 @@
     text-align: left;
     // width: 140px;
     margin-top: 30px;
-    font-size: 14px;
+    font-size: .75em;
   }
   .appendix {
-    display: inline-block;
+    position: absolute;
     text-align: left;
-    margin-top: 50px;
-    font-size: 12px;
+    bottom: 10px;
+    font-size: .75em;
   }
 }
+
 @mixin procObjArrow($background-color) {
   content: " ";
   position: absolute;
@@ -52,12 +57,28 @@
   border-bottom: 22px solid transparent;
 }
 
-.step0 { @include procObj(#94282C); };
-.step0::after{ @include procObjArrow(#94282C); }
-.step1 { @include procObj(#945228); }
-.step1::after{ @include procObjArrow(#945228); }
-.step2 { @include procObj(#947828); }
-.step2::after{ @include procObjArrow(#947828); }
-.step3 { @include procObj(#7D9428); }
-.step3::after{ @include procObjArrow(#7D9428); }
-.step4 { @include procObj(#2D9428); }
+.use-process {
+  overflow: hidden;
+  margin: 65px 0px;
+  .step0 { @include procObj(#94282C); };
+  .step0::after{ @include procObjArrow(#94282C); }
+  .step1 { @include procObj(#945228); }
+  .step1::after{ @include procObjArrow(#945228); }
+  .step2 { @include procObj(#947828); }
+  .step2::after{ @include procObjArrow(#947828); }
+  .step3 { @include procObj(#7D9428); }
+  .step3::after{ @include procObjArrow(#7D9428); }
+  .step4 { @include procObj(#2D9428); }
+}
+
+#sub-menu {
+  position: relative;
+  width: 100%;
+  margin-top: 12px;
+
+  font-family: NanumBarunGothicOTF;
+  font-size: 11px;
+  text-align: right;
+  background-color: transparent;
+  color: $gray_darken;
+}

@@ -129,8 +129,6 @@ input.ng-pristine {
 // Basic Hyperlink Define
 a:link {
   position: inherit;
-  width: inherit;
-  height: inherit;
   text-decoration: none;
   background-color: transparent;
   color: inherit;
@@ -140,9 +138,9 @@ a:visited {
   color: inherit;
 }
 
-a:hover {
-  color: $link_hover_color;
-}
+// a:hover {
+//   color: $link_hover_color;
+// }
 
 
 textarea {
@@ -179,7 +177,7 @@ textarea {
   padding:5px;
   padding-left: 20px !important;
   padding-right: 20px !important;
-  width: 250px !important;
+  // width: 250px !important;
   // border: 1px solid $error_color;
 
   margin-left: 20px;
@@ -267,4 +265,27 @@ $duration: 1.4s;
 
 th {
   text-align: center;
+}
+
+.manual-title {
+  padding: 30px;
+  padding-bottom: 0;
+  h3 {
+    margin-bottom: 10px;
+  }
+}
+
+.manual-sequence {
+  margin-bottom: 20px;
+  padding: 20px;
+  img {
+    margin: 20px 0;
+  }
+  p {
+    margin: 10px 0;
+  }
+}
+
+.manual-img {
+  width: 800px;
 }

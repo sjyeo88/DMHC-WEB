@@ -154,11 +154,40 @@ export class ManageDetailComponent implements AfterViewChecked{
     let month = tgtDate.getMonth();
     this.serv.getAssigns(this.tgtPatient.idPATIENT_USER, year, month+1 )
     .then(data=>{
-      this.list = data;
+      this.list = data.sort((a, b)=>{
+        return a.PUSH_TIME > b.PUSH_TIME ? -1 : a.PUSH_TIME === b.PUSH_TIME ? 0 : 1
+      })
     })
-    .then(obj=>{
-      console.log(this.calender);
-    })
+  }
+
+  tableSorter(list:Array<any>, field:string) {
+    console.log(list);
+    if(list[0][field] > list[list.length-1][field]) {
+      list = list.sort((a, b)=>{
+        let tgtA; let tgtB;
+        if(typeof(a[field]) === 'string') {
+          tgtA = a[field].toString()
+          tgtB = b[field].toString()
+        } else {
+          tgtA = a[field]
+          tgtB = b[field]
+        }
+        return tgtA < tgtB ? -1 : tgtA > tgtB ? 1 : 0
+      })
+    } else  {
+      list = list.sort((a, b)=>{
+        let tgtA; let tgtB;
+        if(typeof(a[field]) === 'string') {
+          tgtA = a[field].toString()
+          tgtB = b[field].toString()
+        } else {
+          tgtA = a[field]
+          tgtB = b[field]
+        }
+        return tgtA > tgtB ? -1 : tgtA < tgtB ? 1 : 0
+      })
+    }
+
   }
 
   getAssignResult(tgtDate:Date) {
@@ -166,11 +195,12 @@ export class ManageDetailComponent implements AfterViewChecked{
     let month = tgtDate.getMonth();
     this.serv.getAssigns(this.tgtPatient.idPATIENT_USER, year, month+1 )
     .then(data=>{
-      let firstDate = new Date(year, month, 0)
+      let firstDate = new Date(year, month, 1)
       let lastDate = new Date(year, month+1, 0)
       let headDate = -1*(firstDate.getDay()-1)
+      data = data.filter(obj=> { return obj.status === 1 || obj.status ===0 })
       this.result.assignNum = data.length
-      this.result.finished = data.filter(obj=> { return obj.result === '1'} ).length;
+      this.result.finished = data.filter(obj=> { return obj.status == 1} ).length;
       this.result.percentage = (this.result.assignNum !== 0) ?
       (100*this.result.finished/this.result.assignNum).toFixed(2)  : '0';
       for(let i=0; i < 5; i++){
@@ -190,15 +220,13 @@ export class ManageDetailComponent implements AfterViewChecked{
       }
       return this.calender;
     })
-    .then(obj=>{
-      console.log(this.calender);
-    })
   }
 
   getSurveyResult() {
     this.isSurveyLoaded = false;
-    this.serv.getSurveyResult(1, this.cuDate.getFullYear())
+    this.serv.getSurveyResult(this.tgtPatient.idPATIENT_USER, this.cuDate.getFullYear())
     .then(data=>{
+      console.log(data);
       let result = []
       if(data.length !== 0) {
         let ids = data.reduce((last, cu) =>{
@@ -244,13 +272,13 @@ export class ManageDetailComponent implements AfterViewChecked{
           options: this.chartOpt
         })
       }
-      this.chart.update();
+      // this.chart.update();
       this.isSurveyLoaded = true;
     })
     .catch(()=>{
       this.isSurveyLoaded = true;
       this.surveyResult.datasets = [];
-      this.chart.update();
+      // this.chart.update();
 
       this.msgs=[];
       this.msgs.push({

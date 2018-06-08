@@ -5,6 +5,9 @@ export class LectureModelHTML {
     // {value:1, get label ():string {return 'Page '+ this.value.toString()}, html:''},
     {value:1, label:'Page 1', html:''},
   ];
+  images = [
+    {value:1, label:'Page 1', image:''},
+  ];
   page_backup: Page[] = [
     // {value:1, get label ():string {return 'Page '+ this.value.toString()}, html:''},
     {value:1, label:'Page 1', html:''},
@@ -52,6 +55,12 @@ interface Page {
   value:number;
   label:string;
   html:string;
+}
+
+interface Image {
+  value:number;
+  label:string;
+  image:string;
 }
 
 interface Title {

@@ -39,7 +39,6 @@
           <li>성별 : {{ tgtPatient.gender | gender }}</li>
           <li>생년월일: {{ tgtPatient.birth | date:'yyyy-MM-dd' }}</li>
           <li>가입일: {{ tgtPatient.JOIN_DATE | date:'yyyy-MM-dd' }}</li>
-          <li>모바일 앱 접속일: <br>{{ tgtPatient.LAST_LOGIN_DATE }}</li>
         </ul>
         <ul>
           <li> <i class="fa fa-phone"></i> : {{ tgtPatient.phone | phone }} </li>
@@ -102,14 +101,13 @@
                 <div class="objs-container">
                   <div *ngFor="let assign of day?.assigns;">
                     <div class="obj-container">
-                      <span [ngClass]="assign.result == 1 ? 'obj-finished' : 'obj-ing'"></span>
+                      <span [ngClass]="assign.status == 1 ? 'obj-finished' : 'obj-ing'"></span>
                       <!-- <p [ngClass]="day?.date.getDay() > 3 ? 'detail-right' : 'detail-left'"> -->
                       <p class="detail">
-
                            <li><strong>과제 그룹 이름 : </strong> {{assign?.groupName}}</li>
                            <li><strong>과제 이름 :</strong> {{assign?.title}}</li>
                            <li><strong>지시문 : </strong> {{assign?.command}}</li>
-                           <li><strong>결과 : </strong> {{assign?.result == 1 ? '완료' : '진행 중' }}</li>
+                           <li><strong>결과 : </strong> {{assign?.status == 1 ? '완료' : '진행 중' }}</li>
                       </p>
                     </div>
                   </div>
@@ -121,21 +119,21 @@
 
         <div class="list" *ngIf="viewMode==ViewModeOpt.List">
           <table>
-            <th>과제 제시날짜</th>
-            <th>과제 그룹</th>
-            <th>과제명</th>
-            <th>지시문</th>
-            <th>수행결과</th>
+            <th class="clickable" (click)="tableSorter(list, 'PUSH_TIME')">과제 제시날짜</th>
+            <th class="clickable" (click)="tableSorter(list, 'groupName')">과제 그룹</th>
+            <th class="clickable" (click)="tableSorter(list, 'title')">과제명</th>
+            <th class="clickable" (click)="tableSorter(list, 'command')">지시문</th>
+            <th class="clickable" (click)="tableSorter(list, 'status')">수행결과</th>
 
             <tr *ngFor="let item of isExpand ? list : list.slice(0, 10)">
-              <td align="center" class="time"> {{ item.PUSH_TIME | date: 'yyyy-MM-dd hh시 mm분' }} </td>
+              <td align="center" class="time"> {{ item.PUSH_TIME | date: 'yy-MM-dd hh:mm' }} </td>
               <td> {{ item.groupName }} </td>
               <td> {{ item.title }} </td>
               <td> {{ item.command }} </td>
-              <td class="result" align="center" *ngIf="item.result == 1">
+              <td class="result" align="center" *ngIf="item.status == 1">
                 <i class="fa fa-check-circle fa-lg finished"></i>
               </td>
-              <td class="result" align="center" *ngIf="item.result == 0">
+              <td class="result" align="center" *ngIf="item.status == 0">
                 <i class="fa fa-times-circle fa-lg pending"></i>
               </td>
             </tr>

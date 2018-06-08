@@ -1,5 +1,6 @@
 // General XMLHttpRequest module
 // Author : Yeo Sung Jun
+import { globals } from './../../environments/global';
 
 export class YHttp{
 
@@ -20,6 +21,7 @@ export class YHttp{
   }
 
   public send(data?:FormData, header?:{key:string, value:string}) {
+      globals.loading = true;
       let xhttp = new XMLHttpRequest;
       xhttp.open(this.method, this.url, true);
       if(header) {
@@ -31,11 +33,14 @@ export class YHttp{
       xhttp.onreadystatechange = () => {
         this.status = xhttp.status;
         xhttp.onerror=() => {
-            this.ConErr();
+          this.ConErr();
+          globals.loading = false;
         }
 
         xhttp.onload=() => {
           this.status = xhttp.status;
+          globals.loading = false;
+
           if(xhttp.status >= 200 && xhttp.status <= 300 || xhttp.status == 304 || xhttp.status == 302) {
             this.response = xhttp.response;
             this.Complete() ;

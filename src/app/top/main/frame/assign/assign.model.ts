@@ -84,10 +84,9 @@ export class Options {
   ]
   public inputType:DropDownOpt[]= [
     {label: '단순 텍스트 입력', value:0},
-    {label: '단순 음성 입력', value:1},
-    {label: '텍스트 / 음성 사용자 선택', value:2},
-    {label: '일일 기준 시간 별 입력', value:3},
-    {label: '주간 계획 입력', value:4},
+    {label: '일일 활동 기록지', value:3},
+    {label: '주간 목표 계획지', value:2},
+    {label: '주간 활동 기록지', value:4},
     {label: '설문 작성하기', value:7},
     {label: '사용자 정의 테이블 형식', value:5},
     {label: '교육 다시보기', value:6},
@@ -97,6 +96,15 @@ export class Options {
     {label: '월 1회', value:0},
     {label: '주 1회', value:1},
     {label: '일 1회', value:2},
+  ]
+
+  public tableInputOpt:DropDownOpt[]= [
+    {label: '단순 텍스트 입력', value:0},
+    {label: '숫자 입력', value:1},
+    {label: '감정 선택 입력', value:2},
+    {label: '활동 선택 입력', value:3},
+    {label: '이모티콘 입력', value:4},
+    {label: 'O/X 입력', value:5},
   ]
 
   public delOpt:DropDownOpt[]= [

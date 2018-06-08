@@ -1,0 +1,155 @@
+
+<p-growl [value]="msgs"></p-growl>
+<h2 id="register-title">매일마음관리 계정 찾기</h2>
+
+<form [formGroup]="fm.form"  novalidate class="regist-form">
+  <!-- User Name Field -->
+  <input type="text" formControlName="username" name="username" placeholder="성명" >
+
+  <!-- UserName Validation -->
+  <div class="label">
+    <label *ngIf="username.errors?.required && username.untouched">
+      {{ fm.vmsg.usernameLabel.value }}
+    </label>
+    <label *ngIf="username.errors?.required && username.touched"
+    class="invalid">
+      {{ fm.vmsg.usernameLabel.require }}
+    </label>
+    <label *ngIf="username.errors?.maxlength" class="invalid">
+      {{ fm.vmsg.usernameLabel.invalidMax}}
+    </label>
+
+    <label *ngIf="username.errors?.minlength" class="invalid">
+      {{ fm.vmsg.usernameLabel.invalidMin}}
+    </label>
+    <label *ngIf="username.valid" class="valid">
+      {{ fm.vmsg.usernameLabel.value }}
+    </label>
+  </div>
+
+
+  <input type="text" formControlName="phoneNum" placeholder="휴대폰 번호">
+  <div class="label" >
+    <label *ngIf="phoneNum.errors?.required && phoneNum.untouched">
+      {{ fm.vmsg.phoneNumLabel.value }}
+    </label>
+    <label *ngIf="phoneNum.errors?.required && phoneNum.touched" class="invalid">
+      {{ fm.vmsg.phoneNumLabel.require }}
+    </label>
+    <label *ngIf="phoneNum.errors?.minlength" class="invalid">
+      {{ fm.vmsg.phoneNumLabel.invalidMin }}
+    </label>
+    <label *ngIf="phoneNum.errors?.maxlength" class="invalid">
+      {{ fm.vmsg.phoneNumLabel.invalidMax }}
+    </label>
+    <label *ngIf="phoneNum.errors?.pattern && !(phoneNum.errors?.minlength) && !(phoneNum.errors?.maxlength)" class="invalid">
+      {{ fm.vmsg.phoneNumLabel.invalidPattern }}
+    </label>
+    <label *ngIf="phoneNum.valid" class="valid">
+      {{ fm.vmsg.phoneNumLabel.value }}
+    </label>
+  </div>
+
+
+  <p-calendar formControlName="birthday"  [locale]="ko.ko"
+    monthNavigator="true" yearNavigator="true" yearRange="1900:2100"
+    inputStyleClass="date-picker" placeholder="생일을 입력해주세요"
+    readonlyInput="true" dateFormat="yy.mm.dd"
+  >
+  </p-calendar>
+  <div class="label" >
+    <label *ngIf="birthday.errors?.required && birthday.untouched">
+      {{ fm.vmsg.birthLabel.value }}
+    </label>
+    <label *ngIf="birthday.errors?.required && birthday.touched" class="invalid">
+      {{ fm.vmsg.birthLabel.require }}
+    </label>
+    <label *ngIf="birthday.valid" class="valid">
+      {{ fm.vmsg.birthLabel.value }}
+    </label>
+  </div>
+
+
+  <div>
+    <p-dropdown [options]="jobs" formControlName="job"
+      placeholder="직종을 선택해주세요." filter="true"
+      styleClass="dropdown" ></p-dropdown>
+  </div>
+  <div class="label" >
+    <label *ngIf="job.errors?.required && job.untouched">
+        {{ fm.vmsg.jobLabel.value }}
+    </label>
+    <label *ngIf="job.errors?.required && job.touched" class="invalid">
+        {{ fm.vmsg.jobLabel.require }}
+    </label>
+    <label *ngIf="job.valid" class="valid">
+        {{ fm.vmsg.jobLabel.value }}
+    </label>
+  </div>
+
+  <div>
+    <p-dropdown [options]="depts" formControlName="dept"
+      placeholder="소속기관을 선택해주세요." filter="true"
+      styleClass="dropdown" ></p-dropdown>
+  </div>
+
+  <div class="label" >
+    <label *ngIf="dept.errors?.required && dept.untouched">
+      {{ fm.vmsg.deptLabel.value }}
+    </label>
+    <label *ngIf="dept.errors?.required && dept.touched" class="invalid">
+      {{ fm.vmsg.deptLabel.require }}
+    </label>
+    <label *ngIf="dept.valid" class="valid">
+      {{ fm.vmsg.deptLabel.value }}
+    </label>
+  </div>
+
+
+  <div class="passwords" *ngIf="isEmail">
+    <p>
+      회원님의 이메일은 <label class="email"><{{ findEmail }}></label> 입니다.
+      <br><br>
+      비밀번호를 초기화 하시겠습니까? <br>
+      비밀번호 초기화하기 위하여 올바른 답변을 입력해주세요. <br>
+      비밀번호가 성공적으로 초기화되면 회원님의 메일로 전송됩니다.
+    </p>
+    <div>
+      <p-dropdown
+      [options]="questions"
+      formControlName="password_q"
+      styleClass="dropdown"
+      placeholder="비밀번호 질문"
+      ></p-dropdown>
+    </div>
+    <div class="label" >
+      <label *ngIf="password_q.errors?.required && password_q.untouched">
+          {{ fm.vmsg.password_q.value }}
+      </label>
+      <label *ngIf="password_q.errors?.required && password_q.touched" class="invalid">
+          {{ fm.vmsg.password_q.require }}
+      </label>
+      <label *ngIf="password_q.valid" class="valid">
+          {{ fm.vmsg.password_q.value }}
+      </label>
+    </div>
+
+    <div>
+      <input type="text" formControlName="password_a" placeholder="비밀번호 답변">
+    </div>
+    <div class="label" >
+      <label *ngIf="password_a.errors?.required && password_a.untouched">
+          {{ fm.vmsg.password_a.value }}
+      </label>
+      <label *ngIf="password_a.errors?.required && password_a.touched" class="invalid">
+          {{ fm.vmsg.password_a.require }}
+      </label>
+      <label *ngIf="password_a.valid" class="valid">
+          {{ fm.vmsg.password_a.value }}
+      </label>
+    </div>
+  </div>
+
+  <button type="submit" id="submit-register" *ngIf="isEmail" (click)="onSubmitPassword()">비밀번호 초기화</button>
+  <button type="submit" id="submit-register" *ngIf="!isEmail"(click)="onSubmitEmail()">이메일 찾기</button>
+</form>

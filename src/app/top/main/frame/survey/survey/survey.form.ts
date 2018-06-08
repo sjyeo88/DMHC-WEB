@@ -14,7 +14,7 @@ class ValidConfig {
   titleDuplicateMsg:string = '기존 설문 중 중복된 설문이 있습니다.'
   measureTxtMax:number = 10;
   measureTxtMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.measureTxtMax+ ' 자 이하]'
-  ojbectTxtMax:number = 30;
+  ojbectTxtMax:number = 80;
   objectTxtMaxLengthMsg:string = '길이가 너무 깁니다 [' + this.ojbectTxtMax+ ' 자 이하]'
 }
 

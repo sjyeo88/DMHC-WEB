@@ -11,6 +11,8 @@ import { RegisterComponent } from './login-panel/register/register.component';
 import { WelcomeComponent } from './login-panel/welcome/welcome.component'
 import { ConfirmComponent } from './login-panel/confirm/confirm.component'
 import { ConfirmJobComponent } from './login-panel/confirm-job/confirm-job.component'
+import { FindEmailComponent } from './login-panel/find-email/find-email.component'
+
 import { ErrorComponent } from './error/error.component'
 import { ExpireComponent } from './expire/expire.component'
 import { TopComponent } from './top/top.component'
@@ -18,6 +20,7 @@ import { MainComponent } from './top/main/main.component'
 import { ShortcutComponent } from './top/main/shortcut/shortcut.component'
 import { FrameComponent } from './top/main/frame/frame.component'
 import { NewLectureComponent } from './top/main/frame/lecture/new-lecture/new-lecture.component'
+import { EditLectureComponent } from './top/main/frame/lecture/edit-lecture/edit-lecture.component'
 import { AllLectureComponent } from './top/main/frame/lecture/all-lecture/all-lecture.component'
 import { NewSurveyComponent } from './top/main/frame/survey/new-survey/new-survey.component'
 import { EditSurveyComponent } from './top/main/frame/survey/edit-survey/edit-survey.component'
@@ -33,6 +36,12 @@ import { FaqComponent } from './top/main/frame/guest/faq/faq.component';
 import { QnaComponent } from './top/main/frame/guest/qna/qna.component';
 import { UserComponent } from './top/main/frame/mypage/user/user.component';
 import { UseProcessComponent } from './top/main/frame/dmhc/use-process/use-process.component';
+import { IntroComponent } from './top/main/frame/dmhc/intro/intro.component';
+import { AccesstermComponent } from './top/main/frame/dmhc/accessterm/accessterm.component';
+import { AssignManualComponent } from './top/main/frame/assign/assign-manual/assign-manual.component';
+import { LectureManualComponent } from './top/main/frame/lecture/lecture-manual/lecture-manual.component';
+import { SurveyManualComponent } from './top/main/frame/survey/survey-manual/survey-manual.component';
+import { ManageManualComponent } from './top/main/frame/manage/manage-manual/manage-manual.component';
 
 
 const routes: Routes = [
@@ -50,17 +59,24 @@ const routes: Routes = [
               children: [
                 {path: 'sitemap', component: SitemapComponent },
                 {path: 'dmhc/process', component: UseProcessComponent },
+                {path: 'dmhc/intro', component: IntroComponent },
+                {path: 'dmhc/accessterm', component: AccesstermComponent },
                 {path: 'lecture/all', component: AllLectureComponent },
                 {path: 'lecture/new', component: NewLectureComponent },
+                {path: 'lecture/edit', component: EditLectureComponent },
+                {path: 'lecture/manual', component: LectureManualComponent },
                 {path: 'survey/new', component: NewSurveyComponent },
                 {path: 'survey/edit', component: EditSurveyComponent },
+                {path: 'survey/manual', component: SurveyManualComponent },
                 {path: 'assign/all', component: AssignAllComponent},
                 {path: 'assign/new', component: AssignNewComponent },
                 {path: 'assign/edit', component: AssignEditComponent },
                 {path: 'assign/hash', component: HashComponent },
+                {path: 'assign/manual', component: AssignManualComponent },
                 {path: 'manage/all', component: ManageAllComponent },
                 {path: 'manage/detail', component: ManageDetailComponent },
                 {path: 'manage/detail/:idPATIENT_USER', component: ManageDetailComponent },
+                {path: 'manage/manual', component: ManageManualComponent },
                 {path: 'mypage/user', component: UserComponent },
                 {path: 'guest/notice', component: NoticeComponent },
                 {path: 'guest/notice/:idNOTICE', component: NoticeComponent },
@@ -81,6 +97,9 @@ const routes: Routes = [
       {path: 'welcome', component: WelcomeComponent},
       {path: 'confirm', component: ConfirmComponent },
       {path: 'confirm/job', component: ConfirmJobComponent },
+      {path: 'use-process', component: UseProcessComponent },
+      {path: 'intro', component: IntroComponent },
+      {path: 'find-email', component: FindEmailComponent },
     ]
   },
   {path: 'expire', component: ExpireComponent},

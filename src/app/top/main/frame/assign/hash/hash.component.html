@@ -18,7 +18,7 @@
 <div class="">
   <button type="button" class="add-button" (click)="addTag()">+ Hash Tag 추가하기</button>
 </div>
-<form class="" FormGroup="newHash.hashForm" method="post">
+<form class="" method="post">
 <table class="hash-table">
   <tr class="header">
     <th [style.width.%]="5">No</th>
@@ -29,77 +29,77 @@
     <th [style.width.%]="8">추가</th>
     <th [style.width.%]="8">삭제</th>
   </tr>
-  <!-- <tr [ngClass]="(item.rawId !==0)?'selectable-body':'body'" *ngFor="let item of tableModel.model; let i=index"> -->
-
-  <tr class="body" *ngFor="let item of tableModel.model; let i=index">
-    <td *ngIf="!item.sub && item.rawId !== -1"> {{item.rawId }} </td>
-    <td *ngIf="item.sub || item.rawId === -1"></td>
-    <td [ngStyle]="{'padding':'10px', 'padding-left':'calc('+ item.depth+'*40px)', 'text-align':'left'}" >
-
-      <span class="expand" *ngIf="item.rawId !==-1 && !item.expand" (click)="onExpand(item)">
+  <tr class="body" *ngFor="let item of tableModel.models; let idx=index">
+    <td *ngIf="item.origin.key > 0">{{item.origin.key}}</td>
+    <td *ngIf="item.origin.key <= 0 || !item.origin.key"></td>
+    <td [ngStyle]="{'padding':'10px', 'padding-left':'calc('+ item.view.level+'*40px)', 'text-align':'left'}" >
+      <span class="expand" *ngIf=" item.origin.key && !item.view.expand" (click)="onExpand(item, idx)">
         <i class="fa fa-caret-right fa-2x"></i>
       </span>
-      <span class="expand-active" *ngIf="item.rawId !==-1 && item.expand" (click)="onExpand(item)">
+      <span class="expand-active"  *ngIf="item.origin.key && item.view.expand" (click)="onExpand(item, idx)">
         <i class="fa fa-caret-down fa-2x"></i>
       </span>
-
-      <div *ngIf="item.isSaved" class="word"> {{ item.name }} </div>
-      <div *ngIf="!item.isSaved && !item.sub"  [style.padding-left.px]="5">
-        <input class="word" type="text"
-          [id]="item.inputId"
-          [ngModelOptions]="{standalone: true}"
-          [(ngModel)]="item.name"
-          pattern="[#a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}"
-          (ngModelChange)="checkValue(item)"
-          (paste)="hashPaste(item, $event)"
-          (keydown)="openRow(item, $event)"
+      <div *ngIf="item.view.isSaved" class="word"> {{item.origin.name}} </div>
+      <div *ngIf="!item.view.isSaved"  [style.padding-left.px]="5" >
+        <input #rowLabel class="word" type="text"
+          [id]="item.view.inputId"
+          [ngModelOptions]="{
+            standalone: true,
+            debounce: 1000
+          }"
+          [(ngModel)]="item.origin.name"
+          [pattern]="item.view.pattern"
+          (ngModelChange)="checkAllWithDebounceTime(item)"
+          (paste)="hashPaste(item, idx, $event)"
+          (keydown)="openRow(item, idx, $event)"
           required
         >
-      </div>
-      <div *ngIf="!item.isSaved && item.sub"  [style.padding-left.px]="5">
-        <input class="word" type="text"
-          [id]="item.inputId"
-          [ngModelOptions]="{standalone: true}"
-          [(ngModel)]="item.name"
-          pattern="[a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ|#a-zA-Z0-9가-힣ㄱ-ㅎㅏ-ㅣ]{1,10}"
-          (ngModelChange)="checkValue(item)"
-          (paste)="hashPaste(item, $event)"
-          (keydown)="openRow(item, $event)"
-          required
-        >
+          <!-- (keyup)="checkAll(item)" -->
       </div>
     </td>
+    <td>
+      {{item.origin.number}}
+      <br>
+      <span *ngIf="item.view.addNumber !== 0">
+        (+{{item.view.addNumber}})
+      </span>
+    </td>
+    <td>{{item.origin.ADD_TIME | date :'yyyy-MM-dd'}}</td>
+    <td *ngIf="item.view.isSaved && !item.view.isSaving" >
+      <i class="fa fa-check fa-lg finished"></i>
+    </td>
+    <td *ngIf="!item.view.isSaved && !item.view.isSavable && !item.view.isSaving" (click)="errorMsg(item)">
+      <i class="fa  fa-times fa-lg editing"></i>
+    </td>
+    <td *ngIf="!item.view.isSaved && item.view.isSavable && item.origin.key < 0 && !item.view.isSaving" (click)="onHashUpdate(item)">
+      <i class="fa  fa-floppy-o fa-lg editing"></i>
+    </td>
+    <td *ngIf="!item.view.isSaved && item.view.isSavable && !item.origin.key && !item.view.isSaving" (click)="onWordsUpdate([item])">
+      <i class="fa  fa-floppy-o fa-lg editing"></i>
+    </td>
+    <td *ngIf="!item.view.isSaved && item.view.isSavable && item.origin.key > 0 && !item.view.isSaving" (click)="onHashesUpdate([item])">
+      <i class="fa  fa-floppy-o fa-lg editing"></i>
+    </td>
 
-      <!-- <div class="editable-td" contenteditable>Test</div> -->
-    <td> {{ item.number }}</td>
-    <td>{{item.ADD_TIME  | date: 'yyyy-MM-dd' }}</td>
-    <td *ngIf="item.isSaved" ><i class="fa fa-check fa-lg finished"></i></td>
-    <td *ngIf="!item.isSaved && !item.isSaving && !item.sub && item.isSavable" (click)="onHashSave(item)"><i class="fa fa-floppy-o fa-lg editing"></i></td>
-    <td *ngIf="!item.isSaved && !item.isSaving && item.sub  && item.isSavable" (click)="onWordSave(item)"><i class="fa  fa-floppy-o fa-lg editing"></i></td>
-
-    <td *ngIf="!item.isSaved && !item.isSaving && !item.sub && !item.isSavable" ><i class="fa fa-times fa-lg editing"></i></td>
-    <td *ngIf="!item.isSaved && !item.isSaving && item.sub  && !item.isSavable" ><i class="fa  fa-times fa-lg editing"></i></td>
+    <td *ngIf="!item.view.isSaved && item.view.isSaving"><i class="fa fa-spinner fa-pulse fa-fw"></i></td>
 
 
-    <td *ngIf="!item.isSaved && item.isSaving"><i class="fa fa-spinner fa-pulse fa-fw"></i></td>
+    <td *ngIf="item.origin.key && item.view.level === 0" (click)="addChild(item, idx)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
+    <td *ngIf="item.origin.key && item.view.level !== 0"></td>
 
-    <td *ngIf="!item.sub" (click)="addChild(item)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
-    <td *ngIf="item.rawId !==-1 && item.sub"></td>
-    <td *ngIf="item.rawId ===-1 && item.sub" (click)="addBro(item)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
-    <td (click)="confirmDel(item)"><i class="fa fa-minus-circle fa-lg icon"></i> </td>
-    <!-- <div class="">Test</div> -->
+    <td *ngIf="!item.origin.key && item.view.level === 1" (click)="addBro(item, idx)"><i class="fa fa-plus-circle fa-lg icon"></i></td>
+    <td *ngIf="!item.origin.key && item.view.level !== 1"></td>
+
+    <td *ngIf="item.origin.key && item.view.level < 2" (click)="removeRow(item, idx)">
+      <i class="fa fa-minus-circle fa-lg icon"></i>
+    </td>
+    <td *ngIf="item.origin.key && item.view.level >= 2"></td>
+
+    <td *ngIf="!item.origin.key && item.view.level === 1" (click)="removeRow(item, idx)">
+      <i class="fa fa-minus-circle fa-lg icon"></i>
+    </td>
+    <td *ngIf="!item.origin.key && item.view.level !== 1 "></td>
   </tr>
+
 </table>
 </form>
-
-
-  <!-- <div  [style.margin-top.px]="10">
-    <p-paginator *ngIf="allHashLoaded"
-    rows="10"
-    [first]="pagFirstIndex"
-    [style]="{'border':'none'}"
-    [style]="{'background-color':'white'}"
-    (onPageChange)="onPageMove($event)"
-    [totalRecords]="allHashes.length">
-    </p-paginator>
-  </div> -->

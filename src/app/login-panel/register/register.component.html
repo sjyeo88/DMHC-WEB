@@ -27,12 +27,9 @@
 <!-- Code start  ---------------------------------------------------------->
 
 <h2 id="register-title">매일마음관리 치료자 등록요청</h2>
-<form [formGroup]="rf.registForm"  novalidate
-class="regist-form">
+<form [formGroup]="rf.registForm"  novalidate class="regist-form">
   <!-- User Name Field -->
-  <input type="text" formControlName="username"
-  name="username" placeholder="성명"
-  >
+  <input type="text" formControlName="username" name="username" placeholder="성명" >
 
   <!-- UserName Validation -->
   <div class="label">
@@ -119,16 +116,47 @@ class="regist-form">
       <label *ngIf="passwordGroup.valid" class="valid">
         {{ vmsg.passwordCheckLabel.valid}}
       </label>
-      <!-- <label *ngIf="!(passwordGroup.errors?.match) && (passwordCheck.errors?.minlenth || passwordCheck.errors?.maxlenth)" class="valid">
-        &nbsp;
-      </label> -->
-
     </div>
-    <!-- <input type="date" [(ngModel)]="company.birthdate"> -->
   </div>
 
   <br>
 
+  <div>
+    <p-dropdown
+    [options]="questions"
+    formControlName="password_q"
+    styleClass="dropdown"
+    placeholder="비밀번호 질문"
+    ></p-dropdown>
+  </div>
+  <div class="label" >
+      <label *ngIf="password_q.errors?.required && password_q.untouched">
+          {{ vmsg.password_q.value }}
+      </label>
+      <label *ngIf="password_q.errors?.required && password_q.touched" class="invalid">
+          {{ vmsg.password_q.require }}
+      </label>
+      <label *ngIf="password_q.valid" class="valid">
+          {{ vmsg.password_q.value }}
+      </label>
+  </div>
+
+  <div>
+    <input type="text" formControlName="password_a" placeholder="비밀번호 답변">
+  </div>
+  <div class="label" >
+      <label *ngIf="password_a.errors?.required && password_a.untouched">
+          {{ vmsg.password_a.value }}
+      </label>
+      <label *ngIf="password_a.errors?.required && password_a.touched" class="invalid">
+          {{ vmsg.password_a.require }}
+      </label>
+      <label *ngIf="password_a.valid" class="valid">
+          {{ vmsg.password_a.value }}
+      </label>
+  </div>
+
+  <br>
 
   <input type="text" formControlName="phoneNum"
   placeholder="휴대폰 번호">
